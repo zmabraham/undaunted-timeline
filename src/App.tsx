@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe, Network, Quote as QuoteIcon } from 'lucide-react';
+import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe, Network, Quote as QuoteIcon, Library } from 'lucide-react';
 import { ERAS, processTimelineData, type UndauntedData } from './data/undaunted-data';
 import TimelineView from './components/TimelineView';
 import EraView from './components/EraView';
@@ -9,12 +9,15 @@ import PersonProfile from './components/PersonProfile';
 import SearchPanel from './components/SearchPanel';
 import KnowledgeGraphView from './components/KnowledgeGraphView';
 import QuotesView from './components/QuotesView';
+import BookReader from './components/BookReader';
 
-type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'institutions' | 'communities' | 'concepts' | 'documents' | 'allPlaces' | 'search' | 'knowledgeGraph' | 'quotes';
+type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'institutions' | 'communities' | 'concepts' | 'documents' | 'allPlaces' | 'search' | 'knowledgeGraph' | 'quotes' | 'book';
 
 function App() {
   const [view, setView] = useState<View>('home');
   const [showSplash, setShowSplash] = useState(true);
+  const [bookHighlight, setBookHighlight] = useState<string | undefined>();
+  const [bookStartChapter, setBookStartChapter] = useState<number>(1);
 
   // Splash screen timer
   useEffect(() => {
@@ -90,10 +93,11 @@ function App() {
   }, [data]);
 
   const handleBack = () => {
+    setBookHighlight(undefined);
     if (view === 'event' && selectedEra) {
       setView('era');
       setSelectedEvent(null);
-    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings' || view === 'institutions' || view === 'communities' || view === 'concepts' || view === 'documents' || view === 'allPlaces' || view === 'knowledgeGraph' || view === 'quotes') {
+    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings' || view === 'institutions' || view === 'communities' || view === 'concepts' || view === 'documents' || view === 'allPlaces' || view === 'knowledgeGraph' || view === 'quotes' || view === 'book') {
       setView('home');
       setSelectedEra(null);
     } else if (view === 'person') {
@@ -180,6 +184,7 @@ function App() {
                   {view === 'concepts' && 'Concepts & Ideas'}
                   {view === 'documents' && 'Documents'}
                   {view === 'quotes' && 'Quotes from the Rebbes'}
+                  {view === 'book' && 'The Complete Book'}
                   {view === 'event' && 'Event Chronicle'}
                   {view === 'person' && 'Soul Profile'}
                   {view === 'search' && 'Search the Archives'}
@@ -396,6 +401,14 @@ function App() {
                 quotes={timelineData.quotes}
               />
             )}
+            {view === 'book' && (
+              <BookReader
+                key="book"
+                initialChapter={bookStartChapter}
+                highlightText={bookHighlight}
+                onBack={handleBack}
+              />
+            )}
             </motion.div>
           </AnimatePresence>
         )}
@@ -484,11 +497,19 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
         {/* Entry Points - more compact */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 max-w-6xl mx-auto">
           <EntryCard
+            icon={<Library className="w-8 h-8" />}
+            title="Read the Book"
+            description="Complete chapter-by-chapter reader"
+            onClick={() => onNavigate('book')}
+            delay={0.05}
+            color="#DC2626"
+          />
+          <EntryCard
             icon={<Clock3 className="w-8 h-8" />}
             title="Era Overview"
             description="Four defining eras of leadership"
             onClick={() => onNavigate('panorama')}
-            delay={0.05}
+            delay={0.1}
             color="#8B5CF6"
           />
           <EntryCard
@@ -496,7 +517,7 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             title="People Directory"
             description="Biographies and associated events"
             onClick={() => onNavigate('people')}
-            delay={0.1}
+            delay={0.15}
             color="#3B82F6"
           />
           <EntryCard
@@ -504,7 +525,7 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             title="Places Directory"
             description="All locations alphabetically"
             onClick={() => onNavigate('allPlaces')}
-            delay={0.15}
+            delay={0.2}
             color="#10B981"
           />
           <EntryCard
@@ -512,7 +533,7 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             title="Quotes"
             description="Wisdom from the Rebbes"
             onClick={() => onNavigate('quotes')}
-            delay={0.2}
+            delay={0.25}
             color="#EC4899"
           />
           <EntryCard
@@ -520,7 +541,7 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             title="Topics & Themes"
             description="Alphabetical subject index"
             onClick={() => onNavigate('topics')}
-            delay={0.25}
+            delay={0.3}
             color="#F59E0B"
           />
           <EntryCard
@@ -528,7 +549,7 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             title="The Teachings"
             description="Wisdom and discourses"
             onClick={() => onNavigate('teachings')}
-            delay={0.3}
+            delay={0.35}
             color="#EC4899"
           />
           <EntryCard
@@ -536,7 +557,7 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             title="Institutions"
             description="Yeshivas & organizations"
             onClick={() => onNavigate('institutions')}
-            delay={0.35}
+            delay={0.4}
             color="#6366F1"
           />
           <EntryCard
@@ -544,16 +565,8 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             title="Knowledge Graph"
             description="Interactive visual network"
             onClick={() => onNavigate('knowledgeGraph')}
-            delay={0.4}
-            color="#06B6D4"
-          />
-          <EntryCard
-            icon={<Lightbulb className="w-8 h-8" />}
-            title="Concepts & Ideas"
-            description="Philosophical concepts"
-            onClick={() => onNavigate('concepts')}
             delay={0.45}
-            color="#F59E0B"
+            color="#06B6D4"
           />
           <EntryCard
             icon={<Clock3 className="w-8 h-8" />}

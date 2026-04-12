@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Calendar, BookOpen, Crown, ChevronLeft, Star, Library } from 'lucide-react';
+import { Calendar, BookOpen, Crown, ChevronLeft, Library } from 'lucide-react';
 
 interface PersonProfileProps {
   person: any;

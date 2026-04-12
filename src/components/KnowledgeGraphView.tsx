@@ -29,9 +29,6 @@ interface Link {
 
 export default function KnowledgeGraphView({
   entities,
-  events,
-  people,
-  places,
   onSelectEntity
 }: KnowledgeGraphViewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -107,10 +104,10 @@ export default function KnowledgeGraphView({
 
         // Simple similarity check
         if (passageA && passageB && passageA.length > 0 && passageB.length > 0) {
-          const wordsA = new Set(passageA.toLowerCase().split(/\s+/).filter((w: string) => w.length > 4));
-          const wordsB = new Set(passageB.toLowerCase().split(/\s+/).filter((w: string) => w.length > 4));
+          const wordsA = new Set<string>(passageA.toLowerCase().split(/\s+/).filter((w: string) => w.length > 4));
+          const wordsB = new Set<string>(passageB.toLowerCase().split(/\s+/).filter((w: string) => w.length > 4));
 
-          const intersection = [...wordsA].filter((w: string) => wordsB.has(w));
+          const intersection = Array.from(wordsA).filter(w => wordsB.has(w));
           const similarity = intersection.length / Math.min(wordsA.size, wordsB.size);
 
           if (similarity > 0.3) {
@@ -364,7 +361,8 @@ export default function KnowledgeGraphView({
             All ({entities.length})
           </button>
           {Object.entries(typeCounts)
-            .sort(([, a], [, b]) => b - a)
+            .sort(([, a], [, b]) => (Number(a) || 0) - (Number(b) || 0))
+            .reverse()
             .slice(0, 6)
             .map(([type, count]) => (
               <button
@@ -376,7 +374,7 @@ export default function KnowledgeGraphView({
                     : 'bg-gold-400/20 text-gold-700 hover:bg-gold-400/30'
                 }`}
               >
-                {type} ({count})
+                {String(type)} ({String(count)})
               </button>
             ))}
         </div>

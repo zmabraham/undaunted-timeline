@@ -545,26 +545,63 @@ function MapView({ places, events: _events, onSelectEvent: _onSelectEvent }: any
   );
 }
 
-function TopicsView({ topics, entities: _entities, onSelectEvent: _onSelectEvent }: any) {
+function TopicsView({ topics, entities, onSelectEvent }: any) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+
+  const getEntitiesForTopic = (topic: string) => {
+    return entities.filter((e: any) => {
+      const passage = (e.passage || '').toLowerCase();
+      const desc = (e.extracted_data?.event || e.extracted_data?.description || e.extracted_data?.topic || '').toLowerCase();
+      return passage.includes(topic.toLowerCase()) || desc.includes(topic.toLowerCase());
+    }).slice(0, 20);
+  };
+
+  if (selectedTopic) {
+    const topicEntities = getEntitiesForTopic(selectedTopic);
+    return (
+      <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+        <div className="max-w-5xl mx-auto">
+          <button onClick={() => setSelectedTopic(null)} className="font-subheading text-gold-300 hover:text-gold-200 mb-6">← Back to Topics</button>
+          <h2 className="font-display text-4xl text-gold-200 text-center mb-8">{selectedTopic}</h2>
+          <p className="font-body text-parchment-400 text-center mb-8">Found {topicEntities.length} references</p>
+          <div className="space-y-4">
+            {topicEntities.map((entity: any, i: number) => (
+              <div key={i} onClick={() => entity.node_type?.toLowerCase().includes('event') && onSelectEvent(entity)} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5 cursor-pointer hover:border-gold-400">
+                <span className="font-subheading text-xs text-gold-700 uppercase">{entity.node_type}</span>
+                <h3 className="font-display text-lg text-ink-200 mt-2">{entity.extracted_data?.event || entity.extracted_data?.name || entity.extracted_data?.description || 'Entry'}</h3>
+                <p className="font-body text-sm text-ink-100 line-clamp-3">{entity.passage}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h2 className="font-display text-4xl text-gold-200 text-center mb-8">Topics & Themes</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {alphabet.map(letter => {
             const letterTopics = topics.filter((t: string) => t.startsWith(letter));
             if (letterTopics.length === 0) return null;
             return (
               <div key={letter} className="text-center">
-                <div className="font-display text-3xl text-gold-400 mb-2">{letter}</div>
-                <div className="space-y-1">
-                  {letterTopics.slice(0, 5).map((topic: string, i: number) => (
-                    <div key={i} className="font-body text-sm text-parchment-400 truncate">{topic}</div>
+                <div className="font-display text-3xl text-gold-400 mb-3">{letter}</div>
+                <div className="space-y-2">
+                  {letterTopics.slice(0, 6).map((topic: string, i: number) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedTopic(topic)}
+                      className="block w-full font-body text-sm text-gold-700 hover:text-gold-400 hover:bg-gold-400/10 px-2 py-1 rounded transition-all"
+                    >
+                      {topic}
+                    </button>
                   ))}
-                  {letterTopics.length > 5 && (
-                    <div className="font-subheading text-xs text-gold-600">+{letterTopics.length - 5} more</div>
+                  {letterTopics.length > 6 && (
+                    <div className="font-subheading text-xs text-parchment-500">+{letterTopics.length - 6} more</div>
                   )}
                 </div>
               </div>

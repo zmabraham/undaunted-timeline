@@ -231,6 +231,7 @@ function App() {
                 event={selectedEvent}
                 places={timelineData.places}
                 onSelectPerson={(person: any) => { setSelectedPerson(person); setSelectedEvent(null); setView('person'); }}
+                onBack={handleBack}
               />
             )}
             {view === 'person' && selectedPerson && (

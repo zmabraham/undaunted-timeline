@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, User, ArrowRight, BookOpen, Quote } from 'lucide-react';
+import { MapPin, Calendar, User, ArrowRight, BookOpen, Quote, ChevronLeft } from 'lucide-react';
 
 interface EventDetailProps {
   event: any;
   places: any[];
   onSelectPerson: (person: any) => void;
+  onBack?: () => void;
 }
 
-export default function EventDetail({ event, onSelectPerson }: EventDetailProps) {
+export default function EventDetail({ event, onSelectPerson, onBack }: EventDetailProps) {
   const extractPeople = () => {
     const passage = event.passage || '';
     const matches = passage.match(/(Rabbi [A-Z][a-z]+|Rebbe|The [A-Z][a-z]+)/g);
@@ -25,6 +26,19 @@ export default function EventDetail({ event, onSelectPerson }: EventDetailProps)
     >
       {/* Aged paper texture overlay */}
       <div className="fixed inset-0 bg-aged-paper opacity-30 pointer-events-none" />
+
+      {/* Back button at top */}
+      {onBack && (
+        <motion.button
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          onClick={onBack}
+          className="relative z-20 mb-6 flex items-center gap-2 px-4 py-2 font-subheading text-sm text-gold-300 hover:text-gold-200 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span>Back to Era</span>
+        </motion.button>
+      )}
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Event Header Card */}

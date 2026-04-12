@@ -426,6 +426,15 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
       {/* Footnote tooltip - rendered at document body level using Portal */}
       {createPortal(
         <>
+          {/* Close footnote when clicking elsewhere */}
+          {activeFootnote && (
+            <div
+              className="fixed inset-0"
+              style={{ zIndex: 9998 }}
+              onClick={() => setActiveFootnote(null)}
+            />
+          )}
+
           <AnimatePresence>
             {activeFootnote && (
               <motion.div
@@ -433,11 +442,12 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="fixed z-[100] max-w-sm pointer-events-auto"
+                className="fixed max-w-sm pointer-events-auto"
                 style={{
                   left: `${footnotePosition.x}px`,
                   top: `${footnotePosition.y}px`,
-                  transform: 'translateX(-50%)'
+                  transform: 'translateX(-50%)',
+                  zIndex: 9999
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -450,14 +460,6 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Close footnote when clicking elsewhere */}
-          {activeFootnote && (
-            <div
-              className="fixed inset-0 z-[90]"
-              onClick={() => setActiveFootnote(null)}
-            />
-          )}
         </>,
         document.body
       )}

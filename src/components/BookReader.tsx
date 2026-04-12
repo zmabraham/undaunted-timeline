@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, ChevronLeft, ChevronRight, List, Search, X, Crown } from 'lucide-react';
 
 interface Chapter {
@@ -15,6 +15,11 @@ interface BookData {
   chapters: Chapter[];
 }
 
+interface Footnote {
+  number: number;
+  text: string;
+}
+
 interface BookReaderProps {
   initialChapter?: number;
   highlightText?: string;
@@ -28,7 +33,71 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
   const [showTOC, setShowTOC] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Array<{ chapter: number; paragraph: number; text: string }>>([]);
+  const [activeFootnote, setActiveFootnote] = useState<Footnote | null>(null);
+  const [footnotePosition, setFootnotePosition] = useState({ x: 0, y: 0 });
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Parse footnotes from text
+  const parseFootnotes = (text: string): { text: string; footnotes: Footnote[] } => {
+    const footnoteRegex = /\[\[(\d+):\s*([^\]]+)\]\]/g;
+    const footnotes: Footnote[] = [];
+    let processedText = text;
+
+    // Extract all footnotes
+    let footnoteMatch;
+    while ((footnoteMatch = footnoteRegex.exec(text)) !== null) {
+      footnotes.push({ number: parseInt(footnoteMatch[1]), text: footnoteMatch[2].trim() });
+    }
+
+    // Replace footnotes with clickable superscript numbers
+    processedText = text.replace(footnoteRegex, (_match, num) => {
+      return `<sup class="footnote-ref cursor-pointer text-gold-600 hover:text-gold-400 font-subheading text-xs align-super" data-footnote="${num}">[${num}]</sup>`;
+    });
+
+    return { text: processedText, footnotes };
+  };
+
+  // Handle footnote hover/click
+  const handleFootnoteEnter = (footnoteText: string, element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+    setActiveFootnote({ number: 0, text: footnoteText });
+    setFootnotePosition({ x: rect.left + rect.width / 2, y: rect.bottom + 8 });
+  };
+
+  const handleFootnoteLeave = () => {
+    setActiveFootnote(null);
+  };
+
+  // Attach event listeners to footnote refs after content renders
+  useEffect(() => {
+    if (contentRef.current) {
+      const footnoteRefs = contentRef.current.querySelectorAll('.footnote-ref');
+      footnoteRefs.forEach((ref: Element) => {
+        const element = ref as HTMLElement;
+        const footnoteNum = element.getAttribute('data-footnote');
+
+        // Find the footnote text from all footnotes in current chapter
+        const fullText = contentRef.current?.textContent || '';
+        const footnoteMatch = fullText.match(new RegExp(`\\[\\[${footnoteNum}:\\s*([^\\]]+)\\]\\]`));
+        const footnoteText = footnoteMatch ? footnoteMatch[1].trim() : '';
+
+        element.addEventListener('mouseenter', () => handleFootnoteEnter(footnoteText, element));
+        element.addEventListener('mouseleave', handleFootnoteLeave);
+        element.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleFootnoteEnter(footnoteText, element);
+        });
+      });
+
+      return () => {
+        footnoteRefs.forEach((ref: Element) => {
+          const element = ref as HTMLElement;
+          element.removeEventListener('mouseenter', () => {});
+          element.removeEventListener('mouseleave', () => {});
+        });
+      };
+    }
+  }, [currentChapter, bookData]);
 
   // Load book data
   useEffect(() => {
@@ -218,15 +287,51 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
 
             {/* Chapter content */}
             <div className="prose prose-parchment max-w-none">
-              {currentChapterData.paragraphs.map((paragraph, index) => (
-                <p
-                  key={index}
-                  className="font-body text-base sm:text-lg leading-relaxed text-ink-100 mb-6"
-                >
-                  {paragraph}
-                </p>
-              ))}
+              {currentChapterData.paragraphs.map((paragraph, index) => {
+                const { text } = parseFootnotes(paragraph);
+                return (
+                  <p
+                    key={index}
+                    className="font-body text-base sm:text-lg leading-relaxed text-ink-100 mb-6"
+                    dangerouslySetInnerHTML={{ __html: text }}
+                  />
+                );
+              })}
             </div>
+
+            {/* Footnote tooltip */}
+            <AnimatePresence>
+              {activeFootnote && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="fixed z-50 max-w-xs"
+                  style={{
+                    left: `${footnotePosition.x}px`,
+                    top: `${footnotePosition.y}px`,
+                    transform: 'translateX(-50%)'
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="bg-ink-900 border border-gold-400/50 rounded-lg p-4 shadow-2xl">
+                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-ink-900"></div>
+                    <p className="font-body text-sm text-parchment-100 leading-relaxed">
+                      {activeFootnote.text}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Close footnote when clicking elsewhere */}
+            {activeFootnote && (
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setActiveFootnote(null)}
+              />
+            )}
 
             {/* Chapter end navigation */}
             <div className="mt-12 pt-8 border-t border-gold-400/20 flex justify-center gap-4">

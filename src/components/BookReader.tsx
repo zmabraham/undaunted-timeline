@@ -32,7 +32,7 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
 
   // Load book data
   useEffect(() => {
-    fetch('/data/book.json')
+    fetch(`${import.meta.env.BASE_URL}data/book.json`)
       .then(res => res.json())
       .then(data => {
         setBookData(data);

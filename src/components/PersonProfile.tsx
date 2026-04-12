@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
-import { Calendar, BookOpen, Crown, ChevronLeft, Star } from 'lucide-react';
+import { Calendar, BookOpen, Crown, ChevronLeft, Star, Library } from 'lucide-react';
 
 interface PersonProfileProps {
   person: any;
   events: any[];
   onBack?: () => void;
+  onReadInBook?: (text: string) => void;
 }
 
-export default function PersonProfile({ person, events, onBack }: PersonProfileProps) {
+export default function PersonProfile({ person, events, onBack, onReadInBook }: PersonProfileProps) {
   const name = person.extracted_data?.name || person.passage || 'Unknown';
 
   const personEvents = events.filter((e: any) => {
@@ -74,6 +75,21 @@ export default function PersonProfile({ person, events, onBack }: PersonProfileP
               <div className="flex items-center justify-center gap-2 text-sm font-subheading text-parchment-600">
                 <Calendar className="w-4 h-4 text-gold-600" />
                 <span>{person.extracted_data.years}</span>
+              </div>
+            )}
+
+            {/* Read in Book button */}
+            {person.passage && onReadInBook && (
+              <div className="mt-6 flex justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onReadInBook(person.passage.substring(0, 50))}
+                  className="flex items-center gap-2 px-6 py-3 bg-gold-400/20 border border-gold-400/40 rounded-full font-subheading text-sm text-gold-200 hover:bg-gold-400/30 transition-all"
+                >
+                  <Library className="w-4 h-4" />
+                  <span>Read in Book</span>
+                </motion.button>
               </div>
             )}
           </div>

@@ -92,6 +92,12 @@ function App() {
     return processTimelineData(data);
   }, [data]);
 
+  const handleReadInBook = (highlightText: string, chapter?: number) => {
+    setBookHighlight(highlightText);
+    setBookStartChapter(chapter || 1);
+    setView('book');
+  };
+
   const handleBack = () => {
     setBookHighlight(undefined);
     if (view === 'event' && selectedEra) {
@@ -294,10 +300,17 @@ function App() {
                 places={timelineData.places}
                 onSelectPerson={(person: any) => { setSelectedPerson(person); setSelectedEvent(null); setView('person'); }}
                 onBack={handleBack}
+                onReadInBook={handleReadInBook}
               />
             )}
             {view === 'person' && selectedPerson && (
-              <PersonProfile key="person" person={selectedPerson} events={timelineData.events} onBack={handleBack} />
+              <PersonProfile
+                key="person"
+                person={selectedPerson}
+                events={timelineData.events}
+                onBack={handleBack}
+                onReadInBook={handleReadInBook}
+              />
             )}
             {view === 'search' && (
               <SearchPanel
@@ -345,6 +358,7 @@ function App() {
               <TeachingsView
                 key="teachings"
                 teachings={timelineData.teachings}
+                onReadInBook={handleReadInBook}
               />
             )}
             {view === 'institutions' && (
@@ -1000,7 +1014,7 @@ function DocumentsView({ documents }: any) {
   );
 }
 
-function TeachingsView({ teachings }: any) {
+function TeachingsView({ teachings, onReadInBook }: any) {
   const [selectedTeaching, setSelectedTeaching] = useState<any>(null);
 
   if (selectedTeaching) {
@@ -1016,6 +1030,19 @@ function TeachingsView({ teachings }: any) {
             <p className="font-body text-lg text-ink-100 leading-relaxed whitespace-pre-line">
               {selectedTeaching.passage || selectedTeaching.extracted_data?.description || 'No content available'}
             </p>
+            {onReadInBook && selectedTeaching.passage && (
+              <div className="mt-6 flex justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onReadInBook(selectedTeaching.passage.substring(0, 50))}
+                  className="flex items-center gap-2 px-6 py-3 bg-gold-400/20 border border-gold-400/40 rounded-full font-subheading text-sm text-gold-200 hover:bg-gold-400/30 transition-all"
+                >
+                  <Library className="w-4 h-4" />
+                  <span>Read in Book</span>
+                </motion.button>
+              </div>
+            )}
           </div>
         </div>
       </div>

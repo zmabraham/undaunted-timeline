@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, User, ArrowRight, BookOpen, Quote, ChevronLeft } from 'lucide-react';
+import { MapPin, Calendar, User, ArrowRight, BookOpen, Quote, ChevronLeft, Library } from 'lucide-react';
 
 interface EventDetailProps {
   event: any;
   places: any[];
   onSelectPerson: (person: any) => void;
   onBack?: () => void;
+  onReadInBook?: (text: string) => void;
 }
 
-export default function EventDetail({ event, onSelectPerson, onBack }: EventDetailProps) {
+export default function EventDetail({ event, onSelectPerson, onBack, onReadInBook }: EventDetailProps) {
   const extractPeople = () => {
     const passage = event.passage || '';
     const matches = passage.match(/(Rabbi [A-Z][a-z]+|Rebbe|The [A-Z][a-z]+)/g);
@@ -84,6 +85,19 @@ export default function EventDetail({ event, onSelectPerson, onBack }: EventDeta
           <p className="font-body text-xl leading-relaxed text-ink-100 italic pl-8">
             {event.passage}
           </p>
+          {onReadInBook && (
+            <div className="mt-6 flex justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onReadInBook(event.passage.substring(0, 50))}
+                className="flex items-center gap-2 px-6 py-3 bg-gold-400/20 border border-gold-400/40 rounded-full font-subheading text-sm text-gold-200 hover:bg-gold-400/30 transition-all"
+              >
+                <Library className="w-4 h-4" />
+                <span>Read in Book</span>
+              </motion.button>
+            </div>
+          )}
         </motion.div>
 
         {/* People Mentioned */}

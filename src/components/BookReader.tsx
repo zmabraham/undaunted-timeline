@@ -35,29 +35,39 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
   const [searchResults, setSearchResults] = useState<Array<{ chapter: number; paragraph: number; text: string }>>([]);
   const [activeFootnote, setActiveFootnote] = useState<Footnote | null>(null);
   const [footnotePosition, setFootnotePosition] = useState({ x: 0, y: 0 });
-  const [chapterFootnotes, setChapterFootnotes] = useState<Map<number, Footnote>>(new Map());
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Parse footnotes from text and store them
-  const parseFootnotes = (text: string): { text: string; footnotes: Map<number, Footnote> } => {
+  // Parse footnotes from text and return array of parts
+  const parseFootnotes = (text: string): Array<{ type: 'text' | 'footnote'; content: string; footnoteText?: string }> => {
+    const parts: Array<{ type: 'text' | 'footnote'; content: string; footnoteText?: string }> = [];
     const footnoteRegex = /\[\[(\d+):\s*([^\]]+)\]\]/g;
-    const footnotes = new Map<number, Footnote>();
-    let processedText = text;
+    let lastIndex = 0;
+    let match;
 
-    // Extract all footnotes and store in map
-    let footnoteMatch;
-    while ((footnoteMatch = footnoteRegex.exec(text)) !== null) {
-      const num = parseInt(footnoteMatch[1]);
-      const text_content = footnoteMatch[2].trim();
-      footnotes.set(num, { number: num, text: text_content });
+    while ((match = footnoteRegex.exec(text)) !== null) {
+      // Add text before this footnote
+      if (match.index > lastIndex) {
+        parts.push({ type: 'text', content: text.slice(lastIndex, match.index) });
+      }
+
+      // Add the footnote reference
+      const footnoteNum = match[1];
+      const footnoteText = match[2].trim();
+      parts.push({
+        type: 'footnote',
+        content: `[${footnoteNum}]`,
+        footnoteText
+      });
+
+      lastIndex = match.index + match[0].length;
     }
 
-    // Replace footnotes with clickable superscript numbers
-    processedText = text.replace(footnoteRegex, (_match, num) => {
-      return `<sup class="footnote-ref cursor-pointer text-gold-600 hover:text-gold-400 font-subheading text-xs align-super" data-footnote="${num}">[${num}]</sup>`;
-    });
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push({ type: 'text', content: text.slice(lastIndex) });
+    }
 
-    return { text: processedText, footnotes };
+    return parts;
   };
 
   // Handle footnote hover/click
@@ -71,57 +81,14 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
     setActiveFootnote(null);
   };
 
-  // Attach event listeners to footnote refs after content renders
+  // Close tooltip when clicking elsewhere
   useEffect(() => {
-    if (contentRef.current && chapterFootnotes.size > 0) {
-      const footnoteRefs = contentRef.current.querySelectorAll('.footnote-ref');
-
-      const cleanupFns: Array<() => void> = [];
-
-      footnoteRefs.forEach((ref: Element) => {
-        const element = ref as HTMLElement;
-        const footnoteNumStr = element.getAttribute('data-footnote');
-        if (!footnoteNumStr) return;
-
-        const footnoteNum = parseInt(footnoteNumStr);
-        const footnote = chapterFootnotes.get(footnoteNum);
-        if (!footnote) return;
-
-        const onMouseEnter = () => handleFootnoteEnter(footnote.text, element);
-        const onMouseLeave = handleFootnoteLeave;
-        const onClick = (e: Event) => {
-          e.stopPropagation();
-          handleFootnoteEnter(footnote.text, element);
-        };
-
-        element.addEventListener('mouseenter', onMouseEnter);
-        element.addEventListener('mouseleave', onMouseLeave);
-        element.addEventListener('click', onClick);
-
-        cleanupFns.push(() => {
-          element.removeEventListener('mouseenter', onMouseEnter);
-          element.removeEventListener('mouseleave', onMouseLeave);
-          element.removeEventListener('click', onClick);
-        });
-      });
-
-      return () => {
-        cleanupFns.forEach(fn => fn());
-      };
+    const handleClickOutside = () => setActiveFootnote(null);
+    if (activeFootnote) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
     }
-  }, [currentChapter, chapterFootnotes]);
-
-  // Collect footnotes from current chapter
-  useEffect(() => {
-    if (currentChapterData) {
-      const allFootnotes = new Map<number, Footnote>();
-      currentChapterData.paragraphs.forEach(paragraph => {
-        const { footnotes } = parseFootnotes(paragraph);
-        footnotes.forEach((fn, num) => allFootnotes.set(num, fn));
-      });
-      setChapterFootnotes(allFootnotes);
-    }
-  }, [currentChapter, bookData]);
+  }, [activeFootnote]);
 
   // Load book data
   useEffect(() => {
@@ -312,13 +279,32 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
             {/* Chapter content */}
             <div className="prose prose-parchment max-w-none">
               {currentChapterData.paragraphs.map((paragraph, index) => {
-                const { text } = parseFootnotes(paragraph);
+                const parts = parseFootnotes(paragraph);
                 return (
                   <p
                     key={index}
                     className="font-body text-base sm:text-lg leading-relaxed text-ink-100 mb-6"
-                    dangerouslySetInnerHTML={{ __html: text }}
-                  />
+                  >
+                    {parts.map((part, partIndex) => {
+                      if (part.type === 'footnote') {
+                        return (
+                          <sup
+                            key={partIndex}
+                            className="footnote-ref cursor-pointer text-gold-600 hover:text-gold-400 font-subheading text-xs align-super mx-0.5"
+                            onMouseEnter={(e) => handleFootnoteEnter(part.footnoteText || '', e.currentTarget)}
+                            onMouseLeave={handleFootnoteLeave}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleFootnoteEnter(part.footnoteText || '', e.currentTarget);
+                            }}
+                          >
+                            {part.content}
+                          </sup>
+                        );
+                      }
+                      return <span key={partIndex}>{part.content}</span>;
+                    })}
+                  </p>
                 );
               })}
             </div>

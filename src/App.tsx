@@ -99,19 +99,19 @@ function App() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-ink-500/90 backdrop-blur-md border-b border-gold-400/20">
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
 
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
               {view !== 'home' && (
                 <button
                   onClick={handleBack}
-                  className="px-4 py-2 font-subheading text-sm text-gold-300 hover:text-gold-200 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 font-subheading text-xs sm:text-sm text-gold-300 hover:text-gold-200 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all shrink-0"
                 >
-                  ← Return
+                  ← <span className="hidden sm:inline">Return</span>
                 </button>
               )}
-              <div>
-                <h1 className="font-display text-xl font-semibold text-gold-200">
+              <div className="min-w-0 flex-1">
+                <h1 className="font-display text-base sm:text-lg md:text-xl font-semibold text-gold-200 truncate">
                   {view === 'home' && 'Undaunted: The Living Timeline'}
                   {view === 'panorama' && 'Era Overview'}
                   {view === 'era' && selectedEra?.name}
@@ -130,7 +130,7 @@ function App() {
                   {view === 'search' && 'Search the Archives'}
                 </h1>
                 {view === 'home' && (
-                  <p className="font-body text-sm text-parchment-500 italic mt-0.5">
+                  <p className="font-body text-xs sm:text-sm text-parchment-500 italic mt-0.5 hidden sm:block">
                     A journey through Chabad history
                   </p>
                 )}
@@ -139,18 +139,18 @@ function App() {
             {view === 'home' && (
               <button
                 onClick={() => setView('search')}
-                className="p-2.5 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all"
+                className="p-2 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all shrink-0"
               >
-                <Search className="w-5 h-5 text-gold-300" />
+                <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gold-300" />
               </button>
             )}
           </div>
         </div>
       </header>
 
-      <main className="pt-24 h-screen">
+      <main className="pt-20 h-screen">
         {loading && (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full px-4">
             <div className="text-center">
               <motion.div
                 animate={{ rotate: 360 }}

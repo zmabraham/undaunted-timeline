@@ -20,26 +20,42 @@ function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const dataUrl = `${import.meta.env.BASE_URL || ''}/undaunted_merged_kg.json`.replace(/^\/\//, '/');
-    console.log('Fetching data from:', dataUrl);
+    // Try the direct path first (works in most cases)
+    const paths = [
+      '/undaunted_merged_kg.json',
+      './undaunted_merged_kg.json',
+      `${window.location.origin}/undaunted_merged_kg.json`
+    ];
 
-    fetch(dataUrl)
-      .then(r => {
-        console.log('Response status:', r.status);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.text();
-      })
-      .then(text => {
-        console.log('Data length:', text.length);
-        return JSON.parse(text);
-      })
-      .then(setData)
-      .catch(err => {
-        console.error('Failed to load data:', err);
-        setError(err.message);
-        setData(null);
-      })
-      .finally(() => setLoading(false));
+    const tryFetch = async (index = 0) => {
+      if (index >= paths.length) {
+        setError('Could not load timeline data');
+        setLoading(false);
+        return;
+      }
+
+      const path = paths[index];
+      console.log(`Trying path ${index + 1}:`, path);
+
+      try {
+        const response = await fetch(path);
+        if (response.ok) {
+          const text = await response.text();
+          console.log('Data loaded:', text.length, 'bytes');
+          const json = JSON.parse(text);
+          setData(json);
+          setLoading(false);
+        } else {
+          console.log(`Path ${index + 1} failed:`, response.status);
+          tryFetch(index + 1);
+        }
+      } catch (err) {
+        console.log(`Path ${index + 1} error:`, err);
+        tryFetch(index + 1);
+      }
+    };
+
+    tryFetch();
   }, []);
 
   const timelineData = useMemo(() => {

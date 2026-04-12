@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3 } from 'lucide-react';
+import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe } from 'lucide-react';
 import { ERAS, processTimelineData, type UndauntedData } from './data/undaunted-data';
 import TimelineView from './components/TimelineView';
 import EraView from './components/EraView';
@@ -8,7 +8,7 @@ import EventDetail from './components/EventDetail';
 import PersonProfile from './components/PersonProfile';
 import SearchPanel from './components/SearchPanel';
 
-type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'search';
+type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'institutions' | 'communities' | 'concepts' | 'documents' | 'allPlaces' | 'search';
 
 function App() {
   const [view, setView] = useState<View>('home');
@@ -58,7 +58,7 @@ function App() {
   }, []);
 
   const timelineData = useMemo(() => {
-    if (!data) return { events: [], people: [], places: [], topics: [], teachings: [], allEntities: [] };
+    if (!data) return { events: [], people: [], places: [], allPlaces: [], topics: [], teachings: [], institutions: [], communities: [], concepts: [], documents: [], allEntities: [] };
     return processTimelineData(data);
   }, [data]);
 
@@ -66,7 +66,7 @@ function App() {
     if (view === 'event' && selectedEra) {
       setView('era');
       setSelectedEvent(null);
-    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings') {
+    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings' || view === 'institutions' || view === 'communities' || view === 'concepts' || view === 'documents' || view === 'allPlaces') {
       setView('home');
       setSelectedEra(null);
     } else if (view === 'person') {
@@ -100,10 +100,15 @@ function App() {
                   {view === 'panorama' && 'Era Overview'}
                   {view === 'era' && selectedEra?.name}
                   {view === 'people' && 'Souls of History'}
+                  {view === 'allPlaces' && 'Places Directory'}
                   {view === 'timeline' && 'Interactive Timeline'}
-                  {view === 'map' && 'Geographic Journey'}
+                  {view === 'map' && 'Geographic Map'}
                   {view === 'topics' && 'Topics & Themes'}
                   {view === 'teachings' && 'The Teachings'}
+                  {view === 'institutions' && 'Institutions'}
+                  {view === 'communities' && 'Communities'}
+                  {view === 'concepts' && 'Concepts & Ideas'}
+                  {view === 'documents' && 'Documents'}
                   {view === 'event' && 'Event Chronicle'}
                   {view === 'person' && 'Soul Profile'}
                   {view === 'search' && 'Search the Archives'}
@@ -156,7 +161,9 @@ function App() {
                   people: timelineData.people.length,
                   places: timelineData.places.length,
                   topics: timelineData.topics.length,
-                  teachings: timelineData.teachings.length
+                  teachings: timelineData.teachings.length,
+                  institutions: timelineData.institutions.length,
+                  communities: timelineData.communities.length
                 }}
               />
             )}
@@ -237,6 +244,36 @@ function App() {
                 teachings={timelineData.teachings}
               />
             )}
+            {view === 'institutions' && (
+              <InstitutionsView
+                key="institutions"
+                institutions={timelineData.institutions}
+              />
+            )}
+            {view === 'communities' && (
+              <CommunitiesView
+                key="communities"
+                communities={timelineData.communities}
+              />
+            )}
+            {view === 'concepts' && (
+              <ConceptsView
+                key="concepts"
+                concepts={timelineData.concepts}
+              />
+            )}
+            {view === 'documents' && (
+              <DocumentsView
+                key="documents"
+                documents={timelineData.documents}
+              />
+            )}
+            {view === 'allPlaces' && (
+              <AllPlacesView
+                key="allPlaces"
+                places={timelineData.allPlaces}
+              />
+            )}
           </AnimatePresence>
         )}
       </main>
@@ -244,31 +281,18 @@ function App() {
       {/* Elegant Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-ink-500/90 backdrop-blur-md border-t border-gold-400/20">
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-center gap-6 font-subheading text-sm text-parchment-500">
-          <span className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-gold-500" />
-            {timelineData.events.length} Chronicles
-          </span>
-          <span className="text-gold-400/50">✦</span>
-          <span className="flex items-center gap-2">
-            <User className="w-4 h-4 text-gold-500" />
-            {timelineData.people.length} Souls
-          </span>
-          <span className="text-gold-400/50">✦</span>
-          <span className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-gold-500" />
-            {timelineData.places.length} Places
-          </span>
-          <span className="text-gold-400/50">✦</span>
-          <span className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-gold-500" />
-            {timelineData.teachings.length} Teachings
-          </span>
-          <span className="text-gold-400/50">✦</span>
-          <span className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-gold-500" />
-            {timelineData.topics.length} Topics
-          </span>
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-center gap-4 font-subheading text-xs text-parchment-500 flex-wrap">
+          <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-gold-500" /> {timelineData.events.length}</span>
+          <span className="text-gold-400/30">✦</span>
+          <span className="flex items-center gap-1"><User className="w-3 h-3 text-gold-500" /> {timelineData.people.length}</span>
+          <span className="text-gold-400/30">✦</span>
+          <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-gold-500" /> {timelineData.allPlaces.length}</span>
+          <span className="text-gold-400/30">✦</span>
+          <span className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-gold-500" /> {timelineData.teachings.length}</span>
+          <span className="text-gold-400/30">✦</span>
+          <span className="flex items-center gap-1"><Building2 className="w-3 h-3 text-gold-500" /> {timelineData.institutions.length}</span>
+          <span className="text-gold-400/30">✦</span>
+          <span className="flex items-center gap-1"><Users2 className="w-3 h-3 text-gold-500" /> {timelineData.communities.length}</span>
         </div>
       </footer>
     </div>
@@ -276,7 +300,7 @@ function App() {
 }
 
 // Home/Landing View Component
-function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; stats: { events: number; people: number; places: number; topics: number; teachings: number } }) {
+function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; stats: { events: number; people: number; places: number; topics: number; teachings: number; institutions: number; communities: number } }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -319,58 +343,106 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
               <div className="font-display text-4xl font-semibold text-gold-300">{stats.teachings}</div>
               <div className="font-subheading text-parchment-500">Teachings</div>
             </div>
+            <div className="text-center">
+              <div className="font-display text-4xl font-semibold text-gold-300">{stats.institutions}</div>
+              <div className="font-subheading text-parchment-500">Institutions</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-4xl font-semibold text-gold-300">{stats.communities}</div>
+              <div className="font-subheading text-parchment-500">Communities</div>
+            </div>
           </div>
         </motion.div>
 
         {/* Entry Points */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
           <EntryCard
-            icon={<Clock3 className="w-12 h-12" />}
+            icon={<Clock3 className="w-10 h-10" />}
             title="Era Overview"
-            description="Explore five defining eras of Chabad leadership"
+            description="Explore four defining eras of Chabad leadership"
             onClick={() => onNavigate('panorama')}
-            delay={0.1}
+            delay={0.05}
             color="#8B5CF6"
           />
           <EntryCard
-            icon={<User className="w-12 h-12" />}
+            icon={<User className="w-10 h-10" />}
             title="People Directory"
             description="Master biographies with associated events"
             onClick={() => onNavigate('people')}
-            delay={0.2}
+            delay={0.1}
             color="#3B82F6"
           />
           <EntryCard
-            icon={<MapPin className="w-12 h-12" />}
-            title="Interactive Map"
-            description="Geographic journey through history"
-            onClick={() => onNavigate('map')}
-            delay={0.3}
+            icon={<Globe className="w-10 h-10" />}
+            title="Places Directory"
+            description="All locations mentioned in the chronicles"
+            onClick={() => onNavigate('allPlaces')}
+            delay={0.15}
             color="#10B981"
           />
           <EntryCard
-            icon={<BookOpen className="w-12 h-12" />}
+            icon={<MapPin className="w-10 h-10" />}
+            title="Interactive Map"
+            description="Geographic journey through history"
+            onClick={() => onNavigate('map')}
+            delay={0.2}
+            color="#059669"
+          />
+          <EntryCard
+            icon={<BookOpen className="w-10 h-10" />}
             title="Topics & Themes"
             description="Alphabetical exploration of subjects"
             onClick={() => onNavigate('topics')}
-            delay={0.4}
+            delay={0.25}
             color="#F59E0B"
           />
           <EntryCard
-            icon={<Crown className="w-12 h-12" />}
+            icon={<Crown className="w-10 h-10" />}
             title="The Teachings"
             description="Wisdom and insights from the Rebbes"
             onClick={() => onNavigate('teachings')}
-            delay={0.5}
+            delay={0.3}
             color="#EC4899"
           />
           <EntryCard
-            icon={<Clock3 className="w-12 h-12" />}
+            icon={<Building2 className="w-10 h-10" />}
+            title="Institutions"
+            description="Yeshivas, organizations, foundations"
+            onClick={() => onNavigate('institutions')}
+            delay={0.35}
+            color="#6366F1"
+          />
+          <EntryCard
+            icon={<Users2 className="w-10 h-10" />}
+            title="Communities"
+            description="Jewish communities around the world"
+            onClick={() => onNavigate('communities')}
+            delay={0.4}
+            color="#8B5CF6"
+          />
+          <EntryCard
+            icon={<Lightbulb className="w-10 h-10" />}
+            title="Concepts & Ideas"
+            description="Philosophical concepts and themes"
+            onClick={() => onNavigate('concepts')}
+            delay={0.45}
+            color="#F59E0B"
+          />
+          <EntryCard
+            icon={<FileText className="w-10 h-10" />}
+            title="Documents"
+            description="Source documents, letters, writings"
+            onClick={() => onNavigate('documents')}
+            delay={0.5}
+            color="#64748B"
+          />
+          <EntryCard
+            icon={<Clock3 className="w-10 h-10" />}
             title="Interactive Timeline"
             description="Visual chronology with expandable events"
             onClick={() => onNavigate('timeline')}
-            delay={0.6}
-            color="#6366F1"
+            delay={0.55}
+            color="#3B82F6"
           />
         </div>
       </div>
@@ -421,13 +493,30 @@ function PeopleDirectory({ people, events: _events, onSelectPerson }: any) {
   return (
     <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
       <div className="max-w-7xl mx-auto">
-        <h2 className="font-display text-4xl text-gold-200 text-center mb-8">People Directory</h2>
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+          <User className="w-6 h-6 text-gold-400" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+        </div>
+        <h2 className="font-display text-5xl text-gold-200 text-center mb-4">People Directory</h2>
+        <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
+          Souls who shaped Chabad history
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {people.slice(0, 50).map((person: any, i: number) => (
-            <div key={i} onClick={() => onSelectPerson(person)} className="bg-parchment-100/80 p-4 rounded-lg border border-gold-400/30 cursor-pointer hover:border-gold-400">
-              <h3 className="font-display text-lg text-ink-200">{person.extracted_data?.name || 'Unknown'}</h3>
-            </div>
-          ))}
+          {people.slice(0, 100).map((person: any, i: number) => {
+            const name = person.extracted_data?.name || person.node_type === 'PEOPLE' ? person.passage?.split(' ').slice(0, 3).join(' ') : 'Unknown';
+            return (
+              <div key={i} onClick={() => onSelectPerson(person)} className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-5 cursor-pointer hover:border-gold-400 transition-all">
+                <h3 className="font-display text-lg text-ink-200">{name}</h3>
+                {person.extracted_data?.title && (
+                  <p className="font-subheading text-sm text-gold-700">{person.extracted_data.title}</p>
+                )}
+                {person.extracted_data?.role && (
+                  <p className="font-body text-sm text-parchment-600">{person.extracted_data.role}</p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -481,6 +570,136 @@ function TopicsView({ topics, entities: _entities, onSelectEvent: _onSelectEvent
               </div>
             );
           })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AllPlacesView({ places }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+          <Globe className="w-6 h-6 text-gold-400" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+        </div>
+        <h2 className="font-display text-5xl text-gold-200 text-center mb-4">Places Directory</h2>
+        <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
+          Locations mentioned throughout the chronicles
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {places.slice(0, 100).map((place: any, i: number) => (
+            <div key={i} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-4">
+              <h3 className="font-display text-lg text-ink-200">{place.name}</h3>
+              <p className="font-body text-sm text-ink-100 line-clamp-2">{place.passage?.substring(0, 100)}...</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InstitutionsView({ institutions }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+          <Building2 className="w-6 h-6 text-gold-400" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+        </div>
+        <h2 className="font-display text-5xl text-gold-200 text-center mb-4">Institutions</h2>
+        <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
+          Yeshivas, organizations, and foundations
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {institutions.map((inst: any, i: number) => (
+            <div key={i} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5">
+              <h3 className="font-display text-lg text-ink-200 mb-2">{inst.extracted_data?.name || inst.extracted_data?.institution || 'Institution'}</h3>
+              <p className="font-body text-sm text-ink-100 line-clamp-3">{inst.passage || inst.extracted_data?.description || ''}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CommunitiesView({ communities }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+          <Users2 className="w-6 h-6 text-gold-400" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+        </div>
+        <h2 className="font-display text-5xl text-gold-200 text-center mb-4">Communities</h2>
+        <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
+          Jewish communities around the world
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {communities.map((comm: any, i: number) => (
+            <div key={i} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5">
+              <h3 className="font-display text-lg text-ink-200 mb-2">{comm.extracted_data?.name || comm.extracted_data?.community || 'Community'}</h3>
+              <p className="font-body text-sm text-ink-100 line-clamp-3">{comm.passage || comm.extracted_data?.description || ''}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConceptsView({ concepts }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+          <Lightbulb className="w-6 h-6 text-gold-400" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+        </div>
+        <h2 className="font-display text-5xl text-gold-200 text-center mb-4">Concepts & Ideas</h2>
+        <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
+          Philosophical concepts and themes
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {concepts.map((conc: any, i: number) => (
+            <div key={i} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5">
+              <h3 className="font-display text-lg text-ink-200 mb-2">{conc.extracted_data?.name || conc.extracted_data?.concept || 'Concept'}</h3>
+              <p className="font-body text-sm text-ink-100 line-clamp-3">{conc.passage || conc.extracted_data?.description || ''}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DocumentsView({ documents }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+          <FileText className="w-6 h-6 text-gold-400" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+        </div>
+        <h2 className="font-display text-5xl text-gold-200 text-center mb-4">Documents</h2>
+        <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
+          Source documents, letters, and writings
+        </p>
+        <div className="space-y-4">
+          {documents.map((doc: any, i: number) => (
+            <div key={i} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5">
+              <h3 className="font-display text-lg text-ink-200 mb-2">{doc.extracted_data?.title || doc.extracted_data?.name || 'Document'}</h3>
+              <p className="font-body text-sm text-ink-100 line-clamp-3">{doc.passage || doc.extracted_data?.description || ''}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

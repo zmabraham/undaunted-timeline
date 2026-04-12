@@ -31,6 +31,22 @@ export function processTimelineData(data: UndauntedData) {
     e.node_type.toLowerCase().includes('teaching')
   );
 
+  const institutions = data.entities.filter(e =>
+    e.node_type.toLowerCase().includes('institution')
+  );
+
+  const communities = data.entities.filter(e =>
+    e.node_type.toLowerCase().includes('community')
+  );
+
+  const concepts = data.entities.filter(e =>
+    e.node_type.toLowerCase().includes('concept')
+  );
+
+  const documents = data.entities.filter(e =>
+    e.node_type.toLowerCase().includes('document')
+  );
+
   // Extract years from events for timeline
   const timelineEvents = events
     .map(e => {
@@ -80,12 +96,23 @@ export function processTimelineData(data: UndauntedData) {
       name: p.extracted_data?.name || p.extracted_data?.location || 'Unknown'
     }));
 
+  // All places (not just geolocated)
+  const allPlaces = places.map(p => ({
+    ...p,
+    name: p.extracted_data?.name || p.extracted_data?.location || p.passage?.substring(0, 50) || 'Unknown'
+  })).sort((a, b) => a.name.localeCompare(b.name));
+
   return {
     events: timelineEvents,
     people,
     places: geolocatedPlaces,
+    allPlaces,
     topics,
     teachings,
+    institutions,
+    communities,
+    concepts,
+    documents,
     allEntities: data.entities
   };
 }

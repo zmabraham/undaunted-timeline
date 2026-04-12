@@ -152,16 +152,32 @@ function App() {
         {loading && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <Crown className="w-12 h-12 text-gold-400 mx-auto mb-4 animate-pulse" />
-              <p className="font-subheading text-parchment-400 text-lg">Loading the archives...</p>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className="w-16 h-16 mx-auto mb-6"
+              >
+                <Crown className="w-full h-full text-gold-400" />
+              </motion.div>
+              <p className="font-subheading text-parchment-400 text-lg mb-2">Loading the archives...</p>
+              <p className="font-body text-parchment-600 text-sm">Preparing the timeline of history</p>
             </div>
           </div>
         )}
         {error && (
           <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <p className="font-display text-red-400 text-xl mb-2">Failed to Load</p>
-              <p className="font-body text-parchment-500">{error}</p>
+            <div className="text-center max-w-md">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-900/30 flex items-center justify-center">
+                <span className="text-3xl">⚠</span>
+              </div>
+              <p className="font-display text-red-400 text-xl mb-2">Unable to Load Archives</p>
+              <p className="font-body text-parchment-500 mb-6">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-6 py-2 bg-gold-400/20 border border-gold-400/40 rounded-full text-gold-300 hover:bg-gold-400/30 transition-all font-subheading"
+              >
+                Retry
+              </button>
             </div>
           </div>
         )}

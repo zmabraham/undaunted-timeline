@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe, Network } from 'lucide-react';
+import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe, Network, Quote as QuoteIcon } from 'lucide-react';
 import { ERAS, processTimelineData, type UndauntedData } from './data/undaunted-data';
 import TimelineView from './components/TimelineView';
 import EraView from './components/EraView';
@@ -8,8 +8,9 @@ import EventDetail from './components/EventDetail';
 import PersonProfile from './components/PersonProfile';
 import SearchPanel from './components/SearchPanel';
 import KnowledgeGraphView from './components/KnowledgeGraphView';
+import QuotesView from './components/QuotesView';
 
-type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'institutions' | 'communities' | 'concepts' | 'documents' | 'allPlaces' | 'search' | 'knowledgeGraph';
+type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'institutions' | 'communities' | 'concepts' | 'documents' | 'allPlaces' | 'search' | 'knowledgeGraph' | 'quotes';
 
 function App() {
   const [view, setView] = useState<View>('home');
@@ -84,7 +85,7 @@ function App() {
   }, []);
 
   const timelineData = useMemo(() => {
-    if (!data) return { events: [], people: [], places: [], allPlaces: [], topics: [], teachings: [], institutions: [], communities: [], concepts: [], documents: [], allEntities: [] };
+    if (!data) return { events: [], people: [], places: [], allPlaces: [], topics: [], teachings: [], institutions: [], communities: [], concepts: [], documents: [], quotes: [], allEntities: [] };
     return processTimelineData(data);
   }, [data]);
 
@@ -92,7 +93,7 @@ function App() {
     if (view === 'event' && selectedEra) {
       setView('era');
       setSelectedEvent(null);
-    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings' || view === 'institutions' || view === 'communities' || view === 'concepts' || view === 'documents' || view === 'allPlaces' || view === 'knowledgeGraph') {
+    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings' || view === 'institutions' || view === 'communities' || view === 'concepts' || view === 'documents' || view === 'allPlaces' || view === 'knowledgeGraph' || view === 'quotes') {
       setView('home');
       setSelectedEra(null);
     } else if (view === 'person') {
@@ -178,6 +179,7 @@ function App() {
                   {view === 'communities' && 'Communities'}
                   {view === 'concepts' && 'Concepts & Ideas'}
                   {view === 'documents' && 'Documents'}
+                  {view === 'quotes' && 'Quotes from the Rebbes'}
                   {view === 'event' && 'Event Chronicle'}
                   {view === 'person' && 'Soul Profile'}
                   {view === 'search' && 'Search the Archives'}
@@ -387,6 +389,12 @@ function App() {
                 }}
               />
             )}
+            {view === 'quotes' && (
+              <QuotesView
+                key="quotes"
+                quotes={timelineData.quotes}
+              />
+            )}
             </motion.div>
           </AnimatePresence>
         )}
@@ -495,19 +503,27 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             color="#10B981"
           />
           <EntryCard
+            icon={<QuoteIcon className="w-8 h-8" />}
+            title="Quotes"
+            description="Wisdom from the Rebbes"
+            onClick={() => onNavigate('quotes')}
+            delay={0.2}
+            color="#EC4899"
+          />
+          <EntryCard
             icon={<BookOpen className="w-8 h-8" />}
             title="Topics & Themes"
             description="Alphabetical subject index"
             onClick={() => onNavigate('topics')}
-            delay={0.2}
+            delay={0.25}
             color="#F59E0B"
           />
           <EntryCard
             icon={<Crown className="w-8 h-8" />}
             title="The Teachings"
-            description="Wisdom from the Rebbes"
+            description="Wisdom and discourses"
             onClick={() => onNavigate('teachings')}
-            delay={0.25}
+            delay={0.3}
             color="#EC4899"
           />
           <EntryCard
@@ -515,40 +531,32 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             title="Institutions"
             description="Yeshivas & organizations"
             onClick={() => onNavigate('institutions')}
-            delay={0.3}
-            color="#6366F1"
-          />
-          <EntryCard
-            icon={<Users2 className="w-8 h-8" />}
-            title="Communities"
-            description="Jewish communities worldwide"
-            onClick={() => onNavigate('communities')}
             delay={0.35}
-            color="#8B5CF6"
-          />
-          <EntryCard
-            icon={<Lightbulb className="w-8 h-8" />}
-            title="Concepts & Ideas"
-            description="Philosophical concepts and themes"
-            onClick={() => onNavigate('concepts')}
-            delay={0.4}
-            color="#F59E0B"
-          />
-          <EntryCard
-            icon={<FileText className="w-8 h-8" />}
-            title="Documents"
-            description="Source documents and writings"
-            onClick={() => onNavigate('documents')}
-            delay={0.45}
-            color="#6B7280"
+            color="#6366F1"
           />
           <EntryCard
             icon={<Network className="w-8 h-8" />}
             title="Knowledge Graph"
             description="Interactive visual network"
             onClick={() => onNavigate('knowledgeGraph')}
-            delay={0.5}
+            delay={0.4}
             color="#06B6D4"
+          />
+          <EntryCard
+            icon={<Lightbulb className="w-8 h-8" />}
+            title="Concepts & Ideas"
+            description="Philosophical concepts"
+            onClick={() => onNavigate('concepts')}
+            delay={0.45}
+            color="#F59E0B"
+          />
+          <EntryCard
+            icon={<Clock3 className="w-8 h-8" />}
+            title="Timeline"
+            description="Visual chronology"
+            onClick={() => onNavigate('timeline')}
+            delay={0.5}
+            color="#3B82F6"
           />
         </div>
       </div>

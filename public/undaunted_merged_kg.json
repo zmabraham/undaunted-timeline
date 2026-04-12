@@ -1,7 +1,7 @@
 {
   "source_book": "undaunted",
   "title": "Undaunted: Merged Knowledge Graph",
-  "total_unique_entities": 993,
+  "total_unique_entities": 1006,
   "original_entity_count": 1491,
   "duplicates_removed": 498,
   "extraction_date": "2026-04-12",
@@ -14988,6 +14988,136 @@
       "extracted_data": {
         "name": "Rebbe Maharash",
         "chapter": "11"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"Please ask anash in my name to limit visiting me for services, maamarim, or yechidut. Only if it's a pressing issue should they come, but they should use discretion.\"",
+      "extracted_data": {
+        "quote": "Please ask anash in my name to limit visiting me for services, maamarim, or yechidut. Only if it's a pressing issue should they come, but they should use discretion.",
+        "speaker": "Rashab (Rabbi Shalom Dovber)",
+        "source_chapter": 1,
+        "context": "Instructions to Chasidim about visits"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"I was walking from school to eat lunch. The market was packed with farmers, horses, and buggies.\"",
+      "extracted_data": {
+        "quote": "I was walking from school to eat lunch. The market was packed with farmers, horses, and buggies.",
+        "speaker": "Rabbi Yosef Yitzchak (Rayatz)",
+        "source_chapter": 1,
+        "context": "Diary entry describing yarmarka"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"I hope G-d will give me a decent profit.\"",
+      "extracted_data": {
+        "quote": "I hope G-d will give me a decent profit.",
+        "speaker": "Reb Dovid the Butcher",
+        "source_chapter": 1,
+        "context": "Market day in Lubavitch"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"My mother, wife, daughters, and son-in-law stood shocked, their faces white as plaster and their eyes filled with tears. At that moment, no words were to be found. They gazed at me with wonderment, hope and longing, mercy and supplication, not uttering a word.\"",
+      "extracted_data": {
+        "quote": "My mother, wife, daughters, and son-in-law stood shocked, their faces white as plaster and their eyes filled with tears. At that moment, no words were to be found. They gazed at me with wonderment, hope and longing, mercy and supplication, not uttering a word.",
+        "speaker": "Rayatz (Rabbi Yosef Yitzchak)",
+        "source_chapter": 4,
+        "context": "Description of arrest scene"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"This, all the nations of the world must know: Only our bodies were sent into exile and subjugated to alien rule; our souls were not given over into captivity and foreign rule. We must proclaim openly and before all that any matter affecting the Jewish religion, the Torah and its mitzvot and customs, is not subject to the coercion of others. No one can impose his belief upon us, nor coerce us to conduct ourselves contrary to our beliefs.\"",
+      "extracted_data": {
+        "quote": "This, all the nations of the world must know: Only our bodies were sent into exile and subjugated to alien rule; our souls were not given over into captivity and foreign rule. We must proclaim openly and before all that any matter affecting the Jewish religion, the Torah and its mitzvot and customs, is not subject to the coercion of others. No one can impose his belief upon us, nor coerce us to conduct ourselves contrary to our beliefs.",
+        "speaker": "Rayatz (Rabbi Yosef Yitzchak)",
+        "source_chapter": 4,
+        "context": "Defiant statement against Soviet persecution"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"If one is sentenced to be taken to Shpalerka, it is for one of two reasons. Either judgment has already been rendered, or it is for questioning – and particularly for [coerced] investigation.\"",
+      "extracted_data": {
+        "quote": "If one is sentenced to be taken to Shpalerka, it is for one of two reasons. Either judgment has already been rendered, or it is for questioning – and particularly for [coerced] investigation.",
+        "speaker": "Rayatz (Rabbi Yosef Yitzchak)",
+        "source_chapter": 4,
+        "context": "Explaining prison procedures"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"This very day you will return home. You will be asked a few questions by the director of the prison and then permitted to return home.\"",
+      "extracted_data": {
+        "quote": "This very day you will return home. You will be asked a few questions by the director of the prison and then permitted to return home.",
+        "speaker": "Fellow Prisoner",
+        "source_chapter": 4,
+        "context": "Reassurance during imprisonment"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"Can't you find another son-in-law?\"",
+      "extracted_data": {
+        "quote": "Can't you find another son-in-law?",
+        "speaker": "Russian Officials",
+        "source_chapter": 6,
+        "context": "Opposition to Rayatz's daughter's marriage"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"A son-in-law like him I can't find there.\"",
+      "extracted_data": {
+        "quote": "A son-in-law like him I can't find there.",
+        "speaker": "Rayatz (Rabbi Yosef Yitzchak)",
+        "source_chapter": 6,
+        "context": "Response to officials about son-in-law"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"I realized right away there were major expenses.\"",
+      "extracted_data": {
+        "quote": "I realized right away there were major expenses.",
+        "speaker": "Yehuda Chitrik",
+        "source_chapter": 6,
+        "context": "Regarding wedding arrangements"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"Once you reach it, turn to one of the recording secretaries, and she will give you a questionnaire that you will respond to in writing.\"",
+      "extracted_data": {
+        "quote": "Once you reach it, turn to one of the recording secretaries, and she will give you a questionnaire that you will respond to in writing.",
+        "speaker": "Prison Guard",
+        "source_chapter": 4,
+        "context": "Instructions for prison processing"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"they would be the key to the future of Orthodox Judaism\"",
+      "extracted_data": {
+        "quote": "they would be the key to the future of Orthodox Judaism",
+        "speaker": "Rashab (Rabbi Shalom Dovber)",
+        "source_chapter": 1,
+        "context": "Regarding the Tomchei Temimim yeshiva students"
+      }
+    },
+    {
+      "node_type": "QUOTE",
+      "passage": "\"as the potential of spiritual revival\"",
+      "extracted_data": {
+        "quote": "as the potential of spiritual revival",
+        "speaker": "Rashab (Rabbi Shalom Dovber)",
+        "source_chapter": 1,
+        "context": "Vision for the yeshiva"
       }
     }
   ]

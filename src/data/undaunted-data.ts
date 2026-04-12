@@ -47,6 +47,10 @@ export function processTimelineData(data: UndauntedData) {
     e.node_type.toLowerCase().includes('document')
   );
 
+  const quotes = data.entities.filter(e =>
+    e.node_type.toLowerCase().includes('quote')
+  );
+
   // Extract years from events for timeline
   const timelineEvents = events
     .map(e => {
@@ -113,6 +117,7 @@ export function processTimelineData(data: UndauntedData) {
     communities,
     concepts,
     documents,
+    quotes,
     allEntities: data.entities
   };
 }

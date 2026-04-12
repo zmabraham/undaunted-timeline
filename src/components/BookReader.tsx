@@ -35,18 +35,21 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
   const [searchResults, setSearchResults] = useState<Array<{ chapter: number; paragraph: number; text: string }>>([]);
   const [activeFootnote, setActiveFootnote] = useState<Footnote | null>(null);
   const [footnotePosition, setFootnotePosition] = useState({ x: 0, y: 0 });
+  const [chapterFootnotes, setChapterFootnotes] = useState<Map<number, Footnote>>(new Map());
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Parse footnotes from text
-  const parseFootnotes = (text: string): { text: string; footnotes: Footnote[] } => {
+  // Parse footnotes from text and store them
+  const parseFootnotes = (text: string): { text: string; footnotes: Map<number, Footnote> } => {
     const footnoteRegex = /\[\[(\d+):\s*([^\]]+)\]\]/g;
-    const footnotes: Footnote[] = [];
+    const footnotes = new Map<number, Footnote>();
     let processedText = text;
 
-    // Extract all footnotes
+    // Extract all footnotes and store in map
     let footnoteMatch;
     while ((footnoteMatch = footnoteRegex.exec(text)) !== null) {
-      footnotes.push({ number: parseInt(footnoteMatch[1]), text: footnoteMatch[2].trim() });
+      const num = parseInt(footnoteMatch[1]);
+      const text_content = footnoteMatch[2].trim();
+      footnotes.set(num, { number: num, text: text_content });
     }
 
     // Replace footnotes with clickable superscript numbers
@@ -70,32 +73,53 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
 
   // Attach event listeners to footnote refs after content renders
   useEffect(() => {
-    if (contentRef.current) {
+    if (contentRef.current && chapterFootnotes.size > 0) {
       const footnoteRefs = contentRef.current.querySelectorAll('.footnote-ref');
+
+      const cleanupFns: Array<() => void> = [];
+
       footnoteRefs.forEach((ref: Element) => {
         const element = ref as HTMLElement;
-        const footnoteNum = element.getAttribute('data-footnote');
+        const footnoteNumStr = element.getAttribute('data-footnote');
+        if (!footnoteNumStr) return;
 
-        // Find the footnote text from all footnotes in current chapter
-        const fullText = contentRef.current?.textContent || '';
-        const footnoteMatch = fullText.match(new RegExp(`\\[\\[${footnoteNum}:\\s*([^\\]]+)\\]\\]`));
-        const footnoteText = footnoteMatch ? footnoteMatch[1].trim() : '';
+        const footnoteNum = parseInt(footnoteNumStr);
+        const footnote = chapterFootnotes.get(footnoteNum);
+        if (!footnote) return;
 
-        element.addEventListener('mouseenter', () => handleFootnoteEnter(footnoteText, element));
-        element.addEventListener('mouseleave', handleFootnoteLeave);
-        element.addEventListener('click', (e) => {
+        const onMouseEnter = () => handleFootnoteEnter(footnote.text, element);
+        const onMouseLeave = handleFootnoteLeave;
+        const onClick = (e: Event) => {
           e.stopPropagation();
-          handleFootnoteEnter(footnoteText, element);
+          handleFootnoteEnter(footnote.text, element);
+        };
+
+        element.addEventListener('mouseenter', onMouseEnter);
+        element.addEventListener('mouseleave', onMouseLeave);
+        element.addEventListener('click', onClick);
+
+        cleanupFns.push(() => {
+          element.removeEventListener('mouseenter', onMouseEnter);
+          element.removeEventListener('mouseleave', onMouseLeave);
+          element.removeEventListener('click', onClick);
         });
       });
 
       return () => {
-        footnoteRefs.forEach((ref: Element) => {
-          const element = ref as HTMLElement;
-          element.removeEventListener('mouseenter', () => {});
-          element.removeEventListener('mouseleave', () => {});
-        });
+        cleanupFns.forEach(fn => fn());
       };
+    }
+  }, [currentChapter, chapterFootnotes]);
+
+  // Collect footnotes from current chapter
+  useEffect(() => {
+    if (currentChapterData) {
+      const allFootnotes = new Map<number, Footnote>();
+      currentChapterData.paragraphs.forEach(paragraph => {
+        const { footnotes } = parseFootnotes(paragraph);
+        footnotes.forEach((fn, num) => allFootnotes.set(num, fn));
+      });
+      setChapterFootnotes(allFootnotes);
     }
   }, [currentChapter, bookData]);
 

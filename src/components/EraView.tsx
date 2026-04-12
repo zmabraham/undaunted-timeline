@@ -19,7 +19,7 @@ interface EraViewProps {
 export default function EraView({ era, events, onSelectEvent, onSelectPerson }: EraViewProps) {
   const getEraPeople = () => {
     const mentioned = new Set<string>();
-    events.forEach(evt => {
+    events.forEach((evt: any) => {
       const passage = evt.passage || '';
       const matches = passage.match(/(Rabbi [A-Z][a-z]+|Rebbe|The [A-Z][a-z]+)/g);
       matches?.forEach((m: string) => mentioned.add(m));
@@ -48,12 +48,12 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
           >
             {era.years}
           </div>
-          <h2 className="text-4xl font-bold mb-4">{era.name}</h2>
+          <h2 className="text-4xl font-bold mb-4 text-white">{era.name}</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">{era.description}</p>
         </motion.div>
 
         <div className="mb-12">
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
+          <h3 className="text-xl font-semibold mb-6 flex items-center gap-2 text-white">
             <Calendar className="w-5 h-5 text-amber-400" />
             Key Events
           </h3>
@@ -73,7 +73,7 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
                     {event.year}
                   </div>
                 )}
-                <h4 className="font-medium mb-2 line-clamp-2">
+                <h4 className="font-medium mb-2 line-clamp-2 text-white">
                   {event.extracted_data?.event || event.extracted_data?.description || 'Event'}
                 </h4>
                 <p className="text-sm text-slate-400 line-clamp-3">
@@ -86,7 +86,7 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
 
         {eraPeople.length > 0 && (
           <div>
-            <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
+            <h3 className="text-xl font-semibold mb-6 flex items-center gap-2 text-white">
               <User className="w-5 h-5 text-amber-400" />
               People of This Era
             </h3>
@@ -99,7 +99,7 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ scale: 1.05 }}
                   onClick={() => onSelectPerson({ extracted_data: { name: person }, passage: '' })}
-                  className="px-4 py-2 bg-slate-800/50 border border-white/10 rounded-full text-sm hover:border-amber-500/30 transition-all"
+                  className="px-4 py-2 bg-slate-800/50 border border-white/10 rounded-full text-sm text-slate-200 hover:border-amber-500/30 transition-all"
                 >
                   {person}
                 </motion.button>

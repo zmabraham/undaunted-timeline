@@ -68,52 +68,58 @@ export default function TimelineView({ eras, events, onSelectEra }: TimelineView
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className="relative cursor-pointer group"
-                onClick={() => onSelectEra(era)}
+                className="relative group"
               >
-                {/* Era Card */}
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative bg-slate-800/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 w-64 hover:border-amber-500/50 transition-all"
-                  style={{
-                    boxShadow: `0 0 30px ${era.color}20`
-                  }}
+                <div
+                  className="cursor-pointer"
+                  onClick={() => onSelectEra(era)}
                 >
-                  {/* Era Indicator Line */}
-                  <div
-                    className="absolute -top-8 left-1/2 w-0.5 h-8"
-                    style={{ backgroundColor: era.color }}
-                  />
-                  <div
-                    className="absolute -top-10 left-1/2 w-4 h-4 rounded-full transform -translate-x-1/2 animate-pulse"
-                    style={{ backgroundColor: era.color, boxShadow: `0 0 20px ${era.color}` }}
-                  />
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative bg-slate-800/50 backdrop-blur-sm border-2 border-white/20 rounded-2xl p-6 w-64 hover:border-amber-500 transition-all"
+                    style={{
+                      boxShadow: `0 0 30px ${era.color}20`
+                    }}
+                  >
+                    {/* Era Indicator Line */}
+                    <div
+                      className="absolute -top-8 left-1/2 w-0.5 h-8"
+                      style={{ backgroundColor: era.color }}
+                    />
+                    <div
+                      className="absolute -top-10 left-1/2 w-4 h-4 rounded-full transform -translate-x-1/2 animate-pulse"
+                      style={{ backgroundColor: era.color, boxShadow: `0 0 20px ${era.color}` }}
+                    />
 
-                  {/* Content */}
-                  <h3 className="text-2xl font-bold mb-1" style={{ color: era.color }}>
-                    {era.name}
-                  </h3>
-                  <p className="text-slate-400 text-sm mb-3">{era.years}</p>
-                  <p className="text-slate-300 text-sm leading-relaxed">{era.description}</p>
+                    {/* Content */}
+                    <h3 className="text-2xl font-bold mb-1" style={{ color: era.color }}>
+                      {era.name}
+                    </h3>
+                    <p className="text-slate-400 text-sm mb-3">{era.years}</p>
+                    <p className="text-slate-300 text-sm leading-relaxed mb-4">{era.description}</p>
 
-                  {/* Event Density Indicator */}
-                  <div className="mt-4 flex items-center gap-2">
-                    <div className="flex-1 h-1 bg-slate-700 rounded-full overflow-hidden">
-                      <div
-                        className="h-full transition-all duration-500"
-                        style={{
-                          width: `${Math.min(eventCount * 5, 100)}%`,
-                          backgroundColor: era.color
-                        }}
-                      />
+                    {/* Event Density Indicator */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="flex-1 h-1 bg-slate-700 rounded-full overflow-hidden">
+                        <div
+                          className="h-full transition-all duration-500"
+                          style={{
+                            width: `${Math.min(eventCount * 5, 100)}%`,
+                            backgroundColor: era.color
+                          }}
+                        />
+                      </div>
+                      <span className="text-xs text-slate-500">{eventCount} events</span>
                     </div>
-                    <span className="text-xs text-slate-500">{eventCount} events</span>
-                  </div>
 
-                  {/* Hover Arrow */}
-                  <ChevronRight className="absolute bottom-4 right-4 w-5 h-5 text-slate-500 group-hover:text-amber-400 transition-colors" />
-                </motion.div>
+                    {/* Click hint */}
+                    <div className="flex items-center justify-between text-xs text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span>Click to explore</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </motion.div>
+                </div>
               </motion.div>
             );
           })}

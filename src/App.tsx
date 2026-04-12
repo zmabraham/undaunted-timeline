@@ -368,7 +368,7 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
         </motion.div>
 
         {/* Entry Points - more compact */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 max-w-6xl mx-auto">
           <EntryCard
             icon={<Clock3 className="w-8 h-8" />}
             title="Era Overview"
@@ -426,11 +426,27 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             color="#8B5CF6"
           />
           <EntryCard
+            icon={<Lightbulb className="w-8 h-8" />}
+            title="Concepts & Ideas"
+            description="Philosophical concepts and themes"
+            onClick={() => onNavigate('concepts')}
+            delay={0.4}
+            color="#F59E0B"
+          />
+          <EntryCard
+            icon={<FileText className="w-8 h-8" />}
+            title="Documents"
+            description="Source documents and writings"
+            onClick={() => onNavigate('documents')}
+            delay={0.45}
+            color="#6B7280"
+          />
+          <EntryCard
             icon={<Clock3 className="w-8 h-8" />}
             title="Interactive Timeline"
             description="Visual chronology with details"
             onClick={() => onNavigate('timeline')}
-            delay={0.4}
+            delay={0.5}
             color="#3B82F6"
           />
         </div>

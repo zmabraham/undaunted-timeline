@@ -12,6 +12,22 @@ type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timel
 
 function App() {
   const [view, setView] = useState<View>('home');
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (view === 'home') return;
+        handleBack();
+      }
+      if (e.key === '/' && view === 'home') {
+        e.preventDefault();
+        setView('search');
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [view]);
   const [selectedEra, setSelectedEra] = useState<typeof ERAS[number] | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedPerson, setSelectedPerson] = useState<any>(null);
@@ -315,7 +331,7 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="h-px w-20 bg-gradient-to-r from-transparent to-gold-400" />
@@ -323,125 +339,98 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             <div className="h-px w-20 bg-gradient-to-l from-transparent to-gold-400" />
           </div>
           <h1 className="font-display text-6xl font-semibold mb-4 text-gold-200">Undaunted</h1>
-          <p className="font-body text-parchment-400 text-2xl italic mb-8">The Living Timeline of Chabad Lubavitch</p>
+          <p className="font-body text-parchment-400 text-2xl italic mb-6">The Living Timeline of Chabad Lubavitch</p>
 
-          {/* Stats */}
-          <div className="flex justify-center gap-12 mb-12">
+          {/* Stats - more compact */}
+          <div className="flex flex-wrap justify-center gap-6 mb-8">
             <div className="text-center">
-              <div className="font-display text-4xl font-semibold text-gold-300">{stats.events}</div>
-              <div className="font-subheading text-parchment-500">Chronicles</div>
+              <div className="font-display text-3xl font-semibold text-gold-300">{stats.events}</div>
+              <div className="font-subheading text-parchment-500 text-sm">Chronicles</div>
             </div>
             <div className="text-center">
-              <div className="font-display text-4xl font-semibold text-gold-300">{stats.people}</div>
-              <div className="font-subheading text-parchment-500">Souls</div>
+              <div className="font-display text-3xl font-semibold text-gold-300">{stats.people}</div>
+              <div className="font-subheading text-parchment-500 text-sm">Souls</div>
             </div>
             <div className="text-center">
-              <div className="font-display text-4xl font-semibold text-gold-300">{stats.places}</div>
-              <div className="font-subheading text-parchment-500">Places</div>
+              <div className="font-display text-3xl font-semibold text-gold-300">{stats.places}</div>
+              <div className="font-subheading text-parchment-500 text-sm">Places</div>
             </div>
             <div className="text-center">
-              <div className="font-display text-4xl font-semibold text-gold-300">{stats.teachings}</div>
-              <div className="font-subheading text-parchment-500">Teachings</div>
-            </div>
-            <div className="text-center">
-              <div className="font-display text-4xl font-semibold text-gold-300">{stats.institutions}</div>
-              <div className="font-subheading text-parchment-500">Institutions</div>
-            </div>
-            <div className="text-center">
-              <div className="font-display text-4xl font-semibold text-gold-300">{stats.communities}</div>
-              <div className="font-subheading text-parchment-500">Communities</div>
+              <div className="font-display text-3xl font-semibold text-gold-300">{stats.teachings}</div>
+              <div className="font-subheading text-parchment-500 text-sm">Teachings</div>
             </div>
           </div>
+
+          {/* Keyboard hint */}
+          <p className="font-subheading text-xs text-parchment-600">
+            Press <kbd className="px-2 py-1 bg-gold-400/20 rounded text-gold-400">/</kbd> to search • <kbd className="px-2 py-1 bg-gold-400/20 rounded text-gold-400">Esc</kbd> to go back
+          </p>
         </motion.div>
 
-        {/* Entry Points */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
+        {/* Entry Points - more compact */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-w-5xl mx-auto">
           <EntryCard
-            icon={<Clock3 className="w-10 h-10" />}
+            icon={<Clock3 className="w-8 h-8" />}
             title="Era Overview"
-            description="Explore four defining eras of Chabad leadership"
+            description="Four defining eras of leadership"
             onClick={() => onNavigate('panorama')}
             delay={0.05}
             color="#8B5CF6"
           />
           <EntryCard
-            icon={<User className="w-10 h-10" />}
+            icon={<User className="w-8 h-8" />}
             title="People Directory"
-            description="Master biographies with associated events"
+            description="Biographies and associated events"
             onClick={() => onNavigate('people')}
             delay={0.1}
             color="#3B82F6"
           />
           <EntryCard
-            icon={<Globe className="w-10 h-10" />}
+            icon={<Globe className="w-8 h-8" />}
             title="Places Directory"
-            description="All locations mentioned in the chronicles"
+            description="All locations alphabetically"
             onClick={() => onNavigate('allPlaces')}
             delay={0.15}
             color="#10B981"
           />
           <EntryCard
-            icon={<MapPin className="w-10 h-10" />}
-            title="Interactive Map"
-            description="Geographic journey through history"
-            onClick={() => onNavigate('map')}
-            delay={0.2}
-            color="#059669"
-          />
-          <EntryCard
-            icon={<BookOpen className="w-10 h-10" />}
+            icon={<BookOpen className="w-8 h-8" />}
             title="Topics & Themes"
-            description="Alphabetical exploration of subjects"
+            description="Alphabetical subject index"
             onClick={() => onNavigate('topics')}
-            delay={0.25}
+            delay={0.2}
             color="#F59E0B"
           />
           <EntryCard
-            icon={<Crown className="w-10 h-10" />}
+            icon={<Crown className="w-8 h-8" />}
             title="The Teachings"
-            description="Wisdom and insights from the Rebbes"
+            description="Wisdom from the Rebbes"
             onClick={() => onNavigate('teachings')}
-            delay={0.3}
+            delay={0.25}
             color="#EC4899"
           />
           <EntryCard
-            icon={<Building2 className="w-10 h-10" />}
+            icon={<Building2 className="w-8 h-8" />}
             title="Institutions"
-            description="Yeshivas, organizations, foundations"
+            description="Yeshivas & organizations"
             onClick={() => onNavigate('institutions')}
-            delay={0.35}
+            delay={0.3}
             color="#6366F1"
           />
           <EntryCard
-            icon={<Users2 className="w-10 h-10" />}
+            icon={<Users2 className="w-8 h-8" />}
             title="Communities"
-            description="Jewish communities around the world"
+            description="Jewish communities worldwide"
             onClick={() => onNavigate('communities')}
-            delay={0.4}
+            delay={0.35}
             color="#8B5CF6"
           />
           <EntryCard
-            icon={<Lightbulb className="w-10 h-10" />}
-            title="Concepts & Ideas"
-            description="Philosophical concepts and themes"
-            onClick={() => onNavigate('concepts')}
-            delay={0.45}
-            color="#F59E0B"
-          />
-          <EntryCard
-            icon={<FileText className="w-10 h-10" />}
-            title="Documents"
-            description="Source documents, letters, writings"
-            onClick={() => onNavigate('documents')}
-            delay={0.5}
-            color="#64748B"
-          />
-          <EntryCard
-            icon={<Clock3 className="w-10 h-10" />}
+            icon={<Clock3 className="w-8 h-8" />}
             title="Interactive Timeline"
-            description="Visual chronology with expandable events"
+            description="Visual chronology with details"
             onClick={() => onNavigate('timeline')}
-            delay={0.55}
+            delay={0.4}
             color="#3B82F6"
           />
         </div>
@@ -463,23 +452,24 @@ function EntryCard({ icon, title, description, onClick, delay, color }: {
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay }}
-      whileHover={{ scale: 1.02, y: -4 }}
+      whileHover={{ scale: 1.03, y: -3 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="relative bg-parchment-100/90 backdrop-blur-sm border-2 border-gold-400/40 rounded-lg overflow-hidden shadow-ornate cursor-pointer group"
+      className="relative bg-parchment-100/90 backdrop-blur-sm border border-gold-400/40 rounded-lg overflow-hidden shadow-ornate cursor-pointer group"
+      style={{ borderWidth: '1px' }}
     >
-      <div className="h-1 w-full" style={{ backgroundColor: color }} />
-      <div className="p-8">
-        <div className="flex items-start gap-6">
-          <div className="p-3 rounded-full bg-gold-400/20" style={{ color }}>
+      <div className="h-0.5 w-full" style={{ backgroundColor: color }} />
+      <div className="p-4">
+        <div className="flex items-start gap-3">
+          <div className="p-2 rounded-full bg-gold-400/20" style={{ color }}>
             {icon}
           </div>
           <div className="flex-1">
-            <h3 className="font-display text-2xl font-semibold mb-2 text-ink-200">{title}</h3>
-            <p className="font-body text-parchment-600">{description}</p>
+            <h3 className="font-display text-base font-semibold mb-1 text-ink-200">{title}</h3>
+            <p className="font-body text-xs text-parchment-600">{description}</p>
           </div>
         </div>
-        <div className="mt-4 flex items-center gap-2 text-gold-700 opacity-0 group-hover:opacity-100 transition-opacity font-subheading text-sm">
+        <div className="mt-2 flex items-center gap-1 text-gold-700 opacity-0 group-hover:opacity-100 transition-opacity font-subheading text-xs">
           <span>Explore</span>
           <span>→</span>
         </div>
@@ -490,9 +480,44 @@ function EntryCard({ icon, title, description, onClick, delay, color }: {
 
 // Placeholder Components (to be implemented)
 function PeopleDirectory({ people, events: _events, onSelectPerson }: any) {
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
+
+  // Get unique first letters
+  const firstLetters = Array.from(new Set(
+    people.map((p: any) => {
+      const name = p.extracted_data?.name || '';
+      return name.charAt(0).toUpperCase();
+    }).filter((l: string) => l)
+  )).sort();
+
+  if (selectedLetter) {
+    const letterPeople = people.filter((p: any) => {
+      const name = p.extracted_data?.name || '';
+      return name.charAt(0).toUpperCase() === selectedLetter;
+    });
+    return (
+      <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+        <div className="max-w-6xl mx-auto">
+          <button onClick={() => setSelectedLetter(null)} className="font-subheading text-gold-300 hover:text-gold-200 mb-6">← Back to All People</button>
+          <h2 className="font-display text-4xl text-gold-200 text-center mb-6">{selectedLetter}</h2>
+          <p className="font-body text-parchment-400 text-center mb-8">{letterPeople.length} names</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {letterPeople.map((person: any, i: number) => (
+              <div key={i} onClick={() => onSelectPerson(person)} className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-5 cursor-pointer hover:border-gold-400 transition-all">
+                <h3 className="font-display text-lg text-ink-200">{person.extracted_data?.name || person.passage?.substring(0, 50)}</h3>
+                {person.extracted_data?.title && <p className="font-subheading text-sm text-gold-700">{person.extracted_data.title}</p>}
+                {person.extracted_data?.role && <p className="font-body text-sm text-parchment-600">{person.extracted_data.role}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-center gap-4 mb-8">
           <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
           <User className="w-6 h-6 text-gold-400" />
@@ -500,23 +525,29 @@ function PeopleDirectory({ people, events: _events, onSelectPerson }: any) {
         </div>
         <h2 className="font-display text-5xl text-gold-200 text-center mb-4">People Directory</h2>
         <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
-          Souls who shaped Chabad history
+          {people.length} souls who shaped Chabad history
         </p>
+
+        {/* Alphabet filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-12">
+          {firstLetters.map((letter: any) => (
+            <button
+              key={letter}
+              onClick={() => setSelectedLetter(letter)}
+              className="w-10 h-10 font-display text-gold-700 hover:text-gold-400 hover:bg-gold-400/10 border border-gold-400/30 rounded-full transition-all"
+            >
+              {letter}
+            </button>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {people.slice(0, 100).map((person: any, i: number) => {
-            const name = person.extracted_data?.name || person.node_type === 'PEOPLE' ? person.passage?.split(' ').slice(0, 3).join(' ') : 'Unknown';
-            return (
-              <div key={i} onClick={() => onSelectPerson(person)} className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-5 cursor-pointer hover:border-gold-400 transition-all">
-                <h3 className="font-display text-lg text-ink-200">{name}</h3>
-                {person.extracted_data?.title && (
-                  <p className="font-subheading text-sm text-gold-700">{person.extracted_data.title}</p>
-                )}
-                {person.extracted_data?.role && (
-                  <p className="font-body text-sm text-parchment-600">{person.extracted_data.role}</p>
-                )}
-              </div>
-            );
-          })}
+          {people.slice(0, 150).map((person: any, i: number) => (
+            <div key={i} onClick={() => onSelectPerson(person)} className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-4 cursor-pointer hover:border-gold-400 transition-all">
+              <h3 className="font-display text-base text-ink-200">{person.extracted_data?.name || person.passage?.substring(0, 60) || 'Unknown'}</h3>
+              {person.extracted_data?.title && <p className="font-subheading text-xs text-gold-700">{person.extracted_data.title}</p>}
+            </div>
+          ))}
         </div>
       </div>
     </div>

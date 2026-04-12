@@ -34,17 +34,28 @@ export function processTimelineData(data: UndauntedData) {
   // Extract years from events for timeline
   const timelineEvents = events
     .map(e => {
+      // Try multiple fields for year/date
+      const yearCe = e.extracted_data?.year_ce;
       const dateStr = e.extracted_data?.date || e.extracted_data?.year || '';
       const yearMatch = dateStr.match(/(\d{4})/);
-      const year = yearMatch ? parseInt(yearMatch[1]) : null;
+
+      let year = null;
+      if (yearCe && typeof yearCe === 'number') {
+        year = yearCe;
+      } else if (yearCe && typeof yearCe === 'string') {
+        const match = yearCe.match(/(\d{4})/);
+        year = match ? parseInt(match[1]) : null;
+      } else if (yearMatch) {
+        year = parseInt(yearMatch[1]);
+      }
 
       return {
         ...e,
         year,
-        date: dateStr
+        date: dateStr || yearCe?.toString() || ''
       };
     })
-    .filter((e): e is typeof e & { year: number } => e.year !== null && e.year >= 1800 && e.year <= 2000)
+    .filter((e): e is typeof e & { year: number } => e.year !== null && e.year >= 1700 && e.year <= 2020)
     .sort((a, b) => a.year - b.year);
 
   return {

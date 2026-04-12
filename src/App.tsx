@@ -12,6 +12,15 @@ type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timel
 
 function App() {
   const [view, setView] = useState<View>('home');
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Splash screen timer
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -95,6 +104,49 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-ink-400 via-ink-500 to-ink-400 text-white overflow-hidden font-body">
+      {/* Splash Screen */}
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="fixed inset-0 z-[100] bg-ink-500 flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 1.2, opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="w-24 h-24 mx-auto mb-8"
+              >
+                <Crown className="w-full h-full text-gold-400" />
+              </motion.div>
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="font-display text-5xl md:text-6xl font-semibold text-gold-200 mb-4"
+              >
+                Undaunted
+              </motion.h1>
+              <motion.p
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="font-body text-parchment-400 text-lg italic"
+              >
+                The Living Timeline
+              </motion.p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Elegant Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-ink-500/90 backdrop-blur-md border-b border-gold-400/20">
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />

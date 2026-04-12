@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Search, X, User, Calendar, MapPin, Sparkles } from 'lucide-react';
+import { Search, X, User, Calendar, MapPin, Sparkles, BookOpen, Building2 } from 'lucide-react';
 
 interface SearchPanelProps {
   entities: any[];
@@ -12,6 +12,25 @@ interface SearchPanelProps {
 export default function SearchPanel({ entities, events, onSelectEvent, onSelectPerson }: SearchPanelProps) {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'events' | 'people' | 'places'>('all');
+
+  // Helper to get icon for entity type
+  const getEntityIcon = (item: any) => {
+    if (item.node_type?.toLowerCase().includes('event')) return <Calendar className="w-5 h-5" />;
+    if (item.node_type?.toLowerCase().includes('person')) return <User className="w-5 h-5" />;
+    if (item.node_type?.toLowerCase().includes('place')) return <MapPin className="w-5 h-5" />;
+    if (item.node_type?.toLowerCase().includes('teaching')) return <BookOpen className="w-5 h-5" />;
+    if (item.node_type?.toLowerCase().includes('institution')) return <Building2 className="w-5 h-5" />;
+    return <Sparkles className="w-5 h-5" />;
+  };
+
+  // Helper to get color for entity type
+  const getEntityColor = (item: any) => {
+    if (item.node_type?.toLowerCase().includes('event')) return 'text-gold-600';
+    if (item.node_type?.toLowerCase().includes('person')) return 'text-blue-500';
+    if (item.node_type?.toLowerCase().includes('place')) return 'text-green-500';
+    if (item.node_type?.toLowerCase().includes('teaching')) return 'text-pink-500';
+    return 'text-purple-500';
+  };
 
   const results = useMemo(() => {
     if (!query.trim()) return [];
@@ -133,7 +152,7 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
             {results.map((item, index) => {
               const isEvent = item.node_type?.toLowerCase().includes('event');
               const isPerson = item.node_type?.toLowerCase().includes('person');
-              const isPlace = item.node_type?.toLowerCase().includes('place');
+              const entityColor = getEntityColor(item);
 
               return (
                 <motion.div
@@ -145,25 +164,32 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
                     if (isEvent) onSelectEvent(item);
                     else if (isPerson) onSelectPerson(item);
                   }}
-                  className="bg-parchment-100/70 backdrop-blur-sm border border-gold-400/30 rounded-lg overflow-hidden hover:border-gold-400/60 cursor-pointer transition-all shadow-card"
+                  className="bg-parchment-100/70 backdrop-blur-sm border border-gold-400/30 rounded-lg overflow-hidden hover:border-gold-400/60 cursor-pointer transition-all shadow-card group"
                 >
                   <div className="p-5">
                     <div className="flex items-start gap-4">
-                      <div className="mt-1">
-                        {isEvent && <Calendar className="w-5 h-5 text-gold-600" />}
-                        {isPerson && <User className="w-5 h-5 text-gold-600" />}
-                        {isPlace && <MapPin className="w-5 h-5 text-gold-600" />}
+                      <div className={`mt-1 ${entityColor}`}>
+                        {getEntityIcon(item)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-display font-semibold mb-2 text-ink-200">
-                          {item.extracted_data?.name ||
-                           item.extracted_data?.event ||
-                           item.extracted_data?.description ||
-                           item.node_type}
-                        </h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-display font-semibold text-ink-200">
+                            {item.extracted_data?.name ||
+                             item.extracted_data?.event ||
+                             item.extracted_data?.description ||
+                             item.node_type}
+                          </h3>
+                          <span className="px-2 py-0.5 text-xs font-subheading uppercase tracking-wide bg-gold-400/20 text-gold-700 rounded-full">
+                            {item.node_type}
+                          </span>
+                        </div>
                         <p className="font-body text-sm text-ink-100 line-clamp-2 leading-relaxed">
                           {item.passage?.substring(0, 150)}
+                          {item.passage && item.passage.length > 150 && '...'}
                         </p>
+                        {item.year && (
+                          <div className="mt-2 font-subheading text-xs text-gold-700">{item.year}</div>
+                        )}
                       </div>
                     </div>
                   </div>

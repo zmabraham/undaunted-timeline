@@ -20,10 +20,18 @@ function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/undaunted_merged_kg.json')
+    const dataUrl = `${import.meta.env.BASE_URL || ''}/undaunted_merged_kg.json`.replace(/^\/\//, '/');
+    console.log('Fetching data from:', dataUrl);
+
+    fetch(dataUrl)
       .then(r => {
+        console.log('Response status:', r.status);
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
+        return r.text();
+      })
+      .then(text => {
+        console.log('Data length:', text.length);
+        return JSON.parse(text);
       })
       .then(setData)
       .catch(err => {

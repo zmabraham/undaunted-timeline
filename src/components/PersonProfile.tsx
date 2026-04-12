@@ -1,19 +1,21 @@
 import { motion } from 'framer-motion';
-import { Calendar, BookOpen, Crown } from 'lucide-react';
+import { Calendar, BookOpen, Crown, ChevronLeft, Star } from 'lucide-react';
 
 interface PersonProfileProps {
   person: any;
   events: any[];
+  onBack?: () => void;
 }
 
-export default function PersonProfile({ person, events }: PersonProfileProps) {
+export default function PersonProfile({ person, events, onBack }: PersonProfileProps) {
   const name = person.extracted_data?.name || person.passage || 'Unknown';
 
   const personEvents = events.filter((e: any) => {
     const passage = (e.passage || '').toLowerCase();
+    const desc = (e.extracted_data?.event || e.extracted_data?.description || '').toLowerCase();
     const nameParts = name.toLowerCase().split(' ');
-    return nameParts.some((part: string) => part.length > 3 && passage.includes(part));
-  });
+    return nameParts.some((part: string) => part.length > 2 && (passage.includes(part) || desc.includes(part)));
+  }).sort((a: any, b: any) => (a.year || 0) - (b.year || 0));
 
   return (
     <motion.div
@@ -24,6 +26,19 @@ export default function PersonProfile({ person, events }: PersonProfileProps) {
     >
       {/* Aged paper texture overlay */}
       <div className="fixed inset-0 bg-aged-paper opacity-30 pointer-events-none" />
+
+      {/* Back button at top */}
+      {onBack && (
+        <motion.button
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          onClick={onBack}
+          className="relative z-20 mb-6 flex items-center gap-2 px-4 py-2 font-subheading text-sm text-gold-300 hover:text-gold-200 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          <span>Back to Directory</span>
+        </motion.button>
+      )}
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Person Profile Card */}

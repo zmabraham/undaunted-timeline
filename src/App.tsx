@@ -210,7 +210,7 @@ function App() {
               />
             )}
             {view === 'person' && selectedPerson && (
-              <PersonProfile key="person" person={selectedPerson} events={timelineData.events} />
+              <PersonProfile key="person" person={selectedPerson} events={timelineData.events} onBack={handleBack} />
             )}
             {view === 'search' && (
               <SearchPanel

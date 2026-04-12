@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, ChevronLeft, ChevronRight, List, Search, X, Crown } from 'lucide-react';
 
@@ -309,40 +310,6 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
               })}
             </div>
 
-            {/* Footnote tooltip */}
-            <AnimatePresence>
-              {activeFootnote && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="fixed z-50 max-w-xs"
-                  style={{
-                    left: `${footnotePosition.x}px`,
-                    top: `${footnotePosition.y}px`,
-                    transform: 'translateX(-50%)'
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="bg-ink-900 border border-gold-400/50 rounded-lg p-4 shadow-2xl">
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-ink-900"></div>
-                    <p className="font-body text-sm text-parchment-100 leading-relaxed">
-                      {activeFootnote.text}
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Close footnote when clicking elsewhere */}
-            {activeFootnote && (
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setActiveFootnote(null)}
-              />
-            )}
-
             {/* Chapter end navigation */}
             <div className="mt-12 pt-8 border-t border-gold-400/20 flex justify-center gap-4">
               {currentChapter > 1 && (
@@ -455,6 +422,45 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
           </motion.div>
         )}
       </div>
+
+      {/* Footnote tooltip - rendered at document body level using Portal */}
+      {createPortal(
+        <>
+          <AnimatePresence>
+            {activeFootnote && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="fixed z-[100] max-w-xs pointer-events-auto"
+                style={{
+                  left: `${footnotePosition.x}px`,
+                  top: `${footnotePosition.y}px`,
+                  transform: 'translateX(-50%)'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="bg-ink-900 border border-gold-400/50 rounded-lg p-4 shadow-2xl">
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-ink-900"></div>
+                  <p className="font-body text-sm text-parchment-100 leading-relaxed">
+                    {activeFootnote.text}
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Close footnote when clicking elsewhere */}
+          {activeFootnote && (
+            <div
+              className="fixed inset-0 z-[90]"
+              onClick={() => setActiveFootnote(null)}
+            />
+          )}
+        </>,
+        document.body
+      )}
     </div>
   );
 }

@@ -1,14 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe } from 'lucide-react';
+import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe, Network } from 'lucide-react';
 import { ERAS, processTimelineData, type UndauntedData } from './data/undaunted-data';
 import TimelineView from './components/TimelineView';
 import EraView from './components/EraView';
 import EventDetail from './components/EventDetail';
 import PersonProfile from './components/PersonProfile';
 import SearchPanel from './components/SearchPanel';
+import KnowledgeGraphView from './components/KnowledgeGraphView';
 
-type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'institutions' | 'communities' | 'concepts' | 'documents' | 'allPlaces' | 'search';
+type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'institutions' | 'communities' | 'concepts' | 'documents' | 'allPlaces' | 'search' | 'knowledgeGraph';
 
 function App() {
   const [view, setView] = useState<View>('home');
@@ -91,7 +92,7 @@ function App() {
     if (view === 'event' && selectedEra) {
       setView('era');
       setSelectedEvent(null);
-    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings' || view === 'institutions' || view === 'communities' || view === 'concepts' || view === 'documents' || view === 'allPlaces') {
+    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings' || view === 'institutions' || view === 'communities' || view === 'concepts' || view === 'documents' || view === 'allPlaces' || view === 'knowledgeGraph') {
       setView('home');
       setSelectedEra(null);
     } else if (view === 'person') {
@@ -180,6 +181,7 @@ function App() {
                   {view === 'event' && 'Event Chronicle'}
                   {view === 'person' && 'Soul Profile'}
                   {view === 'search' && 'Search the Archives'}
+                  {view === 'knowledgeGraph' && 'Knowledge Graph'}
                 </h1>
                 {view === 'home' && (
                   <p className="font-body text-xs sm:text-sm text-parchment-500 italic mt-0.5 hidden sm:block">
@@ -367,6 +369,24 @@ function App() {
                 places={timelineData.allPlaces}
               />
             )}
+            {view === 'knowledgeGraph' && (
+              <KnowledgeGraphView
+                key="knowledgeGraph"
+                entities={timelineData.allEntities}
+                events={timelineData.events}
+                people={timelineData.people}
+                places={timelineData.places}
+                onSelectEntity={(entity: any) => {
+                  if (entity.node_type?.toLowerCase().includes('person')) {
+                    setSelectedPerson(entity);
+                    setView('person');
+                  } else if (entity.node_type?.toLowerCase().includes('event')) {
+                    setSelectedEvent(entity);
+                    setView('event');
+                  }
+                }}
+              />
+            )}
             </motion.div>
           </AnimatePresence>
         )}
@@ -523,12 +543,12 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
             color="#6B7280"
           />
           <EntryCard
-            icon={<Clock3 className="w-8 h-8" />}
-            title="Interactive Timeline"
-            description="Visual chronology with details"
-            onClick={() => onNavigate('timeline')}
+            icon={<Network className="w-8 h-8" />}
+            title="Knowledge Graph"
+            description="Interactive visual network"
+            onClick={() => onNavigate('knowledgeGraph')}
             delay={0.5}
-            color="#3B82F6"
+            color="#06B6D4"
           />
         </div>
       </div>

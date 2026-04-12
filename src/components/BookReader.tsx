@@ -433,7 +433,7 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="fixed z-[100] max-w-xs pointer-events-auto"
+                className="fixed z-[100] max-w-sm pointer-events-auto"
                 style={{
                   left: `${footnotePosition.x}px`,
                   top: `${footnotePosition.y}px`,
@@ -441,9 +441,9 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="bg-ink-900 border border-gold-400/50 rounded-lg p-4 shadow-2xl">
-                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-ink-900"></div>
-                  <p className="font-body text-sm text-parchment-100 leading-relaxed">
+                <div className="bg-gray-900 border-2 border-yellow-600 rounded-lg p-4 shadow-2xl" style={{ backgroundColor: '#1a1a1a', border: '2px solid #d97706' }}>
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent" style={{ borderBottomColor: '#1a1a1a' }}></div>
+                  <p className="font-body text-sm leading-relaxed" style={{ color: '#faf7f0' }}>
                     {activeFootnote.text}
                   </p>
                 </div>

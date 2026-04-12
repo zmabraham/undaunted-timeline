@@ -182,7 +182,15 @@ function App() {
           </div>
         )}
         {!loading && !error && (
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={view}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="h-full"
+            >
             {/* Home/Landing View */}
             {view === 'home' && (
               <HomeView
@@ -306,6 +314,7 @@ function App() {
                 places={timelineData.allPlaces}
               />
             )}
+            </motion.div>
           </AnimatePresence>
         )}
       </main>

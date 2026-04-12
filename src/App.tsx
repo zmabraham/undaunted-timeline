@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { Search, User, MapPin, BookOpen, Clock, Crown } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3 } from 'lucide-react';
 import { ERAS, processTimelineData, type UndauntedData } from './data/undaunted-data';
 import TimelineView from './components/TimelineView';
 import EraView from './components/EraView';
@@ -8,10 +8,10 @@ import EventDetail from './components/EventDetail';
 import PersonProfile from './components/PersonProfile';
 import SearchPanel from './components/SearchPanel';
 
-type View = 'panorama' | 'era' | 'event' | 'person' | 'search';
+type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'search';
 
 function App() {
-  const [view, setView] = useState<View>('panorama');
+  const [view, setView] = useState<View>('home');
   const [selectedEra, setSelectedEra] = useState<typeof ERAS[number] | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedPerson, setSelectedPerson] = useState<any>(null);
@@ -20,7 +20,6 @@ function App() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Try the direct path first (works in most cases)
     const paths = [
       '/undaunted_merged_kg.json',
       './undaunted_merged_kg.json',
@@ -59,7 +58,7 @@ function App() {
   }, []);
 
   const timelineData = useMemo(() => {
-    if (!data) return { events: [], people: [], places: [], teachings: [], allEntities: [] };
+    if (!data) return { events: [], people: [], places: [], topics: [], teachings: [], allEntities: [] };
     return processTimelineData(data);
   }, [data]);
 
@@ -67,14 +66,14 @@ function App() {
     if (view === 'event' && selectedEra) {
       setView('era');
       setSelectedEvent(null);
-    } else if (view === 'era') {
-      setView('panorama');
+    } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings') {
+      setView('home');
       setSelectedEra(null);
     } else if (view === 'person') {
-      setView('era');
+      setView('people');
       setSelectedPerson(null);
     } else if (view === 'search') {
-      setView('panorama');
+      setView('home');
     }
   };
 
@@ -82,13 +81,12 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-ink-400 via-ink-500 to-ink-400 text-white overflow-hidden font-body">
       {/* Elegant Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-ink-500/90 backdrop-blur-md border-b border-gold-400/20">
-        {/* Decorative top border */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
 
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {view !== 'panorama' && (
+              {view !== 'home' && (
                 <button
                   onClick={handleBack}
                   className="px-4 py-2 font-subheading text-sm text-gold-300 hover:text-gold-200 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all"
@@ -98,20 +96,26 @@ function App() {
               )}
               <div>
                 <h1 className="font-display text-xl font-semibold text-gold-200">
-                  {view === 'panorama' && 'Undaunted: The Living Timeline'}
+                  {view === 'home' && 'Undaunted: The Living Timeline'}
+                  {view === 'panorama' && 'Era Overview'}
                   {view === 'era' && selectedEra?.name}
+                  {view === 'people' && 'Souls of History'}
+                  {view === 'timeline' && 'Interactive Timeline'}
+                  {view === 'map' && 'Geographic Journey'}
+                  {view === 'topics' && 'Topics & Themes'}
+                  {view === 'teachings' && 'The Teachings'}
                   {view === 'event' && 'Event Chronicle'}
                   {view === 'person' && 'Soul Profile'}
                   {view === 'search' && 'Search the Archives'}
                 </h1>
-                {view === 'panorama' && (
+                {view === 'home' && (
                   <p className="font-body text-sm text-parchment-500 italic mt-0.5">
                     A journey through Chabad history
                   </p>
                 )}
               </div>
             </div>
-            {view === 'panorama' && (
+            {view === 'home' && (
               <button
                 onClick={() => setView('search')}
                 className="p-2.5 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all"
@@ -142,43 +146,97 @@ function App() {
         )}
         {!loading && !error && (
           <AnimatePresence mode="wait">
-          {view === 'panorama' && (
-            <TimelineView
-              key="panorama"
-              eras={ERAS}
-              events={timelineData.events}
-              onSelectEra={(era) => { setSelectedEra(era); setView('era'); }}
-            />
-          )}
-          {view === 'era' && selectedEra && (
-            <EraView
-              key="era"
-              era={selectedEra}
-              events={timelineData.events.filter((e: any) => e.year && e.year >= selectedEra.startYear && e.year <= selectedEra.endYear)}
-              onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
-              onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
-            />
-          )}
-          {view === 'event' && selectedEvent && (
-            <EventDetail
-              key="event"
-              event={selectedEvent}
-              places={timelineData.places}
-              onSelectPerson={(person: any) => { setSelectedPerson(person); setSelectedEvent(null); setView('person'); }}
-            />
-          )}
-          {view === 'person' && selectedPerson && (
-            <PersonProfile key="person" person={selectedPerson} events={timelineData.events} />
-          )}
-          {view === 'search' && (
-            <SearchPanel
-              key="search"
-              entities={timelineData.allEntities}
-              events={timelineData.events}
-              onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
-              onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
-            />
-          )}
+            {/* Home/Landing View */}
+            {view === 'home' && (
+              <HomeView
+                key="home"
+                onNavigate={(v) => setView(v as View)}
+                stats={{
+                  events: timelineData.events.length,
+                  people: timelineData.people.length,
+                  places: timelineData.places.length,
+                  topics: timelineData.topics.length,
+                  teachings: timelineData.teachings.length
+                }}
+              />
+            )}
+
+            {view === 'panorama' && (
+              <TimelineView
+                key="panorama"
+                eras={ERAS}
+                events={timelineData.events}
+                onSelectEra={(era) => { setSelectedEra(era); setView('era'); }}
+              />
+            )}
+            {view === 'era' && selectedEra && (
+              <EraView
+                key="era"
+                era={selectedEra}
+                events={timelineData.events.filter((e: any) => e.year && e.year >= selectedEra.startYear && e.year <= selectedEra.endYear)}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+                onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
+              />
+            )}
+            {view === 'event' && selectedEvent && (
+              <EventDetail
+                key="event"
+                event={selectedEvent}
+                places={timelineData.places}
+                onSelectPerson={(person: any) => { setSelectedPerson(person); setSelectedEvent(null); setView('person'); }}
+              />
+            )}
+            {view === 'person' && selectedPerson && (
+              <PersonProfile key="person" person={selectedPerson} events={timelineData.events} />
+            )}
+            {view === 'search' && (
+              <SearchPanel
+                key="search"
+                entities={timelineData.allEntities}
+                events={timelineData.events}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+                onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
+              />
+            )}
+
+            {/* New Views - Placeholder for now */}
+            {view === 'people' && (
+              <PeopleDirectory
+                key="people"
+                people={timelineData.people}
+                events={timelineData.events}
+                onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
+              />
+            )}
+            {view === 'timeline' && (
+              <InteractiveTimeline
+                key="timeline"
+                events={timelineData.events}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+              />
+            )}
+            {view === 'map' && (
+              <MapView
+                key="map"
+                places={timelineData.places}
+                events={timelineData.events}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+              />
+            )}
+            {view === 'topics' && (
+              <TopicsView
+                key="topics"
+                topics={timelineData.topics}
+                entities={timelineData.allEntities}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+              />
+            )}
+            {view === 'teachings' && (
+              <TeachingsView
+                key="teachings"
+                teachings={timelineData.teachings}
+              />
+            )}
           </AnimatePresence>
         )}
       </main>
@@ -186,7 +244,7 @@ function App() {
       {/* Elegant Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-ink-500/90 backdrop-blur-md border-t border-gold-400/20">
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-center gap-8 font-subheading text-sm text-parchment-500">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-center gap-6 font-subheading text-sm text-parchment-500">
           <span className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-gold-500" />
             {timelineData.events.length} Chronicles
@@ -206,8 +264,256 @@ function App() {
             <BookOpen className="w-4 h-4 text-gold-500" />
             {timelineData.teachings.length} Teachings
           </span>
+          <span className="text-gold-400/50">✦</span>
+          <span className="flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-gold-500" />
+            {timelineData.topics.length} Topics
+          </span>
         </div>
       </footer>
+    </div>
+  );
+}
+
+// Home/Landing View Component
+function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; stats: { events: number; people: number; places: number; topics: number; teachings: number } }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="h-full overflow-y-auto px-8 py-8 bg-ink-500 relative"
+    >
+      <div className="fixed inset-0 bg-aged-paper opacity-30 pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="text-center mb-16"
+        >
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-20 bg-gradient-to-r from-transparent to-gold-400" />
+            <Crown className="w-8 h-8 text-gold-400" />
+            <div className="h-px w-20 bg-gradient-to-l from-transparent to-gold-400" />
+          </div>
+          <h1 className="font-display text-6xl font-semibold mb-4 text-gold-200">Undaunted</h1>
+          <p className="font-body text-parchment-400 text-2xl italic mb-8">The Living Timeline of Chabad Lubavitch</p>
+
+          {/* Stats */}
+          <div className="flex justify-center gap-12 mb-12">
+            <div className="text-center">
+              <div className="font-display text-4xl font-semibold text-gold-300">{stats.events}</div>
+              <div className="font-subheading text-parchment-500">Chronicles</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-4xl font-semibold text-gold-300">{stats.people}</div>
+              <div className="font-subheading text-parchment-500">Souls</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-4xl font-semibold text-gold-300">{stats.places}</div>
+              <div className="font-subheading text-parchment-500">Places</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-4xl font-semibold text-gold-300">{stats.teachings}</div>
+              <div className="font-subheading text-parchment-500">Teachings</div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Entry Points */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <EntryCard
+            icon={<Clock3 className="w-12 h-12" />}
+            title="Era Overview"
+            description="Explore five defining eras of Chabad leadership"
+            onClick={() => onNavigate('panorama')}
+            delay={0.1}
+            color="#8B5CF6"
+          />
+          <EntryCard
+            icon={<User className="w-12 h-12" />}
+            title="People Directory"
+            description="Master biographies with associated events"
+            onClick={() => onNavigate('people')}
+            delay={0.2}
+            color="#3B82F6"
+          />
+          <EntryCard
+            icon={<MapPin className="w-12 h-12" />}
+            title="Interactive Map"
+            description="Geographic journey through history"
+            onClick={() => onNavigate('map')}
+            delay={0.3}
+            color="#10B981"
+          />
+          <EntryCard
+            icon={<BookOpen className="w-12 h-12" />}
+            title="Topics & Themes"
+            description="Alphabetical exploration of subjects"
+            onClick={() => onNavigate('topics')}
+            delay={0.4}
+            color="#F59E0B"
+          />
+          <EntryCard
+            icon={<Crown className="w-12 h-12" />}
+            title="The Teachings"
+            description="Wisdom and insights from the Rebbes"
+            onClick={() => onNavigate('teachings')}
+            delay={0.5}
+            color="#EC4899"
+          />
+          <EntryCard
+            icon={<Clock3 className="w-12 h-12" />}
+            title="Interactive Timeline"
+            description="Visual chronology with expandable events"
+            onClick={() => onNavigate('timeline')}
+            delay={0.6}
+            color="#6366F1"
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function EntryCard({ icon, title, description, onClick, delay, color }: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  onClick: () => void;
+  delay: number;
+  color: string;
+}) {
+  return (
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay }}
+      whileHover={{ scale: 1.02, y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className="relative bg-parchment-100/90 backdrop-blur-sm border-2 border-gold-400/40 rounded-lg overflow-hidden shadow-ornate cursor-pointer group"
+    >
+      <div className="h-1 w-full" style={{ backgroundColor: color }} />
+      <div className="p-8">
+        <div className="flex items-start gap-6">
+          <div className="p-3 rounded-full bg-gold-400/20" style={{ color }}>
+            {icon}
+          </div>
+          <div className="flex-1">
+            <h3 className="font-display text-2xl font-semibold mb-2 text-ink-200">{title}</h3>
+            <p className="font-body text-parchment-600">{description}</p>
+          </div>
+        </div>
+        <div className="mt-4 flex items-center gap-2 text-gold-700 opacity-0 group-hover:opacity-100 transition-opacity font-subheading text-sm">
+          <span>Explore</span>
+          <span>→</span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// Placeholder Components (to be implemented)
+function PeopleDirectory({ people, events: _events, onSelectPerson }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="font-display text-4xl text-gold-200 text-center mb-8">People Directory</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {people.slice(0, 50).map((person: any, i: number) => (
+            <div key={i} onClick={() => onSelectPerson(person)} className="bg-parchment-100/80 p-4 rounded-lg border border-gold-400/30 cursor-pointer hover:border-gold-400">
+              <h3 className="font-display text-lg text-ink-200">{person.extracted_data?.name || 'Unknown'}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InteractiveTimeline({ events: _events, onSelectEvent: _onSelectEvent }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-7xl mx-auto text-center">
+        <h2 className="font-display text-4xl text-gold-200 mb-8">Interactive Timeline</h2>
+        <p className="font-body text-parchment-400">Coming soon...</p>
+      </div>
+    </div>
+  );
+}
+
+function MapView({ places, events: _events, onSelectEvent: _onSelectEvent }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-7xl mx-auto text-center">
+        <h2 className="font-display text-4xl text-gold-200 mb-8">Geographic Map</h2>
+        <p className="font-body text-parchment-400">Found {places.length} geolocated places</p>
+      </div>
+    </div>
+  );
+}
+
+function TopicsView({ topics, entities: _entities, onSelectEvent: _onSelectEvent }: any) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-5xl mx-auto">
+        <h2 className="font-display text-4xl text-gold-200 text-center mb-8">Topics & Themes</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+          {alphabet.map(letter => {
+            const letterTopics = topics.filter((t: string) => t.startsWith(letter));
+            if (letterTopics.length === 0) return null;
+            return (
+              <div key={letter} className="text-center">
+                <div className="font-display text-3xl text-gold-400 mb-2">{letter}</div>
+                <div className="space-y-1">
+                  {letterTopics.slice(0, 5).map((topic: string, i: number) => (
+                    <div key={i} className="font-body text-sm text-parchment-400 truncate">{topic}</div>
+                  ))}
+                  {letterTopics.length > 5 && (
+                    <div className="font-subheading text-xs text-gold-600">+{letterTopics.length - 5} more</div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TeachingsView({ teachings }: any) {
+  return (
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+          <Crown className="w-6 h-6 text-gold-400" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+        </div>
+        <h2 className="font-display text-5xl text-gold-200 text-center mb-4">The Teachings</h2>
+        <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
+          Wisdom and insights from the Rebbes
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {teachings.slice(0, 50).map((teaching: any, i: number) => (
+            <div key={i} className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-6 shadow-card">
+              <h3 className="font-display text-xl text-ink-200 mb-3">
+                {teaching.extracted_data?.teaching || teaching.extracted_data?.topic || 'Teaching'}
+              </h3>
+              <p className="font-body text-ink-100 line-clamp-4 leading-relaxed">
+                {teaching.passage || teaching.extracted_data?.description || 'No content available'}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

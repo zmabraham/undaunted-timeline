@@ -64,7 +64,7 @@ export default function TimelineView({ eras, events, onSelectEra }: TimelineView
           "Undaunted" — A Journey Through the Eras of Chabad Lubavitch
         </p>
         <div className="mt-6 font-subheading text-parchment-500 text-base max-w-2xl mx-auto">
-          Explore five defining chapters of leadership, sacrifice, and renewal.
+          Explore four defining chapters of leadership, sacrifice, and renewal.
           Click upon any era to discover the souls and stories that shaped history.
         </div>
       </motion.div>

@@ -58,10 +58,33 @@ export function processTimelineData(data: UndauntedData) {
     .filter((e): e is typeof e & { year: number } => e.year !== null && e.year >= 1700 && e.year <= 2020)
     .sort((a, b) => a.year - b.year);
 
+  // Extract unique topics/keywords for alphabetical navigation
+  const allTopics = new Set<string>();
+  data.entities.forEach(e => {
+    // Extract from event descriptions, teachings, etc.
+    const desc = e.extracted_data?.event || e.extracted_data?.description || e.extracted_data?.topic || '';
+    // Extract meaningful words (3+ letters, capitalize)
+    const words = desc.match(/\b[A-Z][a-z]{3,}\b/g) || [];
+    words.forEach((w: string) => allTopics.add(w));
+  });
+
+  const topics = Array.from(allTopics).sort();
+
+  // Extract geolocated places
+  const geolocatedPlaces = places
+    .filter(p => p.extracted_data?.latitude && p.extracted_data?.longitude)
+    .map(p => ({
+      ...p,
+      lat: parseFloat(p.extracted_data.latitude),
+      lng: parseFloat(p.extracted_data.longitude),
+      name: p.extracted_data?.name || p.extracted_data?.location || 'Unknown'
+    }));
+
   return {
     events: timelineEvents,
     people,
-    places,
+    places: geolocatedPlaces,
+    topics,
     teachings,
     allEntities: data.entities
   };
@@ -103,14 +126,5 @@ export const ERAS = [
     endYear: 1950,
     color: '#F59E0B',
     description: 'Arrival in America and rebuilding'
-  },
-  {
-    id: 'ramash',
-    name: 'The Ramash Era',
-    years: '1950-1994',
-    startYear: 1950,
-    endYear: 1994,
-    color: '#10B981',
-    description: 'Leadership of the Rebbe (Ramash)'
   }
 ];

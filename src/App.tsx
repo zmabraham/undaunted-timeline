@@ -523,12 +523,95 @@ function PeopleDirectory({ people, events: _events, onSelectPerson }: any) {
   );
 }
 
-function InteractiveTimeline({ events: _events, onSelectEvent: _onSelectEvent }: any) {
+function InteractiveTimeline({ events, onSelectEvent }: any) {
+  const [expandedEvent, setExpandedEvent] = useState<any>(null);
+
+  // Group events by decade for the timeline
+  const eventsByDecade = events.reduce((acc: any, event: any) => {
+    const decade = Math.floor(event.year / 10) * 10;
+    if (!acc[decade]) acc[decade] = [];
+    acc[decade].push(event);
+    return acc;
+  }, {});
+
+  const decades = Object.keys(eventsByDecade).sort().map(Number);
+
   return (
-    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
-      <div className="max-w-7xl mx-auto text-center">
-        <h2 className="font-display text-4xl text-gold-200 mb-8">Interactive Timeline</h2>
-        <p className="font-body text-parchment-400">Coming soon...</p>
+    <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500 relative">
+      <div className="fixed inset-0 bg-aged-paper opacity-30 pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto relative z-10">
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+          <Clock3 className="w-6 h-6 text-gold-400" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+        </div>
+        <h2 className="font-display text-5xl text-gold-200 text-center mb-4">Interactive Timeline</h2>
+        <p className="font-body text-parchment-400 text-center text-lg mb-12 italic max-w-2xl mx-auto">
+          Click on any event to explore the chronicle
+        </p>
+
+        {/* Timeline */}
+        <div className="relative py-8">
+          {/* Main timeline line */}
+          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-gold-500/60 to-transparent" />
+
+          <div className="space-y-6">
+            {decades.map((decade, decadeIdx) => (
+              <div key={decade} className="relative">
+                {/* Decade marker */}
+                <div className="flex items-center mb-3">
+                  <div className="absolute left-6 w-3 h-3 rounded-full bg-gold-500 border-3 border-ink-500"></div>
+                  <div className="ml-12">
+                    <span className="font-display text-xl text-gold-300">{decade}s</span>
+                    <span className="font-subheading text-xs text-parchment-500 ml-3">({eventsByDecade[decade].length} events)</span>
+                  </div>
+                </div>
+
+                {/* Events for this decade */}
+                <div className="ml-12 space-y-2">
+                  {eventsByDecade[decade].map((event: any, eventIdx: number) => (
+                    <motion.div
+                      key={eventIdx}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (decadeIdx * 0.05) + (eventIdx * 0.01) }}
+                    >
+                      <div
+                        onClick={() => { setExpandedEvent(expandedEvent === event ? null : event); }}
+                        className={`cursor-pointer ${expandedEvent === event ? 'bg-gold-400/20 border-gold-400' : 'bg-parchment-100/80 border-gold-400/30 hover:border-gold-400/60'} border rounded-lg p-4 transition-all`}
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="font-subheading text-sm text-gold-700">{event.year}</span>
+                        </div>
+                        <h4 className="font-display text-base text-ink-200 mb-1">
+                          {event.extracted_data?.event || event.extracted_data?.description || 'Event'}
+                        </h4>
+                        {expandedEvent === event && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            className="mt-3 pt-3 border-t border-gold-400/20"
+                          >
+                            <p className="font-body text-sm text-ink-100 leading-relaxed mb-3">
+                              {event.passage?.substring(0, 200)}...
+                            </p>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); onSelectEvent(event); }}
+                              className="font-subheading text-xs text-gold-600 hover:text-gold-400 px-3 py-1 border border-gold-400/40 rounded-full hover:bg-gold-400/10 transition-all"
+                            >
+                              View Full Details →
+                            </button>
+                          </motion.div>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -16,12 +16,22 @@ function App() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedPerson, setSelectedPerson] = useState<any>(null);
   const [data, setData] = useState<UndauntedData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/undaunted_merged_kg.json')
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then(setData)
-      .catch(() => setData(null));
+      .catch(err => {
+        console.error('Failed to load data:', err);
+        setError(err.message);
+        setData(null);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const timelineData = useMemo(() => {
@@ -71,7 +81,24 @@ function App() {
       </header>
 
       <main className="pt-20 h-screen">
-        <AnimatePresence mode="wait">
+        {loading && (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-slate-400">Loading timeline...</p>
+            </div>
+          </div>
+        )}
+        {error && (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center text-red-400">
+              <p className="mb-2">Failed to load data</p>
+              <p className="text-sm text-slate-500">{error}</p>
+            </div>
+          </div>
+        )}
+        {!loading && !error && (
+          <AnimatePresence mode="wait">
           {view === 'panorama' && (
             <TimelineView
               key="panorama"
@@ -109,7 +136,8 @@ function App() {
               onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
             />
           )}
-        </AnimatePresence>
+          </AnimatePresence>
+        )}
       </main>
 
       <footer className="fixed bottom-0 left-0 right-0 bg-slate-950/80 backdrop-blur-md border-t border-white/10 py-2">

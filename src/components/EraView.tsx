@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { User, Calendar } from 'lucide-react';
+import { User, Calendar, BookOpen, Quote } from 'lucide-react';
 
 interface Era {
   id: string;
@@ -34,72 +34,106 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full overflow-y-auto px-8 py-8"
+      className="h-full overflow-y-auto px-8 py-8 bg-ink-500 relative"
     >
-      <div className="max-w-7xl mx-auto">
+      {/* Aged paper texture overlay */}
+      <div className="fixed inset-0 bg-aged-paper opacity-30 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Era Header */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="text-center mb-12"
         >
+          {/* Decorative elements */}
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+            <BookOpen className="w-5 h-5 text-gold-400" />
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+          </div>
+
           <div
-            className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4"
-            style={{ backgroundColor: `${era.color}20`, color: era.color }}
+            className="inline-block px-6 py-2 rounded-full text-sm font-subheading tracking-wider mb-6 border border-gold-400/40"
+            style={{
+              backgroundColor: `${era.color}15`,
+              color: era.color
+            }}
           >
             {era.years}
           </div>
-          <h2 className="text-4xl font-bold mb-4 text-white">{era.name}</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">{era.description}</p>
+          <h2 className="font-display text-5xl font-semibold mb-4 text-gold-200">{era.name}</h2>
+          <p className="font-body text-parchment-400 text-xl max-w-2xl mx-auto italic leading-relaxed">
+            {era.description}
+          </p>
         </motion.div>
 
-        <div className="mb-12">
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-2 text-white">
-            <Calendar className="w-5 h-5 text-amber-400" />
-            Key Events
+        {/* Key Events Section */}
+        <div className="mb-16">
+          <h3 className="font-display text-2xl font-semibold mb-8 flex items-center justify-center gap-3 text-gold-300">
+            <Calendar className="w-6 h-6" />
+            <span>Chronicles of the Era</span>
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.slice(0, 18).map((event: any, index: number) => (
               <motion.div
                 key={index}
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ delay: index * 0.04 }}
+                whileHover={{ scale: 1.02, y: -3 }}
                 onClick={() => onSelectEvent(event)}
-                className="bg-slate-800/50 backdrop-blur-sm border border-white/10 rounded-xl p-4 cursor-pointer hover:border-amber-500/30 transition-all"
+                className="relative bg-parchment-100/90 backdrop-blur-sm border border-gold-400/30 rounded-lg overflow-hidden cursor-pointer shadow-card group"
               >
-                {event.year && (
-                  <div className="text-sm font-semibold mb-2" style={{ color: era.color }}>
-                    {event.year}
-                  </div>
-                )}
-                <h4 className="font-medium mb-2 line-clamp-2 text-white">
-                  {event.extracted_data?.event || event.extracted_data?.description || 'Event'}
-                </h4>
-                <p className="text-sm text-slate-400 line-clamp-3">
-                  {event.passage?.substring(0, 150)}...
-                </p>
+                {/* Decorative corner */}
+                <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold-400/40" />
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold-400/40" />
+
+                <div className="p-5">
+                  {event.year && (
+                    <div className="inline-block px-3 py-1 rounded-full text-xs font-subheading tracking-wide mb-3 border border-gold-400/30"
+                      style={{
+                        backgroundColor: `${era.color}15`,
+                        color: era.color
+                      }}
+                    >
+                      {event.year}
+                    </div>
+                  )}
+                  <h4 className="font-display font-semibold mb-3 line-clamp-2 text-ink-200 leading-snug">
+                    {event.extracted_data?.event || event.extracted_data?.description || 'Event'}
+                  </h4>
+                  <p className="font-body text-sm text-ink-100 line-clamp-3 leading-relaxed">
+                    {event.passage?.substring(0, 150)}...
+                  </p>
+                </div>
+
+                {/* Hover reveal hint */}
+                <div className="absolute bottom-3 right-3 text-gold-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Quote className="w-4 h-4" />
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
 
+        {/* People Section */}
         {eraPeople.length > 0 && (
           <div>
-            <h3 className="text-xl font-semibold mb-6 flex items-center gap-2 text-white">
-              <User className="w-5 h-5 text-amber-400" />
-              People of This Era
+            <h3 className="font-display text-2xl font-semibold mb-8 flex items-center justify-center gap-3 text-gold-300">
+              <User className="w-6 h-6" />
+              <span>Souls of This Era</span>
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap justify-center gap-3">
               {eraPeople.map((person: string, index: number) => (
                 <motion.button
                   key={index}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: index * 0.04 }}
                   whileHover={{ scale: 1.05 }}
                   onClick={() => onSelectPerson({ extracted_data: { name: person }, passage: '' })}
-                  className="px-4 py-2 bg-slate-800/50 border border-white/10 rounded-full text-sm text-slate-200 hover:border-amber-500/30 transition-all"
+                  className="px-5 py-2.5 bg-parchment-100/80 border border-gold-400/40 rounded-full text-sm font-subheading text-ink-200 hover:border-gold-400 hover:bg-parchment-200 transition-all shadow-sm"
                 >
                   {person}
                 </motion.button>

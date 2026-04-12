@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { User, Calendar, BookOpen } from 'lucide-react';
+import { Calendar, BookOpen, Crown } from 'lucide-react';
 
 interface PersonProfileProps {
   person: any;
@@ -20,79 +20,106 @@ export default function PersonProfile({ person, events }: PersonProfileProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full overflow-y-auto px-8 py-8"
+      className="h-full overflow-y-auto px-8 py-8 bg-ink-500 relative"
     >
-      <div className="max-w-4xl mx-auto">
+      {/* Aged paper texture overlay */}
+      <div className="fixed inset-0 bg-aged-paper opacity-30 pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        {/* Person Profile Card */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 rounded-2xl p-8 mb-8 text-center"
+          className="bg-parchment-100/90 backdrop-blur-sm border border-gold-400/40 rounded-lg overflow-hidden shadow-ornate mb-8 text-center relative"
         >
-          <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-            <User className="w-12 h-12 text-slate-900" />
-          </div>
-          <h1 className="text-3xl font-bold mb-2">{name}</h1>
-          {person.extracted_data?.title && (
-            <p className="text-amber-400">{person.extracted_data.title}</p>
-          )}
-          {person.extracted_data?.role && (
-            <p className="text-slate-400 mt-2">{person.extracted_data.role}</p>
-          )}
-          {person.extracted_data?.years && (
-            <div className="flex items-center justify-center gap-2 mt-4 text-sm text-slate-500">
-              <Calendar className="w-4 h-4" />
-              <span>{person.extracted_data.years}</span>
+          {/* Decorative top bar */}
+          <div className="h-1 w-full bg-gradient-to-r from-gold-400/50 via-gold-400 to-gold-400/50" />
+
+          {/* Decorative corners */}
+          <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-gold-400/30" />
+          <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-gold-400/30" />
+
+          <div className="p-10">
+            {/* Avatar */}
+            <div className="w-28 h-28 bg-gradient-to-br from-gold-300 to-gold-500 rounded-full mx-auto mb-6 flex items-center justify-center shadow-gold-glow border-4 border-gold-400/30">
+              <Crown className="w-14 h-14 text-ink-200" />
             </div>
-          )}
+
+            <h1 className="font-display text-4xl font-semibold mb-2 text-ink-200">{name}</h1>
+
+            {person.extracted_data?.title && (
+              <p className="font-subheading text-lg text-gold-700 mb-2">{person.extracted_data.title}</p>
+            )}
+
+            {person.extracted_data?.role && (
+              <p className="font-body text-parchment-700 mb-4 italic">{person.extracted_data.role}</p>
+            )}
+
+            {person.extracted_data?.years && (
+              <div className="flex items-center justify-center gap-2 text-sm font-subheading text-parchment-600">
+                <Calendar className="w-4 h-4 text-gold-600" />
+                <span>{person.extracted_data.years}</span>
+              </div>
+            )}
+          </div>
         </motion.div>
 
+        {/* Events Involving This Person */}
         {personEvents.length > 0 && (
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
           >
-            <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-amber-400" />
-              Events Involving {name}
+            <h2 className="font-display text-2xl font-semibold mb-6 flex items-center justify-center gap-3 text-gold-300">
+              <BookOpen className="w-7 h-7" />
+              Chronicles Involving {name}
             </h2>
             <div className="space-y-4">
               {personEvents.slice(0, 10).map((evt: any, index: number) => (
-                <div
+                <motion.div
                   key={index}
-                  className="bg-slate-800/30 border border-white/10 rounded-xl p-4 hover:border-amber-500/20 transition-all"
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="bg-parchment-100/70 backdrop-blur-sm border border-gold-400/30 rounded-lg overflow-hidden hover:border-gold-400/50 transition-all"
                 >
-                  {evt.year && (
-                    <div className="text-sm text-amber-400 mb-2">{evt.year}</div>
-                  )}
-                  <h3 className="font-medium mb-2">
-                    {evt.extracted_data?.event || evt.extracted_data?.description || 'Event'}
-                  </h3>
-                  <p className="text-sm text-slate-400 line-clamp-2">
-                    {evt.passage?.substring(0, 200)}...
-                  </p>
-                </div>
+                  <div className="p-5">
+                    {evt.year && (
+                      <div className="inline-block px-3 py-1 rounded-full text-xs font-subheading text-gold-700 border border-gold-400/30 mb-3">
+                        {evt.year}
+                      </div>
+                    )}
+                    <h3 className="font-display font-semibold mb-2 text-ink-200">
+                      {evt.extracted_data?.event || evt.extracted_data?.description || 'Event'}
+                    </h3>
+                    <p className="font-body text-sm text-ink-100 line-clamp-2 leading-relaxed">
+                      {evt.passage?.substring(0, 200)}...
+                    </p>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
         )}
 
+        {/* Additional Details */}
         {Object.entries(person.extracted_data || {}).length > 1 && (
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="mt-8 bg-slate-800/30 border border-white/10 rounded-xl p-6"
+            className="mt-8 bg-parchment-100/70 backdrop-blur-sm border border-gold-400/30 rounded-lg p-6"
           >
-            <h3 className="text-lg font-semibold mb-4">Details</h3>
+            <h3 className="font-display text-xl font-semibold mb-6 text-gold-700">Biographical Details</h3>
             <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(person.extracted_data)
                 .filter(([key]) => !['name', 'title', 'role', 'years'].includes(key))
                 .slice(0, 6)
                 .map(([key, value]: [string, any]) => (
-                  <div key={key}>
-                    <dt className="text-xs text-slate-500 uppercase">{key}</dt>
-                    <dd className="text-slate-200">{String(value ?? '')}</dd>
+                  <div key={key} className="border-b border-gold-400/10 pb-3 last:border-0">
+                    <dt className="font-subheading text-xs text-parchment-700 uppercase tracking-wide">{key}</dt>
+                    <dd className="font-body text-ink-200 mt-1">{String(value ?? '')}</dd>
                   </div>
                 ))}
             </dl>

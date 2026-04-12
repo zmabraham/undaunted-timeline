@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Search, X, User, Calendar, MapPin } from 'lucide-react';
+import { Search, X, User, Calendar, MapPin, Sparkles } from 'lucide-react';
 
 interface SearchPanelProps {
   entities: any[];
@@ -43,29 +43,48 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full overflow-y-auto px-8 py-8"
+      className="h-full overflow-y-auto px-8 py-8 bg-ink-500 relative"
     >
-      <div className="max-w-4xl mx-auto">
+      {/* Aged paper texture overlay */}
+      <div className="fixed inset-0 bg-aged-paper opacity-30 pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        {/* Header */}
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="text-center mb-8"
+        >
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
+            <Sparkles className="w-5 h-5 text-gold-400" />
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400" />
+          </div>
+          <h1 className="font-display text-3xl font-semibold text-gold-200">Search the Archives</h1>
+          <p className="font-body text-parchment-400 mt-2 italic">Explore the chronicles of Chabad history</p>
+        </motion.div>
+
         {/* Search Input */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mb-8"
+          transition={{ delay: 0.1 }}
+          className="mb-6"
         >
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gold-500" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search events, people, places..."
-              className="w-full pl-12 pr-12 py-4 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+              placeholder="Search for souls, events, or places..."
+              className="w-full pl-14 pr-12 py-4 bg-parchment-100/80 backdrop-blur-sm border-2 border-gold-400/40 rounded-xl text-ink-200 placeholder-parchment-500 focus:outline-none focus:border-gold-400 transition-colors font-body text-lg"
               autoFocus
             />
             {query && (
               <button
                 onClick={() => setQuery('')}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-parchment-500 hover:text-gold-500 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -73,18 +92,18 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
           </div>
 
           {/* Filter Buttons */}
-          <div className="flex gap-2 mt-4">
+          <div className="flex gap-3 mt-4 justify-center">
             {(['all', 'events', 'people', 'places'] as const).map(f => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-4 py-2 rounded-full text-sm capitalize transition-all ${
+                className={`px-5 py-2 rounded-full text-sm capitalize transition-all font-subheading ${
                   filter === f
-                    ? 'bg-amber-500 text-slate-900'
-                    : 'bg-slate-800/50 text-slate-400 hover:text-white border border-white/10'
+                    ? 'bg-gold-500 text-ink-200 shadow-gold-glow'
+                    : 'bg-parchment-100/50 text-parchment-500 border border-gold-400/30 hover:border-gold-400/60'
                 }`}
               >
-                {f}
+                {f === 'all' ? 'All Archives' : f}
               </button>
             ))}
           </div>
@@ -94,17 +113,19 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.2 }}
         >
           {query && results.length === 0 && (
-            <div className="text-center py-12 text-slate-500">
-              No results found for "{query}"
+            <div className="text-center py-16">
+              <Sparkles className="w-12 h-12 text-gold-400/30 mx-auto mb-4" />
+              <p className="font-subheading text-parchment-500 text-lg">No chronicles found for "{query}"</p>
+              <p className="font-body text-parchment-600 text-sm mt-2">Try searching for a different term</p>
             </div>
           )}
 
           {results.length > 0 && (
-            <div className="mb-4 text-sm text-slate-500">
-              Found {results.length} result{results.length !== 1 ? 's' : ''}
+            <div className="mb-4 text-center font-subheading text-parchment-500">
+              Found {results.length} result{results.length !== 1 ? 's' : ''} in the archives
             </div>
           )}
 
@@ -124,24 +145,26 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
                     if (isEvent) onSelectEvent(item);
                     else if (isPerson) onSelectPerson(item);
                   }}
-                  className="bg-slate-800/30 border border-white/10 rounded-xl p-4 hover:border-amber-500/30 cursor-pointer transition-all"
+                  className="bg-parchment-100/70 backdrop-blur-sm border border-gold-400/30 rounded-lg overflow-hidden hover:border-gold-400/60 cursor-pointer transition-all shadow-card"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="mt-1">
-                      {isEvent && <Calendar className="w-4 h-4 text-amber-400" />}
-                      {isPerson && <User className="w-4 h-4 text-blue-400" />}
-                      {isPlace && <MapPin className="w-4 h-4 text-green-400" />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium mb-1">
-                        {item.extracted_data?.name ||
-                         item.extracted_data?.event ||
-                         item.extracted_data?.description ||
-                         item.node_type}
-                      </h3>
-                      <p className="text-sm text-slate-400 line-clamp-2">
-                        {item.passage?.substring(0, 150)}
-                      </p>
+                  <div className="p-5">
+                    <div className="flex items-start gap-4">
+                      <div className="mt-1">
+                        {isEvent && <Calendar className="w-5 h-5 text-gold-600" />}
+                        {isPerson && <User className="w-5 h-5 text-gold-600" />}
+                        {isPlace && <MapPin className="w-5 h-5 text-gold-600" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-display font-semibold mb-2 text-ink-200">
+                          {item.extracted_data?.name ||
+                           item.extracted_data?.event ||
+                           item.extracted_data?.description ||
+                           item.node_type}
+                        </h3>
+                        <p className="font-body text-sm text-ink-100 line-clamp-2 leading-relaxed">
+                          {item.passage?.substring(0, 150)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </motion.div>

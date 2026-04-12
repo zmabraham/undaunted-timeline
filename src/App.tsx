@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Search, User, MapPin, BookOpen, Clock } from 'lucide-react';
+import { Search, User, MapPin, BookOpen, Clock, Crown } from 'lucide-react';
 import { ERAS, processTimelineData, type UndauntedData } from './data/undaunted-data';
 import TimelineView from './components/TimelineView';
 import EraView from './components/EraView';
@@ -79,45 +79,64 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden font-sans">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {view !== 'panorama' && (
-              <button onClick={handleBack} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                ← Back
+    <div className="min-h-screen bg-gradient-to-br from-ink-400 via-ink-500 to-ink-400 text-white overflow-hidden font-body">
+      {/* Elegant Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-ink-500/90 backdrop-blur-md border-b border-gold-400/20">
+        {/* Decorative top border */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
+
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {view !== 'panorama' && (
+                <button
+                  onClick={handleBack}
+                  className="px-4 py-2 font-subheading text-sm text-gold-300 hover:text-gold-200 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all"
+                >
+                  ← Return
+                </button>
+              )}
+              <div>
+                <h1 className="font-display text-xl font-semibold text-gold-200">
+                  {view === 'panorama' && 'Undaunted: The Living Timeline'}
+                  {view === 'era' && selectedEra?.name}
+                  {view === 'event' && 'Event Chronicle'}
+                  {view === 'person' && 'Soul Profile'}
+                  {view === 'search' && 'Search the Archives'}
+                </h1>
+                {view === 'panorama' && (
+                  <p className="font-body text-sm text-parchment-500 italic mt-0.5">
+                    A journey through Chabad history
+                  </p>
+                )}
+              </div>
+            </div>
+            {view === 'panorama' && (
+              <button
+                onClick={() => setView('search')}
+                className="p-2.5 border border-gold-400/30 rounded-full hover:bg-gold-400/10 transition-all"
+              >
+                <Search className="w-5 h-5 text-gold-300" />
               </button>
             )}
-            <h1 className="text-xl font-semibold bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent">
-              {view === 'panorama' && 'Undaunted: A Journey Through Chabad History'}
-              {view === 'era' && selectedEra?.name}
-              {view === 'event' && 'Event Details'}
-              {view === 'person' && 'Person Profile'}
-              {view === 'search' && 'Search'}
-            </h1>
           </div>
-          {view === 'panorama' && (
-            <button onClick={() => setView('search')} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
-          )}
         </div>
       </header>
 
-      <main className="pt-20 h-screen">
+      <main className="pt-24 h-screen">
         {loading && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-slate-400">Loading timeline...</p>
+              <Crown className="w-12 h-12 text-gold-400 mx-auto mb-4 animate-pulse" />
+              <p className="font-subheading text-parchment-400 text-lg">Loading the archives...</p>
             </div>
           </div>
         )}
         {error && (
           <div className="flex items-center justify-center h-full">
-            <div className="text-center text-red-400">
-              <p className="mb-2">Failed to load data</p>
-              <p className="text-sm text-slate-500">{error}</p>
+            <div className="text-center">
+              <p className="font-display text-red-400 text-xl mb-2">Failed to Load</p>
+              <p className="font-body text-parchment-500">{error}</p>
             </div>
           </div>
         )}
@@ -164,12 +183,29 @@ function App() {
         )}
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-slate-950/80 backdrop-blur-md border-t border-white/10 py-2">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-center gap-6 text-sm text-slate-400">
-          <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {timelineData.events.length} Events</span>
-          <span className="flex items-center gap-1"><User className="w-4 h-4" /> {timelineData.people.length} People</span>
-          <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {timelineData.places.length} Places</span>
-          <span className="flex items-center gap-1"><BookOpen className="w-4 h-4" /> {timelineData.teachings.length} Teachings</span>
+      {/* Elegant Footer */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-ink-500/90 backdrop-blur-md border-t border-gold-400/20">
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-center gap-8 font-subheading text-sm text-parchment-500">
+          <span className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-gold-500" />
+            {timelineData.events.length} Chronicles
+          </span>
+          <span className="text-gold-400/50">✦</span>
+          <span className="flex items-center gap-2">
+            <User className="w-4 h-4 text-gold-500" />
+            {timelineData.people.length} Souls
+          </span>
+          <span className="text-gold-400/50">✦</span>
+          <span className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-gold-500" />
+            {timelineData.places.length} Places
+          </span>
+          <span className="text-gold-400/50">✦</span>
+          <span className="flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-gold-500" />
+            {timelineData.teachings.length} Teachings
+          </span>
         </div>
       </footer>
     </div>

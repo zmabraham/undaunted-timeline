@@ -321,20 +321,23 @@ function App() {
       </main>
 
       {/* Elegant Footer */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-ink-500/90 backdrop-blur-md border-t border-gold-400/20">
+      <footer className="fixed bottom-0 left-0 right-0 bg-ink-500/95 backdrop-blur-md border-t border-gold-400/20">
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-center gap-4 font-subheading text-xs text-parchment-500 flex-wrap">
-          <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-gold-500" /> {timelineData.events.length}</span>
-          <span className="text-gold-400/30">✦</span>
-          <span className="flex items-center gap-1"><User className="w-3 h-3 text-gold-500" /> {timelineData.people.length}</span>
-          <span className="text-gold-400/30">✦</span>
-          <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-gold-500" /> {timelineData.allPlaces.length}</span>
-          <span className="text-gold-400/30">✦</span>
-          <span className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-gold-500" /> {timelineData.teachings.length}</span>
-          <span className="text-gold-400/30">✦</span>
-          <span className="flex items-center gap-1"><Building2 className="w-3 h-3 text-gold-500" /> {timelineData.institutions.length}</span>
-          <span className="text-gold-400/30">✦</span>
-          <span className="flex items-center gap-1"><Users2 className="w-3 h-3 text-gold-500" /> {timelineData.communities.length}</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2">
+          {/* Entity counts - responsive */}
+          <div className="flex items-center justify-center gap-2 sm:gap-4 font-subheading text-[10px] sm:text-xs text-parchment-500 flex-wrap">
+            <span className="flex items-center gap-1" title="Chronicles"><Clock className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.events.length}</span></span>
+            <span className="text-gold-400/30">✦</span>
+            <span className="flex items-center gap-1" title="Souls"><User className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.people.length}</span></span>
+            <span className="text-gold-400/30">✦</span>
+            <span className="flex items-center gap-1" title="Places"><MapPin className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.allPlaces.length}</span></span>
+            <span className="text-gold-400/30 hidden sm:inline">✦</span>
+            <span className="hidden sm:inline flex items-center gap-1" title="Teachings"><BookOpen className="w-3 h-3 text-gold-500" /> {timelineData.teachings.length}</span>
+            <span className="text-gold-400/30 hidden sm:inline">✦</span>
+            <span className="hidden sm:inline flex items-center gap-1" title="Institutions"><Building2 className="w-3 h-3 text-gold-500" /> {timelineData.institutions.length}</span>
+            <span className="text-gold-400/30 hidden sm:inline">✦</span>
+            <span className="hidden sm:inline flex items-center gap-1" title="Communities"><Users2 className="w-3 h-3 text-gold-500" /> {timelineData.communities.length}</span>
+          </div>
         </div>
       </footer>
     </div>

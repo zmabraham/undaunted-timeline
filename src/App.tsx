@@ -255,11 +255,12 @@ function App() {
                 stats={{
                   events: timelineData.events.length,
                   people: timelineData.people.length,
-                  places: timelineData.places.length,
+                  places: timelineData.allPlaces.length,
                   topics: timelineData.topics.length,
                   teachings: timelineData.teachings.length,
                   institutions: timelineData.institutions.length,
-                  communities: timelineData.communities.length
+                  communities: timelineData.communities.length,
+                  quotes: timelineData.quotes.length
                 }}
               />
             )}
@@ -425,7 +426,7 @@ function App() {
 }
 
 // Home/Landing View Component
-function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; stats: { events: number; people: number; places: number; topics: number; teachings: number; institutions: number; communities: number } }) {
+function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; stats: { events: number; people: number; places: number; topics: number; teachings: number; institutions: number; communities: number; quotes: number } }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -451,22 +452,26 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
           <p className="font-body text-parchment-400 text-2xl italic mb-6">The Living Timeline of Chabad Lubavitch</p>
 
           {/* Stats - more compact */}
-          <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8">
             <div className="text-center">
-              <div className="font-display text-3xl font-semibold text-gold-300">{stats.events}</div>
-              <div className="font-subheading text-parchment-500 text-sm">Chronicles</div>
+              <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.events}</div>
+              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Chronicles</div>
             </div>
             <div className="text-center">
-              <div className="font-display text-3xl font-semibold text-gold-300">{stats.people}</div>
-              <div className="font-subheading text-parchment-500 text-sm">Souls</div>
+              <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.people}</div>
+              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Souls</div>
             </div>
             <div className="text-center">
-              <div className="font-display text-3xl font-semibold text-gold-300">{stats.places}</div>
-              <div className="font-subheading text-parchment-500 text-sm">Places</div>
+              <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.places}</div>
+              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Places</div>
             </div>
             <div className="text-center">
-              <div className="font-display text-3xl font-semibold text-gold-300">{stats.teachings}</div>
-              <div className="font-subheading text-parchment-500 text-sm">Teachings</div>
+              <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.teachings}</div>
+              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Teachings</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.quotes}</div>
+              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Quotes</div>
             </div>
           </div>
 

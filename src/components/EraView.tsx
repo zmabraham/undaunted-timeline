@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { User, Calendar, BookOpen, Quote } from 'lucide-react';
+import { User, Calendar, BookOpen, Quote, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
 interface Era {
   id: string;
@@ -17,6 +18,9 @@ interface EraViewProps {
 }
 
 export default function EraView({ era, events, onSelectEvent, onSelectPerson }: EraViewProps) {
+  const [showAllEvents, setShowAllEvents] = useState(false);
+  const displayedEvents = showAllEvents ? events : events.slice(0, 18);
+
   const getEraPeople = () => {
     const mentioned = new Set<string>();
     events.forEach((evt: any) => {
@@ -70,12 +74,15 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
 
         {/* Key Events Section */}
         <div className="mb-16">
-          <h3 className="font-display text-2xl font-semibold mb-8 flex items-center justify-center gap-3 text-gold-300">
-            <Calendar className="w-6 h-6" />
-            <span>Chronicles of the Era</span>
-          </h3>
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <h3 className="font-display text-2xl font-semibold flex items-center gap-3 text-gold-300">
+              <Calendar className="w-6 h-6" />
+              <span>Chronicles of the Era</span>
+            </h3>
+            <span className="font-subheading text-sm text-parchment-500">({events.length} events)</span>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.slice(0, 18).map((event: any, index: number) => (
+            {displayedEvents.map((event: any, index: number) => (
               <motion.div
                 key={index}
                 initial={{ y: 20, opacity: 0 }}
@@ -115,6 +122,21 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
               </motion.div>
             ))}
           </div>
+
+          {/* Show More/Less Button */}
+          {events.length > 18 && (
+            <div className="flex justify-center mt-8">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowAllEvents(!showAllEvents)}
+                className="flex items-center gap-2 px-6 py-3 bg-parchment-100/90 border border-gold-400/40 rounded-full text-sm font-subheading text-ink-200 hover:border-gold-400 transition-all shadow-sm"
+              >
+                <span>{showAllEvents ? `Show Less (18)` : `Show All (${events.length})`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${showAllEvents ? 'rotate-180' : ''}`} />
+              </motion.button>
+            </div>
+          )}
         </div>
 
         {/* People Section */}

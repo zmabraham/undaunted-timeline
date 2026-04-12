@@ -827,9 +827,32 @@ function DocumentsView({ documents }: any) {
 }
 
 function TeachingsView({ teachings }: any) {
+  const [selectedTeaching, setSelectedTeaching] = useState<any>(null);
+
+  if (selectedTeaching) {
+    return (
+      <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+        <div className="max-w-4xl mx-auto">
+          <button onClick={() => setSelectedTeaching(null)} className="font-subheading text-gold-300 hover:text-gold-200 mb-6">← Back to Teachings</button>
+          <div className="bg-parchment-100/90 border border-gold-400/40 rounded-lg p-8 shadow-ornate">
+            <div className="h-1 w-full bg-gradient-to-r from-gold-400/50 via-gold-400 to-gold-400/50 mb-6" />
+            <h2 className="font-display text-3xl text-ink-200 mb-4">
+              {selectedTeaching.extracted_data?.teaching || selectedTeaching.extracted_data?.topic || selectedTeaching.extracted_data?.title || selectedTeaching.passage?.substring(0, 100) || 'Teaching'}
+            </h2>
+            <p className="font-body text-lg text-ink-100 leading-relaxed whitespace-pre-line">
+              {selectedTeaching.passage || selectedTeaching.extracted_data?.description || 'No content available'}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
-      <div className="max-w-5xl mx-auto">
+      <div className="fixed inset-0 bg-aged-paper opacity-30 pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto relative z-10">
         <div className="flex items-center justify-center gap-4 mb-8">
           <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400" />
           <Crown className="w-6 h-6 text-gold-400" />
@@ -840,17 +863,33 @@ function TeachingsView({ teachings }: any) {
           Wisdom and insights from the Rebbes
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {teachings.slice(0, 50).map((teaching: any, i: number) => (
-            <div key={i} className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-6 shadow-card">
-              <h3 className="font-display text-xl text-ink-200 mb-3">
-                {teaching.extracted_data?.teaching || teaching.extracted_data?.topic || 'Teaching'}
-              </h3>
-              <p className="font-body text-ink-100 line-clamp-4 leading-relaxed">
-                {teaching.passage || teaching.extracted_data?.description || 'No content available'}
-              </p>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {teachings.map((teaching: any, i: number) => {
+            const title = teaching.extracted_data?.teaching || teaching.extracted_data?.topic || teaching.extracted_data?.title ||
+              (teaching.passage && teaching.passage.length > 60 ? teaching.passage.substring(0, 60) + '...' : teaching.passage?.substring(0, 60));
+            const preview = teaching.passage || teaching.extracted_data?.description || '';
+            return (
+              <motion.div
+                key={i}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: i * 0.02 }}
+                onClick={() => setSelectedTeaching(teaching)}
+                className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-5 shadow-card cursor-pointer hover:border-gold-400/60 transition-all"
+              >
+                <h3 className="font-display text-lg text-ink-200 mb-3 leading-snug">
+                  {title !== 'Teaching' ? title : teaching.passage?.substring(0, 80) + '...'}
+                </h3>
+                <p className="font-body text-sm text-ink-100 line-clamp-3 leading-relaxed">
+                  {preview}
+                </p>
+                <div className="mt-3 flex items-center gap-2 text-xs text-gold-700 font-subheading">
+                  <span>Click to read</span>
+                  <span>→</span>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -1124,7 +1124,8 @@
         "country": "Russia (White Russia)",
         "years_relevant": "1813-1915 (Chabad capital)",
         "specific_address": "",
-        "description": "Small village that became capital of Chabad movement for 102 years; now pilgrimage site"
+        "description": "Small village that became capital of Chabad movement for 102 years; now pilgrimage site",
+        "name": "It was a bright summer day in the town of Lubavitc"
       }
     },
     {
@@ -1140,7 +1141,8 @@
         "place_type": "region",
         "country": "Russian Empire",
         "years_relevant": "18th-20th centuries",
-        "description": "Historic region where Lubavitch was located"
+        "description": "Historic region where Lubavitch was located",
+        "name": "White Russia"
       }
     },
     {
@@ -1153,7 +1155,8 @@
         "place_type": "town",
         "country": "Ukraine",
         "years_relevant": "19th century",
-        "description": "Hometown of Rebbetzin Shterna Sara"
+        "description": "Hometown of Rebbetzin Shterna Sara",
+        "name": "When they married in 1875, Rebbetzin Shterna Sara "
       }
     },
     {
@@ -1166,7 +1169,8 @@
         "place_type": "city",
         "country": "Germany",
         "years_relevant": "late 19th - early 20th century",
-        "description": "Where Rashab and Rayatz heard Kaiser Wilhelm speak"
+        "description": "Where Rashab and Rayatz heard Kaiser Wilhelm speak",
+        "name": "The Rashab was alarmed by the German onslaught and"
       }
     },
     {
@@ -1181,7 +1185,8 @@
         "place_type": "city",
         "country": "Russia",
         "years_relevant": "1915-1920 (Chabad headquarters)",
-        "description": "City where Chabad relocated after fleeing Lubavitch; site of Rashab's passing"
+        "description": "City where Chabad relocated after fleeing Lubavitch; site of Rashab's passing",
+        "name": "They made their way far from the invading Germans "
       }
     },
     {
@@ -1194,7 +1199,8 @@
         "place_type": "town",
         "country": "Belarus",
         "years_relevant": "1897-1898",
-        "description": "First location of Tomchei Temimim yeshiva"
+        "description": "First location of Tomchei Temimim yeshiva",
+        "name": "After the holidays, the students and their mashpia relocated to Zembin"
       }
     },
     {
@@ -1209,7 +1215,8 @@
         "place_type": "city",
         "country": "Eretz Yisrael",
         "years_relevant": "1911-1929 (Toras Emes yeshiva)",
-        "description": "Location of first Chabad yeshiva in Eretz Yisrael; Chabad community since 1823"
+        "description": "Location of first Chabad yeshiva in Eretz Yisrael; Chabad community since 1823",
+        "name": "In 1911, the Rashab sent a group of outstanding st"
       }
     },
     {
@@ -1225,7 +1232,8 @@
         "place_type": "city",
         "country": "Russia",
         "years_relevant": "18th-20th centuries",
-        "description": "Capital of Russian Empire; site of government ministry, rabbinic conference"
+        "description": "Capital of Russian Empire; site of government ministry, rabbinic conference",
+        "name": "The Rashab dispatched his son to the capital of St. Petersburg"
       }
     },
     {
@@ -1238,7 +1246,8 @@
         "place_type": "city",
         "country": "Crimea",
         "years_relevant": "1880s (health visits)",
-        "description": "Health resort where Rashab family stayed"
+        "description": "Health resort where Rashab family stayed",
+        "name": "Bolivke... The family's time in Yalta was an idyllic period"
       }
     },
     {
@@ -1251,7 +1260,8 @@
         "place_type": "resort town",
         "country": "Ukraine",
         "years_relevant": "1890s (summer residence)",
-        "description": "Summer resort town where Rashab family stayed"
+        "description": "Summer resort town where Rashab family stayed",
+        "name": "Bolivke... In June of 1896, the Rayatz became engaged to Nechama Dina in Bolivke"
       }
     },
     {
@@ -1264,7 +1274,8 @@
         "place_type": "city",
         "country": "Belarus",
         "years_relevant": "early 20th century",
-        "description": "Center of Poalei Tzion activity; Raza lived there"
+        "description": "Center of Poalei Tzion activity; Raza lived there",
+        "name": "Vitebsk, near Lubavitch. It was inspired by the wr"
       }
     },
     {
@@ -1277,7 +1288,8 @@
         "place_type": "town",
         "country": "Belarus",
         "years_relevant": "19th century",
-        "description": "Rail station town near Lubavitch"
+        "description": "Rail station town near Lubavitch",
+        "name": "Rudnya, some ten miles north. Wagon drivers would wait for pilgrims there"
       }
     },
     {
@@ -1292,7 +1304,8 @@
         "place_type": "town",
         "country": "Belarus",
         "years_relevant": "1866-1923",
-        "description": "Location of rival Chabad court founded by Rabbi Yehuda Leib"
+        "description": "Location of rival Chabad court founded by Rabbi Yehuda Leib",
+        "name": "The Rashab would travel to Lubavitch to visit his "
       }
     },
     {
@@ -1305,7 +1318,8 @@
         "place_type": "town",
         "country": "Ukraine",
         "years_relevant": "19th century",
-        "description": "Location of Chabad court founded by Rabbi Chaim Schneur Zalman; resting place of Alter Rebbe"
+        "description": "Location of Chabad court founded by Rabbi Chaim Schneur Zalman; resting place of Alter Rebbe",
+        "name": "Rabbi Chaim Schneur Zalman in Liadi, and Rabbi Yisrael Noach in Nizhyn."
       }
     },
     {
@@ -1318,7 +1332,8 @@
         "place_type": "city",
         "country": "Ukraine",
         "years_relevant": "19th century",
-        "description": "Location of Chabad court founded by Rabbi Yisrael Noach; resting place of Mitteler Rebbe"
+        "description": "Location of Chabad court founded by Rabbi Yisrael Noach; resting place of Mitteler Rebbe",
+        "name": "Rabbi Yisrael Noach in Nizhyn."
       }
     },
     {
@@ -1333,7 +1348,8 @@
         "place_type": "city",
         "country": "Ukraine",
         "years_relevant": "1913 (Beilis trial)",
-        "description": "Site of infamous Beilis blood libel trial"
+        "description": "Site of infamous Beilis blood libel trial",
+        "name": "Mendel Beilis, a Kiev Jew, was accused of killing twelve-year-old Andrei Yushchinksy"
       }
     },
     {
@@ -1346,7 +1362,8 @@
         "place_type": "city",
         "country": "Russia",
         "years_relevant": "early 20th century",
-        "description": "Site of rabbinic assemblies; Chabad library stored there"
+        "description": "Site of rabbinic assemblies; Chabad library stored there",
+        "name": "For a quarter of a century, until his father's pas"
       }
     },
     {
@@ -1361,7 +1378,8 @@
         "place_type": "complex",
         "country": "Lubavitch",
         "years_relevant": "19th - early 20th century",
-        "description": "Courtyard complex containing Rebbe's residence, synagogue, and yeshiva"
+        "description": "Courtyard complex containing Rebbe's residence, synagogue, and yeshiva",
+        "name": "Chatzer, the Rebbe's court"
       }
     },
     {
@@ -1376,7 +1394,8 @@
         "place_type": "burial_site",
         "country": "Lubavitch",
         "years_relevant": "1866-present",
-        "description": "Burial place of third and fourth Rebbes; site of prayers and revelations"
+        "description": "Burial place of third and fourth Rebbes; site of prayers and revelations",
+        "name": "Ohel, the gravesites of the Rebbes in the cemetery on the outskirts of Lubavitch."
       }
     },
     {
@@ -3634,7 +3653,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "1896",
-        "description": "Summer residence of the Rashab's family. Location of Rayatz's engagement to Nechama Dina in June 1896. Site of Zionist raid on Rashab's summer home in 1906."
+        "description": "Summer residence of the Rashab's family. Location of Rayatz's engagement to Nechama Dina in June 1896. Site of Zionist raid on Rashab's summer home in 1906.",
+        "name": "Bolivke, where the family was spending the summer"
       }
     },
     {
@@ -3648,7 +3668,8 @@
         "country": "Belarus (then western Russia)",
         "specific_address": null,
         "years_relevant": "1897-1898",
-        "description": "First location of Tomchei Temimim outside Lubavitch. Smaller town with fewer distractions for students. Jewish population annihilated during Holocaust."
+        "description": "First location of Tomchei Temimim outside Lubavitch. Smaller town with fewer distractions for students. Jewish population annihilated during Holocaust.",
+        "name": "Zembin, a town of one thousand residents, most of "
       }
     },
     {
@@ -3662,7 +3683,8 @@
         "country": "Eretz Yisrael (Israel)",
         "specific_address": "Beit Romano",
         "years_relevant": "1823-present (Chabad presence)",
-        "description": "Chabad community founded in 1823 by Chasidim who immigrated to Safed and Tiberias. Location of Beit Romano purchased by Rashab in 1908. Site of Toras Emes yeshivah founded in 1911, first chasidic yeshivah in Eretz Yisrael."
+        "description": "Chabad community founded in 1823 by Chasidim who immigrated to Safed and Tiberias. Location of Beit Romano purchased by Rashab in 1908. Site of Toras Emes yeshivah founded in 1911, first chasidic yeshivah in Eretz Yisrael.",
+        "name": "Hebron"
       }
     },
     {
@@ -3676,7 +3698,8 @@
         "country": "Eretz Yisrael (Hebron)",
         "specific_address": "Hebron",
         "years_relevant": "1908-present",
-        "description": "Large mansion originally owned by affluent Jew from Istanbul. Purchased by Rashab in 1908. Became base for Toras Emes yeshivah and Rashab's foothold in Hebron."
+        "description": "Large mansion originally owned by affluent Jew from Istanbul. Purchased by Rashab in 1908. Became base for Toras Emes yeshivah and Rashab's foothold in Hebron.",
+        "name": "Beit Romano"
       }
     },
     {
@@ -3692,7 +3715,8 @@
         "country": "Russia",
         "specific_address": null,
         "years_relevant": "1915-1920 (as Chabad capital)",
-        "description": "Capital of Chabad reestablished here in 1915. Outside Pale of Settlement. Rashab spent last five years of his life here. Jewish population grew to 15,000 by 1915. Bolsheviks took control January 1920."
+        "description": "Capital of Chabad reestablished here in 1915. Outside Pale of Settlement. Rashab spent last five years of his life here. Jewish population grew to 15,000 by 1915. Bolsheviks took control January 1920.",
+        "name": "Rostov-on-Don, seven hundred miles south of Moscow."
       }
     },
     {
@@ -3708,7 +3732,8 @@
         "country": "Moldova (Bessarabia)",
         "specific_address": null,
         "years_relevant": "late 19th century",
-        "description": "Home of Rabbi Avraham Schneersohn, father of Nechama Dina."
+        "description": "Home of Rabbi Avraham Schneersohn, father of Nechama Dina.",
+        "name": "Kishinev"
       }
     },
     {
@@ -3724,7 +3749,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "late 19th-early 20th century",
-        "description": "Home of Rabbi Asher Grossman, who represented Rashab in investigating Nechama Dina as a match for Rayatz."
+        "description": "Home of Rabbi Asher Grossman, who represented Rashab in investigating Nechama Dina as a match for Rayatz.",
+        "name": "Nikolayev"
       }
     },
     {
@@ -3738,7 +3764,8 @@
         "country": "Belarus",
         "specific_address": null,
         "years_relevant": "early 20th century",
-        "description": "The Raza (Rashab's brother) lived here. Near Lubavitch. Center of Poalei Tzion activity. Site of boycotts against Poalei Tzion supporters."
+        "description": "The Raza (Rashab's brother) lived here. Near Lubavitch. Center of Poalei Tzion activity. Site of boycotts against Poalei Tzion supporters.",
+        "name": "Vitebsk"
       }
     },
     {
@@ -3752,7 +3779,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "early 20th century",
-        "description": "Home of Berel Davzik, the student who became involved with Poalei T Zion."
+        "description": "Home of Berel Davzik, the student who became involved with Poalei T Zion.",
+        "name": "Chernihiv"
       }
     },
     {
@@ -3842,7 +3870,8 @@
         "country": "Belarus",
         "specific_address": null,
         "years_relevant": "1901",
-        "description": "Location of textile mill opened by Rayatz in 1901 using JCA funds. Provided employment for 2,000 local Jews."
+        "description": "Location of textile mill opened by Rayatz in 1901 using JCA funds. Provided employment for 2,000 local Jews.",
+        "name": "Dubrovno, some sixty miles from Lubavitch"
       }
     },
     {
@@ -3856,7 +3885,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "1913",
-        "description": "Location of Beilis blood libel trial in 1913."
+        "description": "Location of Beilis blood libel trial in 1913.",
+        "name": "Kiev"
       }
     },
     {
@@ -3870,7 +3900,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "late 19th century",
-        "description": "Birthplace of Rabbi Moshe Dovber Rivkin. His father Reb Bentzion was rabbi of the town."
+        "description": "Birthplace of Rabbi Moshe Dovber Rivkin. His father Reb Bentzion was rabbi of the town.",
+        "name": "Zintsi, Ukraine"
       }
     },
     {
@@ -3884,7 +3915,8 @@
         "country": null,
         "specific_address": "train station",
         "years_relevant": "1906",
-        "description": "Location of train station where Poalei Tzion planned to ambush Rayatz."
+        "description": "Location of train station where Poalei Tzion planned to ambush Rayatz.",
+        "name": "Osha"
       }
     },
     {
@@ -3898,7 +3930,8 @@
         "country": "Russian Empire",
         "specific_address": null,
         "years_relevant": "1791-1917",
-        "description": "Restricted area where five million Jews were required to live. Rostov was outside the Pale. Terminated in 1917 following revolution."
+        "description": "Restricted area where five million Jews were required to live. Rostov was outside the Pale. Terminated in 1917 following revolution.",
+        "name": "Pale of Settlement"
       }
     },
     {
@@ -3912,7 +3945,8 @@
         "country": "Eretz Yisrael",
         "specific_address": null,
         "years_relevant": "1922-present",
-        "description": "Toras Emes yeshivah reconstituted here in 1922 by Rabbi Zalman Havlin. Colel Chabad based here."
+        "description": "Toras Emes yeshivah reconstituted here in 1922 by Rabbi Zalman Havlin. Colel Chabad based here.",
+        "name": "Jerusalem"
       }
     },
     {
@@ -3928,7 +3962,8 @@
         "country": "Eretz Yisrael",
         "specific_address": null,
         "years_relevant": "1823",
-        "description": "Chabad followers living here in early 19th century before moving to Hebron."
+        "description": "Chabad followers living here in early 19th century before moving to Hebron.",
+        "name": "Safed"
       }
     },
     {
@@ -3944,7 +3979,8 @@
         "country": "Eretz Yisrael",
         "specific_address": null,
         "years_relevant": "1823",
-        "description": "Chabad followers living here in early 19th century before moving to Hebron."
+        "description": "Chabad followers living here in early 19th century before moving to Hebron.",
+        "name": "Tiberias"
       }
     },
     {
@@ -4014,7 +4050,8 @@
         "country": "China",
         "specific_address": null,
         "years_relevant": "1904-1905",
-        "description": "Far East region where Russo-Japanese War took place. Jewish soldiers served here and received Passover supplies through Rashab and Rayatz's efforts."
+        "description": "Far East region where Russo-Japanese War took place. Jewish soldiers served here and received Passover supplies through Rashab and Rayatz's efforts.",
+        "name": "Manchuria and Korea"
       }
     },
     {
@@ -4030,7 +4067,8 @@
         "country": "Kazakhstan",
         "specific_address": null,
         "years_relevant": "1928",
-        "description": "Trotsky was banished to remote Alma Alta in 1928 before being deported from Russia."
+        "description": "Trotsky was banished to remote Alma Alta in 1928 before being deported from Russia.",
+        "name": "Alma Alta"
       }
     },
     {
@@ -4044,7 +4082,8 @@
         "country": "Mexico",
         "specific_address": null,
         "years_relevant": "1940",
-        "description": "Trotsky relocated here and was assassinated by Stalinist agent in 1940."
+        "description": "Trotsky relocated here and was assassinated by Stalinist agent in 1940.",
+        "name": "Mexico City"
       }
     },
     {
@@ -6253,7 +6292,8 @@
         "country": "Russia",
         "specific_address": "Jewish cemetery",
         "years_relevant": "1915-1924",
-        "description": "City in southern Russia where the Rashab lived and died, and the Rayatz established his leadership"
+        "description": "City in southern Russia where the Rashab lived and died, and the Rayatz established his leadership",
+        "name": "The funeral took place at the Jewish cemetery in Rostov on Sunday afternoon"
       }
     },
     {
@@ -6269,7 +6309,8 @@
         "country": "Russia",
         "specific_address": null,
         "years_relevant": "1813-1920",
-        "description": "Small village that was the center of the Chabad movement for over a century"
+        "description": "Small village that was the center of the Chabad movement for over a century",
+        "name": "the synagogue and the home of the Rebbe there were"
       }
     },
     {
@@ -6283,7 +6324,8 @@
         "country": "Russia",
         "specific_address": "Rostov",
         "years_relevant": "1940-present",
-        "description": "New Jewish cemetery in Rostov where the Rashab's remains were transferred in 1940"
+        "description": "New Jewish cemetery in Rostov where the Rashab's remains were transferred in 1940",
+        "name": "They prohibited the removal of any remains. Local "
       }
     },
     {
@@ -6299,7 +6341,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "1915-1920",
-        "description": "City in Ukraine where the yeshivah was transferred during World War I"
+        "description": "City in Ukraine where the yeshivah was transferred during World War I",
+        "name": "During the war, the yeshivah had been transferred from Lubavitch to Kremenchuk, Ukraine."
       }
     },
     {
@@ -6313,7 +6356,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "1922-1924",
-        "description": "City in Ukraine with a strong Jewish community where the yeshivah was temporarily relocated"
+        "description": "City in Ukraine with a strong Jewish community where the yeshivah was temporarily relocated",
+        "name": "In Poltava, 375 miles to the west in Russian Ukrai"
       }
     },
     {
@@ -6329,7 +6373,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "1924-1925",
-        "description": "City in Ukraine where the yeshivah was temporarily located"
+        "description": "City in Ukraine where the yeshivah was temporarily located",
+        "name": "After two years, they moved the yeshivah to Kharkiv for six months"
       }
     },
     {
@@ -6346,7 +6391,8 @@
         "country": "Russia",
         "specific_address": null,
         "years_relevant": "1924-1927",
-        "description": "Historical capital of Russia where the Rayatz relocated and established communal leadership"
+        "description": "Historical capital of Russia where the Rayatz relocated and established communal leadership",
+        "name": "so the decision was made to relocate to Leningrad "
       }
     },
     {
@@ -6359,7 +6405,8 @@
         "country": "Russia",
         "specific_address": "Leningrad",
         "years_relevant": "1924-1927",
-        "description": "One of the streets where the Rebbe's apartment was located in Leningrad"
+        "description": "One of the streets where the Rebbe's apartment was located in Leningrad",
+        "name": "The Rebbe's apartment was located on the corner of"
       },
       "merge_count": 2,
       "all_passages": null
@@ -6377,7 +6424,8 @@
         "country": "Belarus",
         "specific_address": null,
         "years_relevant": "19th - early 20th century",
-        "description": "City in Belarus that was the seat of a branch of Chabad"
+        "description": "City in Belarus that was the seat of a branch of Chabad",
+        "name": "Bobruysk (today located in Belarus, some 180 miles from Lubavitch)"
       }
     },
     {
@@ -6393,7 +6441,8 @@
         "country": "Belarus",
         "specific_address": null,
         "years_relevant": "Early 20th century",
-        "description": "City in Belarus where Rabbi Moshe Feinstein served as rabbi"
+        "description": "City in Belarus where Rabbi Moshe Feinstein served as rabbi",
+        "name": "Rabbi Moshe Feinstein, the rabbi of Lyuban, Belorussia"
       }
     },
     {
@@ -6407,7 +6456,8 @@
         "country": "Azerbaijan",
         "specific_address": "Port",
         "years_relevant": "1922",
-        "description": "Port city on the Caspian Sea where Rabbi Kaplan planned to immigrate from"
+        "description": "Port city on the Caspian Sea where Rabbi Kaplan planned to immigrate from",
+        "name": "He planned to board a ship at the port of Baku in the Russian province of Azerbaijan."
       }
     },
     {
@@ -6421,7 +6471,8 @@
         "country": "Belarus",
         "specific_address": null,
         "years_relevant": "1921",
-        "description": "Capital of Belarus where the Chafetz Chaim stopped while leaving Russia"
+        "description": "Capital of Belarus where the Chafetz Chaim stopped while leaving Russia",
+        "name": "He moved it back in March 1921, when he was in his"
       }
     },
     {
@@ -6435,7 +6486,8 @@
         "country": "Russia",
         "specific_address": "Rostov",
         "years_relevant": "-1940",
-        "description": "Old Jewish cemetery in Rostov where the Rashab was originally buried"
+        "description": "Old Jewish cemetery in Rostov where the Rashab was originally buried",
+        "name": "The city of Rostov planned to destroy the old Jewi"
       }
     },
     {
@@ -6451,7 +6503,8 @@
         "country": "Soviet Union",
         "specific_address": null,
         "years_relevant": "1916-1940",
-        "description": "Soviet republic where Chabad established yeshivas for Sephardic Jews"
+        "description": "Soviet republic where Chabad established yeshivas for Sephardic Jews",
+        "name": "He dispatched Rabbi Shmuel Levitin, among other ra"
       }
     },
     {
@@ -6465,7 +6518,8 @@
         "country": "Georgia",
         "specific_address": null,
         "years_relevant": "1900-1920",
-        "description": "City in Soviet Georgia where Simon Yakovshvili was born and raised"
+        "description": "City in Soviet Georgia where Simon Yakovshvili was born and raised",
+        "name": "Simon Yakovshvili, was born in 1900 and raised in Kutaisi in Soviet Georgia"
       }
     },
     {
@@ -6481,7 +6535,8 @@
         "country": "Russia",
         "specific_address": "Lubyanka Street, Moscow",
         "years_relevant": "1920s-1950s",
-        "description": "Notorious prison in Moscow used by the secret police"
+        "description": "Notorious prison in Moscow used by the secret police",
+        "name": "They will find a place for you in the dungeons of Lubyanka Street [the notorious Russian prison]"
       }
     },
     {
@@ -6495,7 +6550,8 @@
         "country": "Russia",
         "specific_address": null,
         "years_relevant": "1920s",
-        "description": "Province in southern Russia where Bashkov was chairman"
+        "description": "Province in southern Russia where Bashkov was chairman",
+        "name": "Chairman of the Soviet Council of Chelyabinsk, a province in southern Russia"
       }
     },
     {
@@ -6509,7 +6565,8 @@
         "country": "Belarus",
         "specific_address": null,
         "years_relevant": "19th - 20th century",
-        "description": "City in Belarus where Bashkov's father was a teacher"
+        "description": "City in Belarus where Bashkov's father was a teacher",
+        "name": "His father was a teacher in Orsha [a city in Belorussia]"
       }
     },
     {
@@ -6525,7 +6582,8 @@
         "country": "Ukraine",
         "specific_address": null,
         "years_relevant": "1920s",
-        "description": "City in Ukraine (now Dnipro) where Bashkov's uncle was a teacher"
+        "description": "City in Ukraine (now Dnipro) where Bashkov's uncle was a teacher",
+        "name": "He told the Rebbe that after his mother's passing, he decided to visit his father in Orsha."
       }
     },
     {
@@ -6539,7 +6597,8 @@
         "country": "Russia",
         "specific_address": null,
         "years_relevant": "1920s",
-        "description": "Town where Krotov committed atrocities against rabbis"
+        "description": "Town where Krotov committed atrocities against rabbis",
+        "name": "He was harnessed them to a wagon and ordered them "
       }
     },
     {
@@ -6553,7 +6612,8 @@
         "country": "Siberia",
         "specific_address": "50 miles from Trans-Siberian railroad",
         "years_relevant": "1930",
-        "description": "Siberian village where Shemtov's wedding took place during exile"
+        "description": "Siberian village where Shemtov's wedding took place during exile",
+        "name": "in the small village of Yanivskiek about fifty mil"
       }
     },
     {
@@ -6567,7 +6627,8 @@
         "country": "Soviet Union",
         "specific_address": "Border of China, Siberia",
         "years_relevant": "1928-present",
-        "description": "Jewish autonomous region established by Stalin in remote Siberia"
+        "description": "Jewish autonomous region established by Stalin in remote Siberia",
+        "name": "Birobidzhan. Jews began settling there in 1928."
       }
     },
     {
@@ -6581,7 +6642,8 @@
         "country": "Belarus",
         "specific_address": "Northern Belarus",
         "years_relevant": "Early 20th century",
-        "description": "Town in northern Belarus where Shemtov's father was a lumber merchant"
+        "description": "Town in northern Belarus where Shemtov's father was a lumber merchant",
+        "name": "In 2002, Rabbi Mordechai Scheiner became the commu"
       }
     },
     {
@@ -6595,7 +6657,8 @@
         "country": "Ukraine",
         "specific_address": "Western Ukraine",
         "years_relevant": "1926",
-        "description": "City in western Ukraine where the rabbinical conference was held"
+        "description": "City in western Ukraine where the rabbinical conference was held",
+        "name": "On October 26, 1926, close to one hundred rabbis c"
       }
     },
     {
@@ -6609,7 +6672,8 @@
         "country": "Russia",
         "specific_address": null,
         "years_relevant": "1920s",
-        "description": "Russian town where Rabbi Eliezer Poupko was rabbi"
+        "description": "Russian town where Rabbi Eliezer Poupko was rabbi",
+        "name": "Rabbi Eliezer Poupko was the rabbi in the Russian town of Velizh."
       }
     },
     {
@@ -6623,7 +6687,8 @@
         "country": "Georgia",
         "specific_address": "Soviet Georgia",
         "years_relevant": "1920s",
-        "description": "City in Soviet Georgia with secret yeshiva"
+        "description": "City in Soviet Georgia with secret yeshiva",
+        "name": "report noted that there were additional older stud"
       }
     },
     {
@@ -6637,7 +6702,8 @@
         "country": "Uzbekistan",
         "specific_address": null,
         "years_relevant": "1942",
-        "description": "City in Uzbekistan where a branch of the yeshivah was established during World War II"
+        "description": "City in Uzbekistan where a branch of the yeshivah was established during World War II",
+        "name": "Samarkand in Uzbekistan, and within a short period"
       }
     },
     {
@@ -6651,7 +6717,8 @@
         "country": "Uzbekistan",
         "specific_address": null,
         "years_relevant": "1942",
-        "description": "City in Uzbekistan where a branch of the yeshivah was established during World War II"
+        "description": "City in Uzbekistan where a branch of the yeshivah was established during World War II",
+        "name": "and within a short period of time another branch was established in Tashkent."
       }
     },
     {
@@ -11412,7 +11479,8 @@
           "Italy",
           "Egypt"
         ],
-        "significance": "Port cities on journey route"
+        "significance": "Port cities on journey route",
+        "name": "at the port of Trieste in Italy, where they boarded a ship heading south to Alexandria, Egypt"
       }
     },
     {
@@ -11444,7 +11512,8 @@
           "Safed"
         ],
         "country": "Eretz Yisrael",
-        "significance": "Northern cities with holy sites"
+        "significance": "Northern cities with holy sites",
+        "name": "first to the northern Galilee region, where he visited holy sites in Nablus, Tiberias, and Safed"
       }
     },
     {
@@ -11496,7 +11565,8 @@
           "Czechoslovakia",
           "Austria"
         ],
-        "significance": "Train route from Berlin to Trieste"
+        "significance": "Train route from Berlin to Trieste",
+        "name": "They traveled by train though Germany, Czechoslovakia, and Austria"
       }
     },
     {
@@ -11511,7 +11581,8 @@
         "activities": [
           "Visited pyramids in Giza",
           "Welcomed by Jewish community"
-        ]
+        ],
+        "name": "Cairo and then took the train to Alexandria"
       }
     },
     {
@@ -11537,7 +11608,8 @@
         "descriptions": [
           "Crown Heights: upscale neighborhood",
           "Brownsville: Jerusalem of America"
-        ]
+        ],
+        "name": "The Rebbe was provided an apartment in Crown Heights, then an upscale Brooklyn neighborhood."
       }
     },
     {
@@ -11565,7 +11637,8 @@
           "Wisconsin",
           "Illinois",
           "District of Columbia"
-        ]
+        ],
+        "name": "During his ten-month sojourn in the US, the Rebbe "
       }
     },
     {
@@ -11582,7 +11655,8 @@
         "institutions": [
           "Yeshivah Torah Vodaath",
           "Yeshivas Rabbeinu Yitzchak Elchonon"
-        ]
+        ],
+        "name": "Yeshivah Torah Vodaath in Williamsburg and Yeshiva"
       }
     },
     {
@@ -11604,7 +11678,8 @@
           "Detroit",
           "Boston"
         ],
-        "significance": "Major Jewish communities visited by Rebbe"
+        "significance": "Major Jewish communities visited by Rebbe",
+        "name": "The Rebbe visited major Jewish communities in Milwaukee, Detroit, and Boston"
       }
     },
     {
@@ -11627,7 +11702,8 @@
         "country": "Eretz Yisrael",
         "significance": [
           "Chabad settlements founded in 1777"
-        ]
+        ],
+        "name": "In 1777, Rabbi Menachem Mendel of Vitebsk led the "
       }
     },
     {
@@ -12553,7 +12629,9 @@
     {
       "node_type": "PLACE",
       "passage": "Otwock, Poland | Gdańsk | Warsaw",
-      "extracted_data": {},
+      "extracted_data": {
+        "name": "Otwock, Poland | Gdańsk | Warsaw"
+      },
       "merge_count": 50,
       "all_passages": [
         "Otwock, Poland",

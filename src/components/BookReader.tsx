@@ -41,6 +41,11 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
   const tooltipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
+  // Sync chapter state with prop changes (e.g., when navigating from entity links)
+  useEffect(() => {
+    setCurrentChapter(initialChapter);
+  }, [initialChapter]);
+
   // Parse footnotes from text and return array of parts
   const parseFootnotes = (text: string): Array<{ type: 'text' | 'footnote'; content: string; footnoteText?: string }> => {
     const parts: Array<{ type: 'text' | 'footnote'; content: string; footnoteText?: string }> = [];
@@ -170,7 +175,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
         }
       }
     }
-  }, [currentChapter, highlightText, bookData, initialParagraph]);
+  }, [currentChapter, initialChapter, highlightText, bookData, initialParagraph]);
 
   const currentChapterData = bookData?.chapters.find(ch => ch.number === currentChapter);
 

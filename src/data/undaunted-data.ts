@@ -108,10 +108,19 @@ export function processTimelineData(data: UndauntedData) {
         year = parseInt(yearMatch[1]);
       }
 
+      // Create a better name from passage - clean up and truncate
+      let passage = e.passage || '';
+      // Remove leading/trailing whitespace and quotes
+      passage = passage.trim().replace(/^["'\u201C\u201D]+|["'\u201C\u201D]+$/g, '');
+      // Capitalize first letter
+      passage = passage.charAt(0).toUpperCase() + passage.slice(1);
+      // Truncate to reasonable length
+      const name = passage.length > 120 ? passage.substring(0, 117) + '...' : passage;
+
       return {
         ...e,
         year,
-        name: e.extracted_data?.name || e.extracted_data?.event || e.passage?.substring(0, 100) || 'Unknown Event'
+        name: name || 'Unknown Event'
       };
     });
 

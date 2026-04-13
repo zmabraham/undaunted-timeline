@@ -445,38 +445,42 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
           {activeFootnote && (
             <div
               className="fixed inset-0"
-              style={{ zIndex: 99998 }}
+              style={{ zIndex: 999998 }}
               onClick={() => setActiveFootnote(null)}
             />
           )}
 
           <AnimatePresence>
             {activeFootnote && (
-              <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="fixed max-w-sm pointer-events-auto"
+              <div
+                className="fixed pointer-events-none"
                 style={{
-                  left: '50%',
+                  left: `${footnotePosition.x}px`,
                   top: `${footnotePosition.y}px`,
-                  marginLeft: '-150px',
-                  zIndex: 99999,
-                  willChange: 'transform, opacity',
-                  backfaceVisibility: 'hidden',
-                  WebkitFontSmoothing: 'antialiased',
-                  MozOsxFontSmoothing: 'grayscale'
-                } as any}
-                onClick={(e) => e.stopPropagation()}
+                  transform: 'translateX(-50%)',
+                  zIndex: 999999
+                }}
               >
-                <div style={{ backgroundColor: '#1a1a1a', border: '2px solid #d97706', borderRadius: '8px', padding: '16px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
-                  <div style={{ position: 'absolute', top: '-8px', left: '50%', marginLeft: '-8px', width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderBottom: '8px solid #1a1a1a' }}></div>
-                  <p style={{ fontFamily: 'serif', fontSize: '14px', lineHeight: '1.6', color: '#faf7f0', margin: 0 }}>
-                    {activeFootnote.text}
-                  </p>
-                </div>
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                  className="pointer-events-auto max-w-sm"
+                  style={{
+                    willChange: 'transform, opacity',
+                    WebkitFontSmoothing: 'antialiased'
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="rounded-lg p-4 shadow-2xl" style={{ backgroundColor: '#1a1a1a', border: '2px solid #d97706' }}>
+                    <div className="absolute" style={{ top: '-8px', left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderBottom: '8px solid #1a1a1a' }}></div>
+                    <p className="font-body text-sm leading-relaxed m-0" style={{ color: '#faf7f0' }}>
+                      {activeFootnote.text}
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
             )}
           </AnimatePresence>
         </>,

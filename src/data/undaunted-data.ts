@@ -33,7 +33,8 @@ export function processTimelineData(data: UndauntedData) {
 
   const teachings = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('teaching') ||
-    e.node_type === 'TEACHING'
+    e.node_type === 'TEACHING' ||
+    e.node_type === 'CONCEPT'  // Map CONCEPT to TEACHINGS
   );
 
   const institutions = data.entities.filter(e =>

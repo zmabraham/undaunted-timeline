@@ -842,10 +842,10 @@ function InteractiveTimeline({ events, onSelectEvent }: any) {
                         className={`cursor-pointer ${expandedEvent === event ? 'bg-gold-400/20 border-gold-400' : 'bg-parchment-100/80 border-gold-400/30 hover:border-gold-400/60'} border rounded-lg p-4 transition-all`}
                       >
                         <div className="flex items-center gap-3 mb-2">
-                          <span className="font-subheading text-sm text-gold-700">{event.year}</span>
+                          <span className="font-subheading text-sm text-gold-500">{event.year}</span>
                         </div>
                         <h4 className="font-display text-base text-ink-200 mb-1">
-                          {event.extracted_data?.event || event.extracted_data?.description || 'Event'}
+                          {(event as any).name || event.extracted_data?.event || event.extracted_data?.description || 'Event'}
                         </h4>
                         {expandedEvent === event && (
                           <motion.div
@@ -853,12 +853,12 @@ function InteractiveTimeline({ events, onSelectEvent }: any) {
                             animate={{ height: 'auto', opacity: 1 }}
                             className="mt-3 pt-3 border-t border-gold-400/20"
                           >
-                            <p className="font-body text-sm text-ink-100 leading-relaxed mb-3">
+                            <p className="font-body text-sm text-ink-200 leading-relaxed mb-3">
                               {event.passage?.substring(0, 200)}...
                             </p>
                             <button
                               onClick={(e) => { e.stopPropagation(); onSelectEvent(event); }}
-                              className="font-subheading text-xs text-gold-600 hover:text-gold-400 px-3 py-1 border border-gold-400/40 rounded-full hover:bg-gold-400/10 transition-all"
+                              className="font-subheading text-xs text-gold-400 hover:text-gold-200 px-3 py-1 border border-gold-400/40 rounded-full hover:bg-gold-400/10 transition-all"
                             >
                               View Full Details →
                             </button>

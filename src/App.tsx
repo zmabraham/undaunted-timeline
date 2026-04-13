@@ -148,8 +148,10 @@ function App() {
   }, [data]);
 
   const handleReadInBook = (entity: any) => {
-    // Check if entity has book_link
-    if (entity.book_link) {
+    // Check if entity has a meaningful book_link (not just chapter-0-paragraph-0)
+    const hasMeaningfulBookLink = entity.book_link && entity.book_link !== 'chapter-0-paragraph-0';
+
+    if (hasMeaningfulBookLink) {
       // Parse format: "chapter-X-paragraph-Y"
       const match = entity.book_link.match(/chapter-(\d+)-paragraph-(\d+)/);
       if (match) {

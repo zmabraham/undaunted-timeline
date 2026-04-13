@@ -1145,19 +1145,73 @@ function DocumentsView({ documents }: any) {
 function TeachingsView({ teachings, onReadInBook }: any) {
   const [selectedTeaching, setSelectedTeaching] = useState<any>(null);
 
+  // Helper to generate descriptive title
+  const generateTeachingTitle = (teaching: any): string => {
+    // First check if we have a proper title in extracted_data
+    if (teaching.extracted_data?.title && teaching.extracted_data.title !== teaching.extracted_data.teaching) {
+      return teaching.extracted_data.title;
+    }
+    if (teaching.extracted_data?.topic) {
+      return teaching.extracted_data.topic;
+    }
+    // Try to extract a meaningful title from the passage
+    const passage = teaching.passage || '';
+    // Look for key phrases that indicate teachings
+    const teachingPatterns = [
+      /(?:The Rebbe|Rabbi) said[:\s]+["']?([^"'.]+)["']?/i,
+      /(?:He |They )stated[:\s]+["']?([^"'.]+)["']?/i,
+      /(?:The |This )teaching[:\s]+(?:about|regarding|concerning)\s+([^,.\s]+)/i,
+    ];
+    for (const pattern of teachingPatterns) {
+      const match = passage.match(pattern);
+      if (match && match[1] && match[1].length > 5 && match[1].length < 60) {
+        return match[1].trim();
+      }
+    }
+    // Extract first meaningful sentence as title
+    const sentences = passage.split(/[.!?]+/);
+    for (const sentence of sentences) {
+      const trimmed = sentence.trim();
+      if (trimmed.length > 20 && trimmed.length < 100) {
+        return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+      }
+    }
+    // Final fallback: first 60 chars of passage
+    return passage.length > 60 ? passage.substring(0, 60) + '...' : passage;
+  };
+
   if (selectedTeaching) {
+    const title = generateTeachingTitle(selectedTeaching);
+    const bookLocation = selectedTeaching.book_link ?
+      `Found in ${selectedTeaching.book_link.replace('chapter-', 'Chapter ').replace('-paragraph-', ', Paragraph ')}` :
+      'From the chronicles of the Rebbes';
+
     return (
       <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
         <div className="max-w-4xl mx-auto">
           <button onClick={() => setSelectedTeaching(null)} className="font-subheading text-gold-300 hover:text-gold-200 mb-6">← Back to Teachings</button>
           <div className="bg-parchment-100/90 border border-gold-400/40 rounded-lg p-8 shadow-ornate">
             <div className="h-1 w-full bg-gradient-to-r from-gold-400/50 via-gold-400 to-gold-400/50 mb-6" />
+
+            {/* Context info */}
+            <div className="mb-4">
+              <p className="font-subheading text-sm text-gold-600">{bookLocation}</p>
+            </div>
+
             <h2 className="font-display text-3xl text-ink-200 mb-4">
-              {selectedTeaching.extracted_data?.teaching || selectedTeaching.extracted_data?.topic || selectedTeaching.extracted_data?.title || selectedTeaching.passage?.substring(0, 100) || 'Teaching'}
+              {title}
             </h2>
+
+            {selectedTeaching.extracted_data?.speaker && (
+              <p className="font-subheading text-sm text-gold-700 mb-4">
+                Taught by: {selectedTeaching.extracted_data.speaker}
+              </p>
+            )}
+
             <p className="font-body text-lg text-ink-100 leading-relaxed whitespace-pre-line">
               {selectedTeaching.passage || selectedTeaching.extracted_data?.description || 'No content available'}
             </p>
+
             {onReadInBook && selectedTeaching.passage && (
               <div className="mt-6 flex justify-center">
                 <motion.button
@@ -1167,7 +1221,7 @@ function TeachingsView({ teachings, onReadInBook }: any) {
                   className="flex items-center gap-2 px-6 py-3 bg-gold-500/20 border border-gold-500/40 rounded-full font-subheading text-sm text-gold-600 hover:bg-gold-500/30 hover:text-gold-700 transition-all"
                 >
                   <Library className="w-4 h-4" />
-                  <span>Read in Book</span>
+                  <span>Read in Book (with highlighting)</span>
                 </motion.button>
               </div>
             )}
@@ -1194,8 +1248,7 @@ function TeachingsView({ teachings, onReadInBook }: any) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {teachings.map((teaching: any, i: number) => {
-            const title = teaching.extracted_data?.teaching || teaching.extracted_data?.topic || teaching.extracted_data?.title ||
-              (teaching.passage && teaching.passage.length > 60 ? teaching.passage.substring(0, 60) + '...' : teaching.passage?.substring(0, 60));
+            const title = generateTeachingTitle(teaching);
             const preview = teaching.passage || teaching.extracted_data?.description || '';
             return (
               <motion.div
@@ -1207,7 +1260,7 @@ function TeachingsView({ teachings, onReadInBook }: any) {
                 className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-5 shadow-card cursor-pointer hover:border-gold-400/60 transition-all"
               >
                 <h3 className="font-display text-lg text-ink-200 mb-3 leading-snug">
-                  {title !== 'Teaching' ? title : teaching.passage?.substring(0, 80) + '...'}
+                  {title}
                 </h3>
                 <p className="font-body text-sm text-ink-100 line-clamp-3 leading-relaxed">
                   {preview}

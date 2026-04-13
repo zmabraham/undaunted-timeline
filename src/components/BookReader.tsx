@@ -23,11 +23,12 @@ interface Footnote {
 
 interface BookReaderProps {
   initialChapter?: number;
+  initialParagraph?: number;
   highlightText?: string;
   onBack?: () => void;
 }
 
-export default function BookReader({ initialChapter = 1, highlightText, onBack }: BookReaderProps) {
+export default function BookReader({ initialChapter = 1, initialParagraph, highlightText, onBack }: BookReaderProps) {
   const [bookData, setBookData] = useState<BookData | null>(null);
   const [currentChapter, setCurrentChapter] = useState(initialChapter);
   const [loading, setLoading] = useState(true);
@@ -105,13 +106,23 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
       });
   }, []);
 
-  // Scroll to highlighted text
+  // Scroll to highlighted text or specific paragraph
   useEffect(() => {
-    if (highlightText && contentRef.current) {
+    if (!contentRef.current || !bookData) return;
+
+    if (initialParagraph !== undefined && initialParagraph >= 0) {
+      // Scroll to specific paragraph
+      const paragraphs = contentRef.current.querySelectorAll('p');
+      if (paragraphs[initialParagraph]) {
+        paragraphs[initialParagraph].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        paragraphs[initialParagraph].classList.add('bg-gold-400/30');
+        setTimeout(() => paragraphs[initialParagraph]?.classList.remove('bg-gold-400/30'), 3000);
+      }
+    } else if (highlightText) {
+      // Scroll to highlighted text
       const content = contentRef.current.textContent || '';
       const index = content.toLowerCase().indexOf(highlightText.toLowerCase());
       if (index !== -1) {
-        // Find the element containing the text and scroll to it
         const walker = document.createTreeWalker(
           contentRef.current,
           NodeFilter.SHOW_TEXT,
@@ -132,7 +143,7 @@ export default function BookReader({ initialChapter = 1, highlightText, onBack }
         }
       }
     }
-  }, [currentChapter, highlightText, bookData]);
+  }, [currentChapter, highlightText, bookData, initialParagraph]);
 
   const currentChapterData = bookData?.chapters[currentChapter - 1];
 

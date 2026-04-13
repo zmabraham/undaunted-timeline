@@ -3,6 +3,9 @@ export interface Entity {
   passage: string;
   extracted_data: Record<string, any>;
   merge_count?: number;
+  chapter?: number;
+  paragraph?: number;
+  book_link?: string;
 }
 
 export interface UndauntedData {
@@ -15,7 +18,7 @@ export interface UndauntedData {
 // Process the merged KG data for the timeline
 export function processTimelineData(data: UndauntedData) {
   const events = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('event')
+    e.node_type.toLowerCase().includes('event') || e.node_type === 'EVENT'
   );
 
   const people = data.entities.filter(e =>
@@ -24,31 +27,39 @@ export function processTimelineData(data: UndauntedData) {
   );
 
   const places = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('place')
+    e.node_type.toLowerCase().includes('place') ||
+    e.node_type === 'PLACE'
   );
 
   const teachings = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('teaching')
+    e.node_type.toLowerCase().includes('teaching') ||
+    e.node_type === 'TEACHING'
   );
 
   const institutions = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('institution')
+    e.node_type.toLowerCase().includes('institution') ||
+    e.node_type === 'INSTITUTION' ||
+    e.node_type === 'ORGANIZATION'
   );
 
   const communities = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('community')
+    e.node_type.toLowerCase().includes('community') ||
+    e.node_type === 'COMMUNITY'
   );
 
   const concepts = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('concept')
+    e.node_type.toLowerCase().includes('concept') ||
+    e.node_type === 'CONCEPT'
   );
 
   const documents = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('document')
+    e.node_type.toLowerCase().includes('document') ||
+    e.node_type === 'DOCUMENT'
   );
 
   const quotes = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('quote')
+    e.node_type.toLowerCase().includes('quote') ||
+    e.node_type === 'QUOTE'
   );
 
   // Extract years from events for timeline

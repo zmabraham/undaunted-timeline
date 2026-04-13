@@ -29,6 +29,7 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [bookHighlight, setBookHighlight] = useState<string | undefined>();
   const [bookStartChapter, setBookStartChapter] = useState<number>(1);
+  const [bookStartParagraph, setBookStartParagraph] = useState<number | undefined>();
   const [bookData, setBookData] = useState<BookData | null>(null);
 
   // Splash screen timer
@@ -105,9 +106,9 @@ function App() {
 
   useEffect(() => {
     const paths = [
-      '/undaunted_merged_kg.json',
-      './undaunted_merged_kg.json',
-      `${window.location.origin}/undaunted_merged_kg.json`
+      `${import.meta.env.BASE_URL}data/undaunted_entities.json`,
+      '/undaunted_entities.json',
+      './undaunted_entities.json'
     ];
 
     const tryFetch = async (index = 0) => {
@@ -123,9 +124,8 @@ function App() {
       try {
         const response = await fetch(path);
         if (response.ok) {
-          const text = await response.text();
-          console.log('Data loaded:', text.length, 'bytes');
-          const json = JSON.parse(text);
+          const json = await response.json();
+          console.log('Data loaded:', json.entities?.length || 0, 'entities');
           setData(json);
           setLoading(false);
         } else {
@@ -146,11 +146,26 @@ function App() {
     return processTimelineData(data);
   }, [data]);
 
-  const handleReadInBook = (highlightText: string, chapter?: number) => {
-    // Find the chapter that contains this passage if not provided
-    const targetChapter = chapter || findChapterForPassage(highlightText);
-    setBookHighlight(highlightText);
-    setBookStartChapter(targetChapter);
+  const handleReadInBook = (entity: any) => {
+    // Check if entity has book_link
+    if (entity.book_link) {
+      // Parse format: "chapter-X-paragraph-Y"
+      const match = entity.book_link.match(/chapter-(\d+)-paragraph-(\d+)/);
+      if (match) {
+        const chapter = parseInt(match[1]);
+        const paragraph = parseInt(match[2]);
+        setBookStartChapter(chapter);
+        setBookStartParagraph(paragraph);
+        // Use passage for highlighting
+        setBookHighlight(entity.passage?.substring(0, 100));
+      }
+    } else if (entity.passage) {
+      // Find the chapter that contains this passage
+      const targetChapter = findChapterForPassage(entity.passage);
+      setBookStartChapter(targetChapter);
+      setBookStartParagraph(undefined);
+      setBookHighlight(entity.passage);
+    }
     setView('book');
   };
 
@@ -475,6 +490,7 @@ function App() {
               <BookReader
                 key="book"
                 initialChapter={bookStartChapter}
+                initialParagraph={bookStartParagraph}
                 highlightText={bookHighlight}
                 onBack={handleBack}
               />
@@ -1091,7 +1107,7 @@ function TeachingsView({ teachings, onReadInBook }: any) {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => onReadInBook(selectedTeaching.passage)}
+                  onClick={() => onReadInBook(selectedTeaching)}
                   className="flex items-center gap-2 px-6 py-3 bg-gold-400/20 border border-gold-400/40 rounded-full font-subheading text-sm text-gold-200 hover:bg-gold-400/30 transition-all"
                 >
                   <Library className="w-4 h-4" />

@@ -17,6 +17,80 @@ export interface UndauntedData {
 
 // Process the merged KG data for the timeline
 export function processTimelineData(data: UndauntedData) {
+  // Intelligent event name generator
+  const generateEventName = (entity: Entity): string => {
+    const passage = entity.passage || '';
+
+    // Key patterns to extract meaningful event names
+    const patterns = [
+      // Arrest/interrogation events
+      /(?:The\s+)?(?:Rabbi|Rebbe)?\s*(\w+(?:\s+\w+)?)?\s*(?:was\s+)?(?:arrested|interrogated|detained|imprisoned|jailed|confined|released|freed|liberated)/i,
+      // Travel/movement events
+      /(?:The\s+)?(?:Rabbi|Rebbe)?\s*(\w+(?:\s+\w+)?)?\s*(?:traveled|moved|fled|escaped|departed|left|arrived|returned|journeyed|traveled)(?:\s+(?:to|from|towards)?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?))?/i,
+      // Speech/teaching events
+      /(?:The\s+)?(?:Rabbi|Rebbe)?\s*(\w+(?:\s+\w+)?)?\s*(?:said|stated|declared|proclaimed|taught|instructed|delivered|spoke)(?:\s+(?:that|about)?)/i,
+      // Meeting/gathering events
+      /(?:The\s+)?(?:Rabbi|Rebbe)?\s*(\w+(?:\s+\w+)?)?\s*(?:met\s+(?:with)?|gathered|assembled|convened|visited|received)/i,
+      // Establishment/founding events
+      /(?:The\s+)?(?:\w+(?:\s+\w+)?)?\s*(?:established|founded|created|started|began|commenced|inaugurated|organized)/i,
+      // Death/burial events
+      /(?:The\s+)?(?:Rabbi|Rebbe)?\s*(\w+(?:\s+\w+)?)?\s*(?:passed\s+away|died|deceased|was\s+burred|funeral|obituary)/i,
+      // Birth events
+      /(?:The\s+)?(?:Rabbi|Rebbe)?\s*(\w+(?:\s+\w+)?)?\s*(?:was\s+born|birth|born\s+in)/i,
+      // Appointment/leadership events
+      /(?:The\s+)?(?:Rabbi|Rebbe)?\s*(\w+(?:\s+\w+)?)?\s*(?:was\s+(?:appointed|named|designated)|became|assumed\s+the\s+leadership|assumed\s+the\s+position)/i,
+      // Publication/writing events
+      /(?:The\s+)?(?:\w+(?:\s+\w+)?)?\s*(?:published|wrote|authored|composed|penned|writings)/i,
+    ];
+
+    // Try to match a pattern
+    for (const pattern of patterns) {
+      const match = passage.match(pattern);
+      if (match) {
+        // Clean up and return the matched phrase
+        let result = match[0];
+        // Remove leading/trailing whitespace and quotes
+        result = result.trim().replace(/^["'\u201C\u201D]+|["'\u201C\u201D]+$/g, '');
+        // Capitalize first letter
+        result = result.charAt(0).toUpperCase() + result.slice(1);
+        // Add period if missing
+        if (!result.endsWith('.')) result += '.';
+        // Truncate if too long
+        if (result.length > 100) result = result.substring(0, 97) + '...';
+        return result;
+      }
+    }
+
+    // Fallback: extract first meaningful sentence
+    const sentences = passage.split(/[.!?]+/);
+    for (const sentence of sentences) {
+      const trimmed = sentence.trim();
+      if (trimmed.length > 20 && trimmed.length < 100) {
+        // Check if sentence contains key event words
+        const eventWords = /\b(arrested|traveled|met|said|established|founded|died|born|appointed|published|escaped|fled|arrived|departed|returned|taught|instructed|delivered|visited|received)\b/i;
+        if (eventWords.test(trimmed)) {
+          let result = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+          if (!result.endsWith('.')) result += '.';
+          return result;
+        }
+      }
+    }
+
+    // Final fallback: first 80 chars of passage, cleaned
+    let result = passage.trim().replace(/^["'\u201C\u201D]+|["'\u201C\u201D]+$/g, '');
+    result = result.charAt(0).toUpperCase() + result.slice(1);
+    if (result.length > 80) {
+      // Try to cut at word boundary
+      const cutAt = result.substring(0, 80).lastIndexOf(' ');
+      if (cutAt > 40) {
+        result = result.substring(0, cutAt) + '...';
+      } else {
+        result = result.substring(0, 77) + '...';
+      }
+    }
+    return result;
+  };
+
   // Helper function to add descriptive name to entities
   const addName = (entity: Entity) => {
     const type = entity.node_type;
@@ -27,11 +101,8 @@ export function processTimelineData(data: UndauntedData) {
         name = entity.extracted_data?.name || entity.passage?.substring(0, 50) || 'Unknown Person';
         break;
       case 'EVENT':
-        // Use passage for event names (they're poorly extracted)
-        let passage = entity.passage || '';
-        passage = passage.trim().replace(/^["'\u201C\u201D]+|["'\u201C\u201D]+$/g, '');
-        passage = passage.charAt(0).toUpperCase() + passage.slice(1);
-        name = passage.length > 120 ? passage.substring(0, 117) + '...' : passage;
+        // Use intelligent event name generator
+        name = generateEventName(entity);
         break;
       case 'PLACE':
         name = entity.extracted_data?.name || entity.extracted_data?.location || entity.passage?.substring(0, 50) || 'Unknown Place';
@@ -169,15 +240,27 @@ export function processTimelineData(data: UndauntedData) {
 
   // Extract unique topics/keywords for alphabetical navigation
   const allTopics = new Set<string>();
+  const topicWords = new Set<string>();
+
+  // Common words to exclude
+  const stopWords = new Set(['the','and','that','have','for','not','with','you','this','but','his','from','they','she','her','been','than','its','were','said','each','which','their','time','will','about','would','there','could','other','more','when','into','some','them','only','over','such','your','how','then','also','first','been','even','most','made','after','under','while','where','just','being','said','because','these','those','every','through','during','before','being','again','still','against','while','where','whom','whether','both','either','neither','already','always','never','often','once','twice','three','four','five','seven','eight','nine','ten','eleven','twelve','twenty','thirty','forty','fifty','hundred','thousand']);
+
   data.entities.forEach(e => {
-    // Extract from event descriptions, teachings, etc.
-    const desc = e.extracted_data?.event || e.extracted_data?.description || e.extracted_data?.topic || '';
-    // Extract meaningful words (3+ letters, capitalize)
-    const words = desc.match(/\b[A-Z][a-z]{3,}\b/g) || [];
-    words.forEach((w: string) => allTopics.add(w));
+    // Extract from passage text and name (since entities only have name/aliases after deduplication)
+    const text = (e.passage || ' ' + (e.name || '')).toLowerCase();
+
+    // Extract meaningful words (4+ letters)
+    const words = text.match(/\b[a-z]{4,}\b/g) || [];
+    words.forEach((w: string) => {
+      // Capitalize first letter
+      const capitalized = w.charAt(0).toUpperCase() + w.slice(1);
+      if (!stopWords.has(w) && !stopWords.has(capitalized)) {
+        topicWords.add(capitalized);
+      }
+    });
   });
 
-  const topics = Array.from(allTopics).sort();
+  const topics = Array.from(topicWords).sort();
 
   // Extract geolocated places
   const geolocatedPlaces = places

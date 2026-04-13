@@ -460,6 +460,7 @@ function App() {
               <AllPlacesView
                 key="allPlaces"
                 places={timelineData.allPlaces}
+                onSelectPlace={handleReadInBook}
               />
             )}
             {view === 'knowledgeGraph' && (
@@ -956,7 +957,7 @@ function TopicsView({ topics, entities, onSelectEvent }: any) {
   );
 }
 
-function AllPlacesView({ places }: any) {
+function AllPlacesView({ places, onSelectPlace }: any) {
   return (
     <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
       <div className="max-w-5xl mx-auto">
@@ -971,7 +972,11 @@ function AllPlacesView({ places }: any) {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {places.slice(0, 100).map((place: any, i: number) => (
-            <div key={i} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-4">
+            <div
+              key={i}
+              onClick={() => onSelectPlace(place)}
+              className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-4 cursor-pointer hover:border-gold-400 hover:bg-parchment-200 transition-all"
+            >
               <h3 className="font-display text-lg text-ink-200">{place.name}</h3>
               <p className="font-body text-sm text-ink-100 line-clamp-2">{place.passage?.substring(0, 100)}...</p>
             </div>

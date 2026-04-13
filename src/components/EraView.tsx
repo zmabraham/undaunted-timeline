@@ -79,7 +79,7 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
               <Calendar className="w-6 h-6" />
               <span>Chronicles of the Era</span>
             </h3>
-            <span className="font-subheading text-sm text-parchment-500">({events.length} events)</span>
+            <span className="font-subheading text-sm text-parchment-300">({events.length} events)</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedEvents.map((event: any, index: number) => (

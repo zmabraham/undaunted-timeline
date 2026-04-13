@@ -65,7 +65,7 @@ export default function TimelineView({ eras, events, onSelectEra }: TimelineView
         <p className="font-body text-parchment-400 text-xl max-w-3xl mx-auto leading-relaxed italic">
           "Undaunted" — A Journey Through the Eras of Chabad Lubavitch
         </p>
-        <div className="mt-6 font-subheading text-parchment-500 text-base max-w-2xl mx-auto">
+        <div className="mt-6 font-subheading text-parchment-300 text-base max-w-2xl mx-auto">
           Explore four defining chapters of leadership, sacrifice, and renewal.
           Click upon any era to discover the souls and stories that shaped history.
         </div>
@@ -182,7 +182,7 @@ export default function TimelineView({ eras, events, onSelectEra }: TimelineView
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="mt-16 font-subheading text-parchment-500 text-sm tracking-wide relative z-10"
+        className="mt-16 font-subheading text-parchment-300 text-sm tracking-wide relative z-10"
       >
         <span className="text-gold-500">✦</span> Select an era to begin your journey
         <span className="text-gold-500"> ✦</span> Use search to find specific souls or events

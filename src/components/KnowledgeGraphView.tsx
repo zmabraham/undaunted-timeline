@@ -395,7 +395,7 @@ export default function KnowledgeGraphView({
               onClick={() => setSelectedNode(null)}
               className="p-1 hover:bg-gold-400/20 rounded-full transition-colors"
             >
-              <X className="w-4 h-4 text-parchment-600" />
+              <X className="w-4 h-4 text-parchment-400" />
             </button>
           </div>
           <h3 className="font-display text-lg font-semibold text-ink-200 mb-2">
@@ -434,8 +434,8 @@ export default function KnowledgeGraphView({
 
       {/* Instructions */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center" style={{ opacity: nodes.length > 0 ? 0 : 1 }}>
-        <Network className="w-16 h-16 text-gold-400/30 mx-auto mb-4" />
-        <p className="font-subheading text-parchment-500">Loading Knowledge Graph...</p>
+        <Network className="w-16 h-16 text-gold-400/50 mx-auto mb-4" />
+        <p className="font-subheading text-parchment-300">Loading Knowledge Graph...</p>
       </div>
     </div>
   );

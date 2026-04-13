@@ -69,7 +69,7 @@ export default function QuotesView({ quotes }: QuotesViewProps) {
 
             {selectedQuote.extracted_data?.source_chapter && (
               <div className="text-right">
-                <span className="font-subheading text-xs text-parchment-600">
+                <span className="font-subheading text-xs text-parchment-400">
                   Chapter {selectedQuote.extracted_data.source_chapter}
                 </span>
               </div>
@@ -159,7 +159,7 @@ export default function QuotesView({ quotes }: QuotesViewProps) {
                     {quote.extracted_data?.speaker || 'Unknown'}
                   </p>
                   {quote.extracted_data?.source_chapter && (
-                    <p className="font-body text-xs text-parchment-600">
+                    <p className="font-body text-xs text-parchment-400">
                       Chapter {quote.extracted_data.source_chapter}
                     </p>
                   )}
@@ -171,7 +171,7 @@ export default function QuotesView({ quotes }: QuotesViewProps) {
               </blockquote>
 
               <div className="flex items-center justify-between">
-                <p className="font-body text-xs text-parchment-600 line-clamp-1">
+                <p className="font-body text-xs text-parchment-400 line-clamp-1">
                   {quote.extracted_data?.context || ''}
                 </p>
                 <span className="text-gold-700 opacity-0 group-hover:opacity-100 transition-opacity font-subheading text-xs">
@@ -184,8 +184,8 @@ export default function QuotesView({ quotes }: QuotesViewProps) {
 
         {filteredQuotes.length === 0 && (
           <div className="text-center py-16">
-            <Quote className="w-12 h-12 text-gold-400/30 mx-auto mb-4" />
-            <p className="font-subheading text-parchment-500 text-lg">No quotes found</p>
+            <Quote className="w-12 h-12 text-gold-400/50 mx-auto mb-4" />
+            <p className="font-subheading text-parchment-300 text-lg">No quotes found</p>
           </div>
         )}
       </div>

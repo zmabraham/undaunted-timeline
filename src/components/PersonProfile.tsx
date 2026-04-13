@@ -72,7 +72,7 @@ export default function PersonProfile({ person, events, onBack, onReadInBook }: 
             )}
 
             {person.extracted_data?.years && (
-              <div className="flex items-center justify-center gap-2 text-sm font-subheading text-parchment-600">
+              <div className="flex items-center justify-center gap-2 text-sm font-subheading text-parchment-400">
                 <Calendar className="w-4 h-4 text-gold-600" />
                 <span>{person.extracted_data.years}</span>
               </div>

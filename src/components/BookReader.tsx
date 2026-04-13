@@ -254,7 +254,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
             )}
             <div>
               <h1 className="font-display text-lg sm:text-xl text-gold-200">Undaunted</h1>
-              <p className="font-subheading text-xs text-parchment-500">The Complete Chronicles</p>
+              <p className="font-subheading text-xs text-parchment-300">The Complete Chronicles</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -281,7 +281,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
 
           <div className="text-center">
             <h2 className="font-display text-base sm:text-lg text-gold-200">{currentChapterData.title}</h2>
-            <p className="font-subheading text-xs text-parchment-500">
+            <p className="font-subheading text-xs text-parchment-300">
               Chapter {currentChapter + 1} of {bookData.chapters.length}
             </p>
           </div>
@@ -315,7 +315,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
             <div className="text-center mb-8 pb-6 border-b border-gold-400/20">
               <BookOpen className="w-10 h-10 text-gold-500 mx-auto mb-4" />
               <h3 className="font-display text-2xl sm:text-3xl text-ink-200 mb-2">{currentChapterData.title}</h3>
-              <p className="font-subheading text-sm text-parchment-600">
+              <p className="font-subheading text-sm text-parchment-400">
                 {currentChapterData.word_count.toLocaleString()} words
               </p>
             </div>
@@ -440,7 +440,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
               {/* Search results */}
               {searchResults.length > 0 && (
                 <div className="mt-3 max-h-60 overflow-y-auto">
-                  <p className="font-subheading text-xs text-parchment-500 mb-2">
+                  <p className="font-subheading text-xs text-parchment-300 mb-2">
                     Found {searchResults.length} results
                   </p>
                   <div className="space-y-2">

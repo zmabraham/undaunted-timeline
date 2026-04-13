@@ -81,7 +81,7 @@ export default function EventDetail({ event, onSelectPerson, onBack, onReadInBoo
           transition={{ delay: 0.1 }}
           className="bg-parchment-100/70 backdrop-blur-sm border-l-4 border-gold-400/50 rounded-r-lg p-8 mb-8 relative"
         >
-          <Quote className="absolute top-4 left-4 w-8 h-8 text-gold-400/30" />
+          <Quote className="absolute top-4 left-4 w-8 h-8 text-gold-400/50" />
           <p className="font-body text-xl leading-relaxed text-ink-100 italic pl-8">
             {event.passage}
           </p>

@@ -103,7 +103,7 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
             {query && (
               <button
                 onClick={() => setQuery('')}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-parchment-500 hover:text-gold-500 transition-colors"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-parchment-300 hover:text-gold-500 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -119,7 +119,7 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
                 className={`px-5 py-2 rounded-full text-sm capitalize transition-all font-subheading ${
                   filter === f
                     ? 'bg-gold-500 text-ink-200 shadow-gold-glow'
-                    : 'bg-parchment-100/50 text-parchment-500 border border-gold-400/30 hover:border-gold-400/60'
+                    : 'bg-parchment-100/50 text-parchment-300 border border-gold-400/30 hover:border-gold-400/60'
                 }`}
               >
                 {f === 'all' ? 'All Archives' : f}
@@ -136,14 +136,14 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
         >
           {query && results.length === 0 && (
             <div className="text-center py-16">
-              <Sparkles className="w-12 h-12 text-gold-400/30 mx-auto mb-4" />
-              <p className="font-subheading text-parchment-500 text-lg">No chronicles found for "{query}"</p>
-              <p className="font-body text-parchment-600 text-sm mt-2">Try searching for a different term</p>
+              <Sparkles className="w-12 h-12 text-gold-400/50 mx-auto mb-4" />
+              <p className="font-subheading text-parchment-300 text-lg">No chronicles found for "{query}"</p>
+              <p className="font-body text-parchment-400 text-sm mt-2">Try searching for a different term</p>
             </div>
           )}
 
           {results.length > 0 && (
-            <div className="mb-4 text-center font-subheading text-parchment-500">
+            <div className="mb-4 text-center font-subheading text-parchment-300">
               Found {results.length} result{results.length !== 1 ? 's' : ''} in the archives
             </div>
           )}

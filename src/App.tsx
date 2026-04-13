@@ -268,7 +268,7 @@ function App() {
                   {view === 'knowledgeGraph' && 'Knowledge Graph'}
                 </h1>
                 {view === 'home' && (
-                  <p className="font-body text-xs sm:text-sm text-parchment-500 italic mt-0.5 hidden sm:block">
+                  <p className="font-body text-xs sm:text-sm text-parchment-300 italic mt-0.5 hidden sm:block">
                     A journey through Chabad history
                   </p>
                 )}
@@ -297,8 +297,8 @@ function App() {
               >
                 <Crown className="w-full h-full text-gold-400" />
               </motion.div>
-              <p className="font-subheading text-parchment-400 text-lg mb-2">Loading the archives...</p>
-              <p className="font-body text-parchment-600 text-sm">Preparing the timeline of history</p>
+              <p className="font-subheading text-parchment-300 text-lg mb-2">Loading the archives...</p>
+              <p className="font-body text-parchment-400 text-sm">Preparing the timeline of history</p>
             </div>
           </div>
         )}
@@ -309,7 +309,7 @@ function App() {
                 <span className="text-3xl">⚠</span>
               </div>
               <p className="font-display text-red-400 text-xl mb-2">Unable to Load Archives</p>
-              <p className="font-body text-parchment-500 mb-6">{error}</p>
+              <p className="font-body text-parchment-300 mb-6">{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="px-6 py-2 bg-gold-400/20 border border-gold-400/40 rounded-full text-gold-300 hover:bg-gold-400/30 transition-all font-subheading"
@@ -505,17 +505,17 @@ function App() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2">
           {/* Entity counts - responsive */}
-          <div className="flex items-center justify-center gap-2 sm:gap-4 font-subheading text-[10px] sm:text-xs text-parchment-500 flex-wrap">
+          <div className="flex items-center justify-center gap-2 sm:gap-4 font-subheading text-[10px] sm:text-xs text-parchment-300 flex-wrap">
             <span className="flex items-center gap-1" title="Chronicles"><Clock className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.allEvents.length}</span></span>
-            <span className="text-gold-400/30">✦</span>
+            <span className="text-gold-400/50">✦</span>
             <span className="flex items-center gap-1" title="Souls"><User className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.people.length}</span></span>
-            <span className="text-gold-400/30">✦</span>
+            <span className="text-gold-400/50">✦</span>
             <span className="flex items-center gap-1" title="Places"><MapPin className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.allPlaces.length}</span></span>
-            <span className="text-gold-400/30 hidden sm:inline">✦</span>
+            <span className="text-gold-400/50 hidden sm:inline">✦</span>
             <span className="hidden sm:inline flex items-center gap-1" title="Teachings"><BookOpen className="w-3 h-3 text-gold-500" /> {timelineData.teachings.length}</span>
-            <span className="text-gold-400/30 hidden sm:inline">✦</span>
+            <span className="text-gold-400/50 hidden sm:inline">✦</span>
             <span className="hidden sm:inline flex items-center gap-1" title="Institutions"><Building2 className="w-3 h-3 text-gold-500" /> {timelineData.institutions.length}</span>
-            <span className="text-gold-400/30 hidden sm:inline">✦</span>
+            <span className="text-gold-400/50 hidden sm:inline">✦</span>
             <span className="hidden sm:inline flex items-center gap-1" title="Communities"><Users2 className="w-3 h-3 text-gold-500" /> {timelineData.communities.length}</span>
           </div>
         </div>
@@ -554,28 +554,28 @@ function HomeView({ onNavigate, stats }: { onNavigate: (view: string) => void; s
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8">
             <div className="text-center">
               <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.events}</div>
-              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Chronicles</div>
+              <div className="font-subheading text-parchment-300 text-xs sm:text-sm">Chronicles</div>
             </div>
             <div className="text-center">
               <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.people}</div>
-              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Souls</div>
+              <div className="font-subheading text-parchment-300 text-xs sm:text-sm">Souls</div>
             </div>
             <div className="text-center">
               <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.places}</div>
-              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Places</div>
+              <div className="font-subheading text-parchment-300 text-xs sm:text-sm">Places</div>
             </div>
             <div className="text-center">
               <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.teachings}</div>
-              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Teachings</div>
+              <div className="font-subheading text-parchment-300 text-xs sm:text-sm">Teachings</div>
             </div>
             <div className="text-center">
               <div className="font-display text-2xl sm:text-3xl font-semibold text-gold-300">{stats.quotes}</div>
-              <div className="font-subheading text-parchment-500 text-xs sm:text-sm">Quotes</div>
+              <div className="font-subheading text-parchment-300 text-xs sm:text-sm">Quotes</div>
             </div>
           </div>
 
           {/* Keyboard hint */}
-          <p className="font-subheading text-xs text-parchment-600">
+          <p className="font-subheading text-xs text-parchment-400">
             Press <kbd className="px-2 py-1 bg-gold-400/20 rounded text-gold-400">/</kbd> to search • <kbd className="px-2 py-1 bg-gold-400/20 rounded text-gold-400">Esc</kbd> to go back
           </p>
         </motion.div>
@@ -695,7 +695,7 @@ function EntryCard({ icon, title, description, onClick, delay, color }: {
           </div>
           <div className="flex-1">
             <h3 className="font-display text-base font-semibold mb-1 text-ink-200">{title}</h3>
-            <p className="font-body text-xs text-parchment-600">{description}</p>
+            <p className="font-body text-xs text-parchment-400">{description}</p>
           </div>
         </div>
         <div className="mt-2 flex items-center gap-1 text-gold-700 opacity-0 group-hover:opacity-100 transition-opacity font-subheading text-xs">
@@ -735,7 +735,7 @@ function PeopleDirectory({ people, events: _events, onSelectPerson }: any) {
               <div key={i} onClick={() => onSelectPerson(person)} className="bg-parchment-100/80 border border-gold-400/30 rounded-lg p-5 cursor-pointer hover:border-gold-400 transition-all">
                 <h3 className="font-display text-lg text-ink-200">{person.extracted_data?.name || person.passage?.substring(0, 50)}</h3>
                 {person.extracted_data?.title && <p className="font-subheading text-sm text-gold-700">{person.extracted_data.title}</p>}
-                {person.extracted_data?.role && <p className="font-body text-sm text-parchment-600">{person.extracted_data.role}</p>}
+                {person.extracted_data?.role && <p className="font-body text-sm text-parchment-400">{person.extracted_data.role}</p>}
               </div>
             ))}
           </div>
@@ -824,7 +824,7 @@ function InteractiveTimeline({ events, onSelectEvent }: any) {
                   <div className="absolute left-6 w-3 h-3 rounded-full bg-gold-500 border-3 border-ink-500"></div>
                   <div className="ml-12">
                     <span className="font-display text-xl text-gold-300">{decade}s</span>
-                    <span className="font-subheading text-xs text-parchment-500 ml-3">({eventsByDecade[decade].length} events)</span>
+                    <span className="font-subheading text-xs text-parchment-300 ml-3">({eventsByDecade[decade].length} events)</span>
                   </div>
                 </div>
 
@@ -944,7 +944,7 @@ function TopicsView({ topics, entities, onSelectEvent }: any) {
                     </button>
                   ))}
                   {letterTopics.length > 6 && (
-                    <div className="font-subheading text-xs text-parchment-500">+{letterTopics.length - 6} more</div>
+                    <div className="font-subheading text-xs text-parchment-300">+{letterTopics.length - 6} more</div>
                   )}
                 </div>
               </div>

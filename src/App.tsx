@@ -107,9 +107,9 @@ function App() {
 
   useEffect(() => {
     const paths = [
-      `${import.meta.env.BASE_URL}data/undaunted_entities.json`,
-      '/undaunted_entities.json',
-      './undaunted_entities.json'
+      `${import.meta.env.BASE_URL}data/undaunted_entities_original.json`,
+      '/undaunted_entities_original.json',
+      './undaunted_entities_original.json'
     ];
 
     const tryFetch = async (index = 0) => {
@@ -259,7 +259,7 @@ function App() {
               )}
               <div className="min-w-0 flex-1">
                 <h1 className="font-display text-base sm:text-lg md:text-xl font-semibold text-gold-200 truncate">
-                  {view === 'home' && 'Undaunted: The Living Timeline'}
+                  {view === 'home' && 'Undaunted: The Living Timeline (Original Extraction)'}
                   {view === 'panorama' && 'Era Overview'}
                   {view === 'era' && selectedEra?.name}
                   {view === 'people' && 'Souls of History'}
@@ -519,7 +519,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <div className="text-center">
             <p className="font-subheading text-xs text-gold-400/60">
-              Undaunted: The Living Timeline
+              Undaunted: The Living Timeline (Original Extraction)
             </p>
           </div>
         </div>

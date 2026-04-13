@@ -386,7 +386,7 @@ export default function KnowledgeGraphView({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-parchment-100/95 backdrop-blur-sm border border-gold-400/50 rounded-lg p-5 shadow-ornate"
+          className="absolute bottom-4 left-4 right-4 md:left-4 md:right-auto md:w-96 max-w-md bg-parchment-100/95 backdrop-blur-sm border border-gold-400/50 rounded-lg p-5 shadow-ornate z-20"
         >
           <div className="flex items-start justify-between mb-3">
             <span className="px-2 py-1 text-xs font-subheading uppercase rounded-full" style={{ backgroundColor: `${selectedNode.color}30`, color: selectedNode.color }}>
@@ -410,28 +410,30 @@ export default function KnowledgeGraphView({
         </motion.div>
       )}
 
-      {/* Legend */}
-      <div className="absolute bottom-4 right-4 bg-parchment-100/90 backdrop-blur-sm border border-gold-400/30 rounded-lg p-3 shadow-lg">
-        <div className="flex items-center gap-2 mb-2">
-          <Network className="w-4 h-4 text-gold-700" />
-          <span className="font-subheading text-xs text-ink-200">Legend</span>
+      {/* Legend - move to bottom right, hidden when node is selected */}
+      {!selectedNode && (
+        <div className="absolute bottom-4 right-4 bg-parchment-100/90 backdrop-blur-sm border border-gold-400/30 rounded-lg p-3 shadow-lg z-10">
+          <div className="flex items-center gap-2 mb-2">
+            <Network className="w-4 h-4 text-gold-700" />
+            <span className="font-subheading text-xs text-ink-200">Legend</span>
+          </div>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+            {[
+              { type: 'Events', color: '#3B82F6' },
+              { type: 'People', color: '#10B981' },
+              { type: 'Places', color: '#F59E0B' },
+              { type: 'Teachings', color: '#EC4899' },
+              { type: 'Institutions', color: '#8B5CF6' },
+              { type: 'Communities', color: '#6366F1' }
+            ].map(({ type, color }) => (
+              <div key={type} className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                <span className="font-body text-xs text-ink-200">{type}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-          {[
-            { type: 'Events', color: '#3B82F6' },
-            { type: 'People', color: '#10B981' },
-            { type: 'Places', color: '#F59E0B' },
-            { type: 'Teachings', color: '#EC4899' },
-            { type: 'Institutions', color: '#8B5CF6' },
-            { type: 'Communities', color: '#6366F1' }
-          ].map(({ type, color }) => (
-            <div key={type} className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-              <span className="font-body text-xs text-parchment-700">{type}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Instructions */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center" style={{ opacity: nodes.length > 0 ? 0 : 1 }}>

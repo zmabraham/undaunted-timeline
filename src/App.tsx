@@ -13,11 +13,23 @@ import BookReader from './components/BookReader';
 
 type View = 'home' | 'panorama' | 'era' | 'event' | 'person' | 'people' | 'timeline' | 'map' | 'topics' | 'teachings' | 'institutions' | 'communities' | 'concepts' | 'documents' | 'allPlaces' | 'search' | 'knowledgeGraph' | 'quotes' | 'book';
 
+interface BookData {
+  title: string;
+  chapters: Array<{
+    number: number;
+    title: string;
+    content: string;
+    paragraphs: string[];
+    word_count: number;
+  }>;
+}
+
 function App() {
   const [view, setView] = useState<View>('home');
   const [showSplash, setShowSplash] = useState(true);
   const [bookHighlight, setBookHighlight] = useState<string | undefined>();
   const [bookStartChapter, setBookStartChapter] = useState<number>(1);
+  const [bookData, setBookData] = useState<BookData | null>(null);
 
   // Splash screen timer
   useEffect(() => {
@@ -42,6 +54,48 @@ function App() {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [view]);
+
+  // Load book data for finding chapter locations
+  useEffect(() => {
+    fetch(`${import.meta.env.BASE_URL}data/book.json`)
+      .then(res => res.json())
+      .then(data => setBookData(data))
+      .catch(err => console.error('Failed to load book data:', err));
+  }, []);
+
+  // Function to find which chapter contains a given passage
+  const findChapterForPassage = (passage: string): number => {
+    if (!bookData) return 1;
+
+    const searchTerms = passage
+      .toLowerCase()
+      .substring(0, 200)
+      .replace(/\[\[\d+:\s*[^\]]*\]\]/g, '') // Remove footnotes
+      .replace(/[^\w\s]/g, ' ') // Remove special chars
+      .split(/\s+/)
+      .filter(w => w.length > 4)
+      .slice(0, 5); // Take first 5 significant words
+
+    let bestMatch = { chapter: 1, score: 0 };
+
+    for (const chapter of bookData.chapters) {
+      const chapterText = chapter.content.toLowerCase();
+      let matchCount = 0;
+
+      for (const term of searchTerms) {
+        if (chapterText.includes(term)) {
+          matchCount++;
+        }
+      }
+
+      if (matchCount > bestMatch.score) {
+        bestMatch = { chapter: chapter.number, score: matchCount };
+      }
+    }
+
+    return bestMatch.chapter;
+  };
+
   const [selectedEra, setSelectedEra] = useState<typeof ERAS[number] | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [selectedPerson, setSelectedPerson] = useState<any>(null);
@@ -93,8 +147,10 @@ function App() {
   }, [data]);
 
   const handleReadInBook = (highlightText: string, chapter?: number) => {
+    // Find the chapter that contains this passage if not provided
+    const targetChapter = chapter || findChapterForPassage(highlightText);
     setBookHighlight(highlightText);
-    setBookStartChapter(chapter || 1);
+    setBookStartChapter(targetChapter);
     setView('book');
   };
 
@@ -1035,7 +1091,7 @@ function TeachingsView({ teachings, onReadInBook }: any) {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => onReadInBook(selectedTeaching.passage.substring(0, 50))}
+                  onClick={() => onReadInBook(selectedTeaching.passage)}
                   className="flex items-center gap-2 px-6 py-3 bg-gold-400/20 border border-gold-400/40 rounded-full font-subheading text-sm text-gold-200 hover:bg-gold-400/30 transition-all"
                 >
                   <Library className="w-4 h-4" />

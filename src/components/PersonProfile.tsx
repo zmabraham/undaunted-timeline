@@ -84,7 +84,7 @@ export default function PersonProfile({ person, events, onBack, onReadInBook }: 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => onReadInBook(person.passage.substring(0, 50))}
+                  onClick={() => onReadInBook(person.passage)}
                   className="flex items-center gap-2 px-6 py-3 bg-gold-400/20 border border-gold-400/40 rounded-full font-subheading text-sm text-gold-200 hover:bg-gold-400/30 transition-all"
                 >
                   <Library className="w-4 h-4" />

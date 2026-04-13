@@ -91,7 +91,7 @@ export default function EventDetail({ event, onSelectPerson, onBack, onReadInBoo
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onReadInBook(event)}
-                className="flex items-center gap-2 px-6 py-3 bg-gold-400/20 border border-gold-400/40 rounded-full font-subheading text-sm text-gold-200 hover:bg-gold-400/30 transition-all"
+                className="flex items-center gap-2 px-6 py-3 bg-gold-500/20 border border-gold-500/40 rounded-full font-subheading text-sm text-gold-600 hover:bg-gold-500/30 hover:text-gold-700 transition-all"
               >
                 <Library className="w-4 h-4" />
                 <span>Read in Book</span>

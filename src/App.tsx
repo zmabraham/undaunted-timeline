@@ -31,6 +31,7 @@ function App() {
   const [bookStartChapter, setBookStartChapter] = useState<number>(1);
   const [bookStartParagraph, setBookStartParagraph] = useState<number | undefined>();
   const [bookData, setBookData] = useState<BookData | null>(null);
+  const [previousView, setPreviousView] = useState<View>('home');
 
   // Splash screen timer
   useEffect(() => {
@@ -171,8 +172,19 @@ function App() {
 
   const handleBack = () => {
     setBookHighlight(undefined);
-    if (view === 'event' && selectedEra) {
-      setView('era');
+    if (view === 'event') {
+      // Return to where we came from
+      if (previousView === 'era' && selectedEra) {
+        setView('era');
+      } else if (previousView === 'timeline') {
+        setView('timeline');
+      } else if (previousView === 'map') {
+        setView('map');
+      } else if (previousView === 'topics') {
+        setView('topics');
+      } else {
+        setView('home');
+      }
       setSelectedEvent(null);
     } else if (view === 'era' || view === 'people' || view === 'timeline' || view === 'map' || view === 'topics' || view === 'teachings' || view === 'institutions' || view === 'communities' || view === 'concepts' || view === 'documents' || view === 'allPlaces' || view === 'knowledgeGraph' || view === 'quotes' || view === 'book') {
       setView('home');
@@ -360,7 +372,7 @@ function App() {
                 key="era"
                 era={selectedEra}
                 events={timelineData.allEvents}
-                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setPreviousView('era'); setView('event'); }}
                 onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
               />
             )}
@@ -388,7 +400,7 @@ function App() {
                 key="search"
                 entities={timelineData.allEntities}
                 events={timelineData.events}
-                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setPreviousView('home'); setView('event'); }}
                 onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
               />
             )}
@@ -406,7 +418,7 @@ function App() {
               <InteractiveTimeline
                 key="timeline"
                 events={timelineData.allEvents}
-                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setPreviousView('timeline'); setView('event'); }}
               />
             )}
             {view === 'map' && (
@@ -414,7 +426,7 @@ function App() {
                 key="map"
                 places={timelineData.places}
                 events={timelineData.events}
-                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setPreviousView('map'); setView('event'); }}
               />
             )}
             {view === 'topics' && (
@@ -422,7 +434,7 @@ function App() {
                 key="topics"
                 topics={timelineData.topics}
                 entities={timelineData.allEntities}
-                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
+                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setPreviousView('topics'); setView('event'); }}
               />
             )}
             {view === 'teachings' && (
@@ -504,20 +516,11 @@ function App() {
       {/* Elegant Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-ink-500/95 backdrop-blur-md border-t border-gold-400/20">
         <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-400/40 to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2">
-          {/* Entity counts - responsive */}
-          <div className="flex items-center justify-center gap-2 sm:gap-4 font-subheading text-[10px] sm:text-xs text-parchment-300 flex-wrap">
-            <span className="flex items-center gap-1" title="Chronicles"><Clock className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.allEvents.length}</span></span>
-            <span className="text-gold-400/50">✦</span>
-            <span className="flex items-center gap-1" title="Souls"><User className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.people.length}</span></span>
-            <span className="text-gold-400/50">✦</span>
-            <span className="flex items-center gap-1" title="Places"><MapPin className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.allPlaces.length}</span></span>
-            <span className="text-gold-400/50 hidden sm:inline">✦</span>
-            <span className="hidden sm:inline flex items-center gap-1" title="Teachings"><BookOpen className="w-3 h-3 text-gold-500" /> {timelineData.teachings.length}</span>
-            <span className="text-gold-400/50 hidden sm:inline">✦</span>
-            <span className="hidden sm:inline flex items-center gap-1" title="Institutions"><Building2 className="w-3 h-3 text-gold-500" /> {timelineData.institutions.length}</span>
-            <span className="text-gold-400/50 hidden sm:inline">✦</span>
-            <span className="hidden sm:inline flex items-center gap-1" title="Communities"><Users2 className="w-3 h-3 text-gold-500" /> {timelineData.communities.length}</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <div className="text-center">
+            <p className="font-subheading text-xs text-gold-400/60">
+              Undaunted: The Living Timeline
+            </p>
           </div>
         </div>
       </footer>
@@ -854,12 +857,12 @@ function InteractiveTimeline({ events, onSelectEvent }: any) {
                             animate={{ height: 'auto', opacity: 1 }}
                             className="mt-3 pt-3 border-t border-gold-400/20"
                           >
-                            <p className="font-body text-sm text-ink-200 leading-relaxed mb-3">
+                            <p className="font-body text-sm text-ink-100 leading-relaxed mb-3">
                               {event.passage?.substring(0, 200)}...
                             </p>
                             <button
                               onClick={(e) => { e.stopPropagation(); onSelectEvent(event); }}
-                              className="font-subheading text-xs text-gold-400 hover:text-gold-200 px-3 py-1 border border-gold-400/40 rounded-full hover:bg-gold-400/10 transition-all"
+                              className="font-subheading text-xs text-gold-600 hover:text-gold-700 px-3 py-1 border border-gold-500/40 rounded-full hover:bg-gold-500/10 transition-all"
                             >
                               View Full Details →
                             </button>
@@ -1113,7 +1116,7 @@ function TeachingsView({ teachings, onReadInBook }: any) {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onReadInBook(selectedTeaching)}
-                  className="flex items-center gap-2 px-6 py-3 bg-gold-400/20 border border-gold-400/40 rounded-full font-subheading text-sm text-gold-200 hover:bg-gold-400/30 transition-all"
+                  className="flex items-center gap-2 px-6 py-3 bg-gold-500/20 border border-gold-500/40 rounded-full font-subheading text-sm text-gold-600 hover:bg-gold-500/30 hover:text-gold-700 transition-all"
                 >
                   <Library className="w-4 h-4" />
                   <span>Read in Book</span>

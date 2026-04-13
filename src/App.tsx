@@ -437,6 +437,7 @@ function App() {
                 topics={timelineData.topics}
                 entities={timelineData.allEntities}
                 onSelectEvent={(evt: any) => { setSelectedEvent(evt); setPreviousView('topics'); setView('event'); }}
+                onReadInBook={handleReadInBook}
               />
             )}
             {view === 'teachings' && (
@@ -898,7 +899,7 @@ function MapView({ places, events: _events, onSelectEvent: _onSelectEvent }: any
   );
 }
 
-function TopicsView({ topics, entities, onSelectEvent }: any) {
+function TopicsView({ topics, entities, onSelectEvent, onReadInBook }: any) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [expandedLetter, setExpandedLetter] = useState<string | null>(null);
@@ -921,9 +922,19 @@ function TopicsView({ topics, entities, onSelectEvent }: any) {
           <p className="font-body text-parchment-400 text-center mb-8">Found {topicEntities.length} references</p>
           <div className="space-y-4">
             {topicEntities.map((entity: any, i: number) => (
-              <div key={i} onClick={() => entity.node_type?.toLowerCase().includes('event') && onSelectEvent(entity)} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5 cursor-pointer hover:border-gold-400">
-                <span className="font-subheading text-xs text-gold-700 uppercase">{entity.node_type}</span>
-                <h3 className="font-display text-lg text-ink-200 mt-2">{entity.extracted_data?.event || entity.extracted_data?.name || entity.extracted_data?.description || 'Entry'}</h3>
+              <div key={i} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5 hover:border-gold-400 transition-all">
+                <div className="flex justify-between items-start mb-3">
+                  <span className="font-subheading text-xs text-gold-700 uppercase">{entity.node_type}</span>
+                  {onReadInBook && entity.passage && (
+                    <button
+                      onClick={() => onReadInBook(entity)}
+                      className="text-xs text-gold-600 hover:text-gold-400 font-subheading border border-gold-400/30 px-2 py-1 rounded-full hover:bg-gold-400/10 transition-all"
+                    >
+                      Read in Book →
+                    </button>
+                  )}
+                </div>
+                <h3 className="font-display text-lg text-ink-200 mt-2">{entity.extracted_data?.event || entity.extracted_data?.title || entity.extracted_data?.name || entity.extracted_data?.description || 'Entry'}</h3>
                 <p className="font-body text-sm text-ink-100 line-clamp-3">{entity.passage}</p>
               </div>
             ))}

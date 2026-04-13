@@ -351,7 +351,7 @@ function App() {
               <TimelineView
                 key="panorama"
                 eras={ERAS}
-                events={timelineData.events}
+                events={timelineData.allEvents}
                 onSelectEra={(era) => { setSelectedEra(era); setView('era'); }}
               />
             )}
@@ -359,7 +359,7 @@ function App() {
               <EraView
                 key="era"
                 era={selectedEra}
-                events={timelineData.events.filter((e: any) => e.year && e.year >= selectedEra.startYear && e.year <= selectedEra.endYear)}
+                events={timelineData.allEvents}
                 onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
                 onSelectPerson={(person: any) => { setSelectedPerson(person); setView('person'); }}
               />
@@ -405,7 +405,7 @@ function App() {
             {view === 'timeline' && (
               <InteractiveTimeline
                 key="timeline"
-                events={timelineData.events}
+                events={timelineData.allEvents}
                 onSelectEvent={(evt: any) => { setSelectedEvent(evt); setView('event'); }}
               />
             )}

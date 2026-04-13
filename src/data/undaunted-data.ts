@@ -90,11 +90,30 @@ export function processTimelineData(data: UndauntedData) {
     .filter((e): e is typeof e & { year: number } => e.year !== null && e.year >= 1700 && e.year <= 2020)
     .sort((a, b) => a.year - b.year);
 
-  // All events (for homepage count and browsing - events don't need years)
-  const allEvents = events.map(e => ({
-    ...e,
-    name: e.extracted_data?.name || e.extracted_data?.event || e.passage?.substring(0, 100) || 'Unknown Event'
-  }));
+  // All events with year data for display (events don't need years to be shown)
+  const allEvents = events
+    .map(e => {
+      // Try multiple fields for year/date
+      const yearCe = e.extracted_data?.year_ce;
+      const dateStr = e.extracted_data?.date || e.extracted_data?.year || '';
+      const yearMatch = dateStr.match(/(\d{4})/);
+
+      let year = null;
+      if (yearCe && typeof yearCe === 'number') {
+        year = yearCe;
+      } else if (yearCe && typeof yearCe === 'string') {
+        const match = yearCe.match(/(\d{4})/);
+        year = match ? parseInt(match[1]) : null;
+      } else if (yearMatch) {
+        year = parseInt(yearMatch[1]);
+      }
+
+      return {
+        ...e,
+        year,
+        name: e.extracted_data?.name || e.extracted_data?.event || e.passage?.substring(0, 100) || 'Unknown Event'
+      };
+    });
 
   // Extract unique topics/keywords for alphabetical navigation
   const allTopics = new Set<string>();

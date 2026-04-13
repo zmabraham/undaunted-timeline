@@ -24,9 +24,11 @@ interface TimelineViewProps {
 
 export default function TimelineView({ eras, events, onSelectEra }: TimelineViewProps) {
 
-  // Count events per era for density indicator
+  // Count events per era - include events without years (they appear in all eras for now)
   const getEventCount = (era: Era) => {
-    return events.filter(e => e.year && e.year >= era.startYear && e.year <= era.endYear).length;
+    const eventsWithYears = events.filter(e => e.year && e.year >= era.startYear && e.year <= era.endYear).length;
+    const eventsWithoutYears = events.filter(e => !e.year).length;
+    return eventsWithYears + eventsWithoutYears;
   };
 
   return (

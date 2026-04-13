@@ -895,13 +895,14 @@ function MapView({ places, events: _events, onSelectEvent: _onSelectEvent }: any
 function TopicsView({ topics, entities, onSelectEvent }: any) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [expandedLetter, setExpandedLetter] = useState<string | null>(null);
 
   const getEntitiesForTopic = (topic: string) => {
     return entities.filter((e: any) => {
       const passage = (e.passage || '').toLowerCase();
       const desc = (e.extracted_data?.event || e.extracted_data?.description || e.extracted_data?.topic || '').toLowerCase();
       return passage.includes(topic.toLowerCase()) || desc.includes(topic.toLowerCase());
-    }).slice(0, 20);
+    });
   };
 
   if (selectedTopic) {
@@ -934,21 +935,29 @@ function TopicsView({ topics, entities, onSelectEvent }: any) {
           {alphabet.map(letter => {
             const letterTopics = topics.filter((t: string) => t.startsWith(letter));
             if (letterTopics.length === 0) return null;
+            const isExpanded = expandedLetter === letter;
+            const displayedTopics = isExpanded ? letterTopics : letterTopics.slice(0, 6);
+
             return (
               <div key={letter} className="text-center">
                 <div className="font-display text-3xl text-gold-400 mb-3">{letter}</div>
                 <div className="space-y-2">
-                  {letterTopics.slice(0, 6).map((topic: string, i: number) => (
+                  {displayedTopics.map((topic: string, i: number) => (
                     <button
                       key={i}
                       onClick={() => setSelectedTopic(topic)}
-                      className="block w-full font-body text-sm text-gold-700 hover:text-gold-400 hover:bg-gold-400/10 px-2 py-1 rounded transition-all"
+                      className="block w-full font-body text-sm text-gold-700 hover:text-gold-400 hover:bg-gold-400/10 px-2 py-1 rounded transition-all text-left"
                     >
                       {topic}
                     </button>
                   ))}
                   {letterTopics.length > 6 && (
-                    <div className="font-subheading text-xs text-parchment-300">+{letterTopics.length - 6} more</div>
+                    <button
+                      onClick={() => setExpandedLetter(isExpanded ? null : letter)}
+                      className="block w-full font-subheading text-xs text-gold-600 hover:text-gold-400 hover:bg-gold-400/10 px-2 py-1 rounded transition-all text-center"
+                    >
+                      {isExpanded ? `Show less` : `+${letterTopics.length - 6} more`}
+                    </button>
                   )}
                 </div>
               </div>

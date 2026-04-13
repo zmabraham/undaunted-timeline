@@ -436,7 +436,6 @@ function App() {
                 key="topics"
                 topics={timelineData.topics}
                 entities={timelineData.allEntities}
-                onSelectEvent={(evt: any) => { setSelectedEvent(evt); setPreviousView('topics'); setView('event'); }}
                 onReadInBook={handleReadInBook}
               />
             )}
@@ -899,7 +898,7 @@ function MapView({ places, events: _events, onSelectEvent: _onSelectEvent }: any
   );
 }
 
-function TopicsView({ topics, entities, onSelectEvent, onReadInBook }: any) {
+function TopicsView({ topics, entities, onReadInBook }: any) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [expandedLetter, setExpandedLetter] = useState<string | null>(null);

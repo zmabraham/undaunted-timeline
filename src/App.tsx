@@ -1000,6 +1000,41 @@ function AllPlacesView({ places, onSelectPlace }: any) {
 }
 
 function InstitutionsView({ institutions }: any) {
+  const [selectedInstitution, setSelectedInstitution] = useState<any>(null);
+
+  if (selectedInstitution) {
+    // Group all institutions by name to find all references
+    const institutionName = selectedInstitution.extracted_data?.name || selectedInstitution.extracted_data?.institution || 'Unknown';
+    const allReferences = institutions.filter((inst: any) => {
+      const name = inst.extracted_data?.name || inst.extracted_data?.institution || '';
+      return name.toLowerCase() === institutionName.toLowerCase();
+    });
+
+    return (
+      <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
+        <div className="max-w-4xl mx-auto">
+          <button onClick={() => setSelectedInstitution(null)} className="font-subheading text-gold-300 hover:text-gold-200 mb-6">← Back to Institutions</button>
+          <div className="bg-parchment-100/90 border border-gold-400/40 rounded-lg p-8 shadow-ornate">
+            <h2 className="font-display text-3xl text-ink-200 mb-4">{institutionName}</h2>
+            <p className="font-subheading text-sm text-gold-700 mb-6">{allReferences.length} references found</p>
+            <div className="space-y-4">
+              {allReferences.map((ref: any, i: number) => (
+                <div key={i} className="bg-ink-500/30 border border-gold-400/20 rounded-lg p-4">
+                  <p className="font-body text-sm text-ink-200 leading-relaxed">{ref.passage || ref.extracted_data?.description || ''}</p>
+                  {ref.book_link && (
+                    <div className="mt-2 text-xs text-gold-600 font-subheading">
+                      Location: {ref.book_link}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full overflow-y-auto px-8 py-8 bg-ink-500">
       <div className="max-w-5xl mx-auto">
@@ -1014,7 +1049,11 @@ function InstitutionsView({ institutions }: any) {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {institutions.map((inst: any, i: number) => (
-            <div key={i} className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5">
+            <div
+              key={i}
+              onClick={() => setSelectedInstitution(inst)}
+              className="bg-parchment-100/70 border border-gold-400/30 rounded-lg p-5 cursor-pointer hover:border-gold-400 hover:bg-parchment-200 transition-all"
+            >
               <h3 className="font-display text-lg text-ink-200 mb-2">{inst.extracted_data?.name || inst.extracted_data?.institution || 'Institution'}</h3>
               <p className="font-body text-sm text-ink-100 line-clamp-3">{inst.passage || inst.extracted_data?.description || ''}</p>
             </div>

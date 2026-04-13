@@ -38,6 +38,8 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
   const [activeFootnote, setActiveFootnote] = useState<Footnote | null>(null);
   const [footnotePosition, setFootnotePosition] = useState({ x: 0, y: 0 });
   const contentRef = useRef<HTMLDivElement>(null);
+  const tooltipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   // Parse footnotes from text and return array of parts
   const parseFootnotes = (text: string): Array<{ type: 'text' | 'footnote'; content: string; footnoteText?: string }> => {
@@ -72,8 +74,14 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
     return parts;
   };
 
-  // Handle footnote hover/click
+  // Handle footnote hover/click - improved to prevent flickering
   const handleFootnoteEnter = (footnoteText: string, element: HTMLElement) => {
+    // Clear any pending hide timeout
+    if (tooltipTimeoutRef.current) {
+      clearTimeout(tooltipTimeoutRef.current);
+      tooltipTimeoutRef.current = null;
+    }
+
     const rect = element.getBoundingClientRect();
     setActiveFootnote({ number: 0, text: footnoteText });
     // Round to integer to prevent sub-pixel blur
@@ -84,17 +92,32 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
   };
 
   const handleFootnoteLeave = () => {
+    // Delay hiding to allow mouse to move to tooltip
+    tooltipTimeoutRef.current = setTimeout(() => {
+      setActiveFootnote(null);
+    }, 100);
+  };
+
+  const handleTooltipEnter = () => {
+    // Keep tooltip open when hovering over it
+    if (tooltipTimeoutRef.current) {
+      clearTimeout(tooltipTimeoutRef.current);
+      tooltipTimeoutRef.current = null;
+    }
+  };
+
+  const handleTooltipLeave = () => {
     setActiveFootnote(null);
   };
 
-  // Close tooltip when clicking elsewhere
+  // Cleanup timeout on unmount
   useEffect(() => {
-    const handleClickOutside = () => setActiveFootnote(null);
-    if (activeFootnote) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [activeFootnote]);
+    return () => {
+      if (tooltipTimeoutRef.current) {
+        clearTimeout(tooltipTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Load book data
   useEffect(() => {
@@ -440,50 +463,42 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
 
       {/* Footnote tooltip - rendered at document body level using Portal */}
       {createPortal(
-        <>
-          {/* Close footnote when clicking elsewhere */}
+        <AnimatePresence>
           {activeFootnote && (
             <div
-              className="fixed inset-0"
-              style={{ zIndex: 999998 }}
-              onClick={() => setActiveFootnote(null)}
-            />
-          )}
-
-          <AnimatePresence>
-            {activeFootnote && (
-              <div
-                className="fixed pointer-events-none"
+              ref={tooltipRef}
+              className="fixed pointer-events-none"
+              style={{
+                left: `${footnotePosition.x}px`,
+                top: `${footnotePosition.y}px`,
+                transform: 'translateX(-50%)',
+                zIndex: 999999
+              }}
+            >
+              <motion.div
+                ref={tooltipRef}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
+                className="pointer-events-auto max-w-sm"
                 style={{
-                  left: `${footnotePosition.x}px`,
-                  top: `${footnotePosition.y}px`,
-                  transform: 'translateX(-50%)',
-                  zIndex: 999999
+                  willChange: 'transform, opacity',
+                  WebkitFontSmoothing: 'antialiased'
                 }}
+                onMouseEnter={handleTooltipEnter}
+                onMouseLeave={handleTooltipLeave}
               >
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-                  className="pointer-events-auto max-w-sm"
-                  style={{
-                    willChange: 'transform, opacity',
-                    WebkitFontSmoothing: 'antialiased'
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="rounded-lg p-4 shadow-2xl" style={{ backgroundColor: '#1a1a1a', border: '2px solid #d97706' }}>
-                    <div className="absolute" style={{ top: '-8px', left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderBottom: '8px solid #1a1a1a' }}></div>
-                    <p className="font-body text-sm leading-relaxed m-0" style={{ color: '#faf7f0' }}>
-                      {activeFootnote.text}
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
-        </>,
+                <div className="rounded-lg p-4 shadow-2xl" style={{ backgroundColor: '#1a1a1a', border: '2px solid #d97706' }}>
+                  <div className="absolute" style={{ top: '-8px', left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderBottom: '8px solid #1a1a1a' }}></div>
+                  <p className="font-body text-sm leading-relaxed m-0" style={{ color: '#faf7f0' }}>
+                    {activeFootnote.text}
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
         document.body
       )}
     </div>

@@ -239,7 +239,6 @@ export function processTimelineData(data: UndauntedData) {
     });
 
   // Extract unique topics/keywords for alphabetical navigation
-  const allTopics = new Set<string>();
   const topicWords = new Set<string>();
 
   // Common words to exclude
@@ -247,7 +246,7 @@ export function processTimelineData(data: UndauntedData) {
 
   data.entities.forEach(e => {
     // Extract from passage text and name (since entities only have name/aliases after deduplication)
-    const text = (e.passage || ' ' + (e.name || '')).toLowerCase();
+    const text = ((e as any).name ? `${e.passage || ''} ${(e as any).name || ''}` : e.passage || '').toLowerCase();
 
     // Extract meaningful words (4+ letters)
     const words = text.match(/\b[a-z]{4,}\b/g) || [];

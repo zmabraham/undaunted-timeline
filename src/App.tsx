@@ -488,7 +488,7 @@ function App() {
             )}
             {view === 'book' && (
               <BookReader
-                key="book"
+                key={`book-${bookStartChapter}-${bookStartParagraph || '0'}`}
                 initialChapter={bookStartChapter}
                 initialParagraph={bookStartParagraph}
                 highlightText={bookHighlight}

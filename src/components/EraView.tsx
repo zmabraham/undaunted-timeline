@@ -108,7 +108,7 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
                     </div>
                   )}
                   <h4 className="font-display font-semibold mb-3 line-clamp-2 text-ink-200 leading-snug">
-                    {event.extracted_data?.event || event.extracted_data?.description || 'Event'}
+                    {(event as any).name || event.extracted_data?.event || event.extracted_data?.description || 'Event'}
                   </h4>
                   <p className="font-body text-sm text-ink-100 line-clamp-3 leading-relaxed">
                     {event.passage?.substring(0, 150)}...

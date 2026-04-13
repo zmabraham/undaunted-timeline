@@ -17,9 +17,16 @@ export interface UndauntedData {
 
 // Process the merged KG data for the timeline
 export function processTimelineData(data: UndauntedData) {
+  // Helper function to clean footnotes from passage
+  const cleanPassage = (passage: string): string => {
+    if (!passage) return '';
+    // Remove footnotes in format [[number: text]]
+    return passage.replace(/\[\[\d+:\s*[^\]]*\]\]/g, '').trim();
+  };
+
   // Intelligent event name generator
   const generateEventName = (entity: Entity): string => {
-    const passage = entity.passage || '';
+    const passage = cleanPassage(entity.passage || '');
 
     // Key patterns to extract meaningful event names
     const patterns = [
@@ -94,39 +101,41 @@ export function processTimelineData(data: UndauntedData) {
   // Helper function to add descriptive name to entities
   const addName = (entity: Entity) => {
     const type = entity.node_type;
+    const cleanedPassage = cleanPassage(entity.passage || '');
     let name = '';
 
     switch (type) {
       case 'PEOPLE':
-        name = entity.extracted_data?.name || entity.passage?.substring(0, 50) || 'Unknown Person';
+        name = entity.extracted_data?.name || cleanedPassage.substring(0, 50) || 'Unknown Person';
         break;
       case 'EVENT':
         // Use intelligent event name generator
         name = generateEventName(entity);
         break;
       case 'PLACE':
-        name = entity.extracted_data?.name || entity.extracted_data?.location || entity.passage?.substring(0, 50) || 'Unknown Place';
+        name = entity.extracted_data?.name || entity.extracted_data?.location || cleanedPassage.substring(0, 50) || 'Unknown Place';
         break;
       case 'QUOTE':
-        const quote = entity.passage || '';
+        const quote = cleanedPassage;
         name = quote.length > 80 ? quote.substring(0, 77) + '...' : quote;
         break;
       case 'CONCEPT':
       case 'TEACHING':
-        name = entity.extracted_data?.teaching || entity.extracted_data?.concept || entity.extracted_data?.topic || entity.passage?.substring(0, 50) || 'Unknown Teaching';
+        name = entity.extracted_data?.teaching || entity.extracted_data?.concept || entity.extracted_data?.topic || cleanedPassage.substring(0, 50) || 'Unknown Teaching';
         break;
       case 'INSTITUTION':
-        name = entity.extracted_data?.name || entity.extracted_data?.institution || entity.passage?.substring(0, 50) || 'Unknown Institution';
+        name = entity.extracted_data?.name || entity.extracted_data?.institution || cleanedPassage.substring(0, 50) || 'Unknown Institution';
         break;
       case 'DATE':
-        name = entity.extracted_data?.date || entity.extracted_data?.year_ce?.toString() || entity.passage?.substring(0, 30) || 'Unknown Date';
+        name = entity.extracted_data?.date || entity.extracted_data?.year_ce?.toString() || cleanedPassage.substring(0, 30) || 'Unknown Date';
         break;
       default:
-        name = entity.extracted_data?.name || entity.extracted_data?.description || entity.passage?.substring(0, 50) || 'Unknown';
+        name = entity.extracted_data?.name || entity.extracted_data?.description || cleanedPassage.substring(0, 50) || 'Unknown';
     }
 
     return {
       ...entity,
+      passage: cleanedPassage,
       name: name || 'Unknown'
     };
   };
@@ -197,6 +206,7 @@ export function processTimelineData(data: UndauntedData) {
 
       return {
         ...e,
+        passage: cleanPassage(e.passage || ''),
         year,
         date: dateStr || yearCe?.toString() || ''
       };
@@ -222,8 +232,8 @@ export function processTimelineData(data: UndauntedData) {
         year = parseInt(yearMatch[1]);
       }
 
-      // Create a better name from passage - clean up and truncate
-      let passage = e.passage || '';
+      // Clean passage and create name
+      let passage = cleanPassage(e.passage || '');
       // Remove leading/trailing whitespace and quotes
       passage = passage.trim().replace(/^["'\u201C\u201D]+|["'\u201C\u201D]+$/g, '');
       // Capitalize first letter
@@ -233,6 +243,7 @@ export function processTimelineData(data: UndauntedData) {
 
       return {
         ...e,
+        passage,
         year,
         name: name || 'Unknown Event'
       };

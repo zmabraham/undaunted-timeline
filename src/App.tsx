@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search, User, MapPin, BookOpen, Clock, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe, Network, Quote as QuoteIcon, Library } from 'lucide-react';
+import { Search, User, BookOpen, Crown, Clock3, Building2, Users2, Lightbulb, FileText, Globe, Network, Quote as QuoteIcon, Library } from 'lucide-react';
 import { ERAS, processTimelineData, type UndauntedData } from './data/undaunted-data';
 import TimelineView from './components/TimelineView';
 import EraView from './components/EraView';

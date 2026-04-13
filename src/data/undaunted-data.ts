@@ -140,8 +140,45 @@ export function processTimelineData(data: UndauntedData) {
     };
   };
 
+  // Helper function to check if an entity is actually an event (not a quote/reference)
+  const isActualEvent = (entity: Entity): boolean => {
+    const passage = cleanPassage(entity.passage || '').toLowerCase();
+
+    // Patterns that indicate this is NOT an event
+    const nonEventPatterns = [
+      /reads?:\s*["']/i,           // "reads:" followed by quote
+      /stated?:\s*["']/i,          // "stated:" followed by quote
+      /wrote?:\s*["']/i,           // "wrote:" followed by quote
+      /said:\s*/i,                 // "said:"
+      /see:\s*/i,                  // "see:" (reference)
+      /cf\.\s*/i,                  // "cf." (reference)
+      /referenced?\s+in\s*/i,      // "referenced in"
+      /quoted\s+in\s*/i,           // "quoted in"
+      /accord(ing|s?)\s+to\s*/i,   // "according to"
+      /chapter\s+\d+:\s*\d+/i,     // Bible verse reference
+      /verse\s+\d+/i,              // verse reference
+      /psalm\s+\d+/i,              // Psalm reference
+    ];
+
+    // Check if any non-event pattern matches
+    for (const pattern of nonEventPatterns) {
+      if (pattern.test(passage)) {
+        return false;
+      }
+    }
+
+    // Check if passage starts with a quote (likely a quote, not an event)
+    const trimmed = passage.trim();
+    if (trimmed.match(/^["'\u201C\u201D]/) && trimmed.length < 200) {
+      // Short quoted passage is likely a quote, not an event
+      return false;
+    }
+
+    return true;
+  };
+
   const events = data.entities.filter(e =>
-    e.node_type.toLowerCase().includes('event') || e.node_type === 'EVENT'
+    (e.node_type.toLowerCase().includes('event') || e.node_type === 'EVENT') && isActualEvent(e)
   ).map(addName);
 
   const people = data.entities.filter(e =>

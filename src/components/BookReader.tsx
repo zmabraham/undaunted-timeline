@@ -145,7 +145,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
     }
   }, [currentChapter, highlightText, bookData, initialParagraph]);
 
-  const currentChapterData = bookData?.chapters[currentChapter - 1];
+  const currentChapterData = bookData?.chapters.find(ch => ch.number === currentChapter);
 
   // Search functionality
   const handleSearch = () => {
@@ -239,8 +239,8 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
         {/* Chapter navigation */}
         <div className="flex items-center justify-between gap-4">
           <button
-            onClick={() => setCurrentChapter(Math.max(1, currentChapter - 1))}
-            disabled={currentChapter === 1}
+            onClick={() => setCurrentChapter(Math.max(0, currentChapter - 1))}
+            disabled={currentChapter === 0}
             className="flex items-center gap-2 px-4 py-2 bg-parchment-100/80 border border-gold-400/30 rounded-full hover:bg-parchment-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-subheading text-sm text-ink-200"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -250,13 +250,13 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
           <div className="text-center">
             <h2 className="font-display text-base sm:text-lg text-gold-200">{currentChapterData.title}</h2>
             <p className="font-subheading text-xs text-parchment-500">
-              Chapter {currentChapter} of {bookData.chapters.length}
+              Chapter {currentChapter + 1} of {bookData.chapters.length}
             </p>
           </div>
 
           <button
-            onClick={() => setCurrentChapter(Math.min(bookData.chapters.length, currentChapter + 1))}
-            disabled={currentChapter === bookData.chapters.length}
+            onClick={() => setCurrentChapter(Math.min(bookData.chapters.length - 1, currentChapter + 1))}
+            disabled={currentChapter === bookData.chapters.length - 1}
             className="flex items-center gap-2 px-4 py-2 bg-parchment-100/80 border border-gold-400/30 rounded-full hover:bg-parchment-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-subheading text-sm text-ink-200"
           >
             <span className="hidden sm:inline">Next</span>
@@ -323,7 +323,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
 
             {/* Chapter end navigation */}
             <div className="mt-12 pt-8 border-t border-gold-400/20 flex justify-center gap-4">
-              {currentChapter > 1 && (
+              {currentChapter > 0 && (
                 <button
                   onClick={() => setCurrentChapter(currentChapter - 1)}
                   className="px-6 py-3 bg-parchment-200/50 border border-gold-400/30 rounded-full font-subheading text-sm text-ink-200 hover:bg-parchment-300 transition-all"
@@ -331,7 +331,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
                   ← Previous Chapter
                 </button>
               )}
-              {currentChapter < bookData.chapters.length && (
+              {currentChapter < bookData.chapters.length - 1 && (
                 <button
                   onClick={() => setCurrentChapter(currentChapter + 1)}
                   className="px-6 py-3 bg-parchment-200/50 border border-gold-400/30 rounded-full font-subheading text-sm text-ink-200 hover:bg-parchment-300 transition-all"

@@ -69,7 +69,8 @@ export default function KnowledgeGraphView({
 
     const newNodes: Node[] = sampledEntities.map((entity, index) => {
       const type = entity.node_type || 'Unknown';
-      const name = entity.extracted_data?.name ||
+      const name = (entity as any).name ||
+                   entity.extracted_data?.name ||
                    entity.extracted_data?.event ||
                    entity.extracted_data?.teaching ||
                    entity.passage?.substring(0, 30) ||

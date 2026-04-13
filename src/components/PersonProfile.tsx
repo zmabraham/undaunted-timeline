@@ -9,7 +9,7 @@ interface PersonProfileProps {
 }
 
 export default function PersonProfile({ person, events, onBack, onReadInBook }: PersonProfileProps) {
-  const name = person.extracted_data?.name || person.passage || 'Unknown';
+  const name = (person as any).name || person.extracted_data?.name || person.passage || 'Unknown';
 
   const personEvents = events.filter((e: any) => {
     const passage = (e.passage || '').toLowerCase();

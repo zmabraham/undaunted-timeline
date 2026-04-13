@@ -17,51 +17,94 @@ export interface UndauntedData {
 
 // Process the merged KG data for the timeline
 export function processTimelineData(data: UndauntedData) {
+  // Helper function to add descriptive name to entities
+  const addName = (entity: Entity) => {
+    const type = entity.node_type;
+    let name = '';
+
+    switch (type) {
+      case 'PEOPLE':
+        name = entity.extracted_data?.name || entity.passage?.substring(0, 50) || 'Unknown Person';
+        break;
+      case 'EVENT':
+        // Use passage for event names (they're poorly extracted)
+        let passage = entity.passage || '';
+        passage = passage.trim().replace(/^["'\u201C\u201D]+|["'\u201C\u201D]+$/g, '');
+        passage = passage.charAt(0).toUpperCase() + passage.slice(1);
+        name = passage.length > 120 ? passage.substring(0, 117) + '...' : passage;
+        break;
+      case 'PLACE':
+        name = entity.extracted_data?.name || entity.extracted_data?.location || entity.passage?.substring(0, 50) || 'Unknown Place';
+        break;
+      case 'QUOTE':
+        const quote = entity.passage || '';
+        name = quote.length > 80 ? quote.substring(0, 77) + '...' : quote;
+        break;
+      case 'CONCEPT':
+      case 'TEACHING':
+        name = entity.extracted_data?.teaching || entity.extracted_data?.concept || entity.extracted_data?.topic || entity.passage?.substring(0, 50) || 'Unknown Teaching';
+        break;
+      case 'INSTITUTION':
+        name = entity.extracted_data?.name || entity.extracted_data?.institution || entity.passage?.substring(0, 50) || 'Unknown Institution';
+        break;
+      case 'DATE':
+        name = entity.extracted_data?.date || entity.extracted_data?.year_ce?.toString() || entity.passage?.substring(0, 30) || 'Unknown Date';
+        break;
+      default:
+        name = entity.extracted_data?.name || entity.extracted_data?.description || entity.passage?.substring(0, 50) || 'Unknown';
+    }
+
+    return {
+      ...entity,
+      name: name || 'Unknown'
+    };
+  };
+
   const events = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('event') || e.node_type === 'EVENT'
-  );
+  ).map(addName);
 
   const people = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('person') ||
     e.node_type === 'PEOPLE'
-  );
+  ).map(addName);
 
   const places = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('place') ||
     e.node_type === 'PLACE'
-  );
+  ).map(addName);
 
   const teachings = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('teaching') ||
     e.node_type === 'TEACHING' ||
     e.node_type === 'CONCEPT'  // Map CONCEPT to TEACHINGS
-  );
+  ).map(addName);
 
   const institutions = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('institution') ||
     e.node_type === 'INSTITUTION' ||
     e.node_type === 'ORGANIZATION'
-  );
+  ).map(addName);
 
   const communities = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('community') ||
     e.node_type === 'COMMUNITY'
-  );
+  ).map(addName);
 
   const concepts = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('concept') ||
     e.node_type === 'CONCEPT'
-  );
+  ).map(addName);
 
   const documents = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('document') ||
     e.node_type === 'DOCUMENT'
-  );
+  ).map(addName);
 
   const quotes = data.entities.filter(e =>
     e.node_type.toLowerCase().includes('quote') ||
     e.node_type === 'QUOTE'
-  );
+  ).map(addName);
 
   // Extract years from events for timeline (only events with valid years)
   const timelineEvents = events
@@ -152,6 +195,9 @@ export function processTimelineData(data: UndauntedData) {
     name: p.extracted_data?.name || p.extracted_data?.location || p.passage?.substring(0, 50) || 'Unknown'
   })).sort((a, b) => a.name.localeCompare(b.name));
 
+  // Add name property to all entities for consistent display
+  const allEntities = data.entities.map(addName);
+
   return {
     events: timelineEvents,
     allEvents,  // All events for counting/browsing, regardless of year data
@@ -165,7 +211,7 @@ export function processTimelineData(data: UndauntedData) {
     concepts,
     documents,
     quotes,
-    allEntities: data.entities
+    allEntities
   };
 }
 

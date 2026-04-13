@@ -49,7 +49,7 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
     return filtered
       .filter(e => {
         const passage = (e.passage || '').toLowerCase();
-        const name = (e.extracted_data?.name || '').toLowerCase();
+        const name = ((e as any).name || '').toLowerCase();
         const desc = (e.extracted_data?.description || '').toLowerCase();
         const event = (e.extracted_data?.event || '').toLowerCase();
         return passage.includes(q) || name.includes(q) || desc.includes(q) || event.includes(q);
@@ -174,7 +174,8 @@ export default function SearchPanel({ entities, events, onSelectEvent, onSelectP
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="font-display font-semibold text-ink-200">
-                            {item.extracted_data?.name ||
+                            {(item as any).name ||
+                             item.extracted_data?.name ||
                              item.extracted_data?.event ||
                              item.extracted_data?.description ||
                              item.node_type}

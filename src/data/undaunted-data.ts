@@ -63,7 +63,7 @@ export function processTimelineData(data: UndauntedData) {
     e.node_type === 'QUOTE'
   );
 
-  // Extract years from events for timeline
+  // Extract years from events for timeline (only events with valid years)
   const timelineEvents = events
     .map(e => {
       // Try multiple fields for year/date
@@ -89,6 +89,12 @@ export function processTimelineData(data: UndauntedData) {
     })
     .filter((e): e is typeof e & { year: number } => e.year !== null && e.year >= 1700 && e.year <= 2020)
     .sort((a, b) => a.year - b.year);
+
+  // All events (for homepage count and browsing - events don't need years)
+  const allEvents = events.map(e => ({
+    ...e,
+    name: e.extracted_data?.name || e.extracted_data?.event || e.passage?.substring(0, 100) || 'Unknown Event'
+  }));
 
   // Extract unique topics/keywords for alphabetical navigation
   const allTopics = new Set<string>();
@@ -120,6 +126,7 @@ export function processTimelineData(data: UndauntedData) {
 
   return {
     events: timelineEvents,
+    allEvents,  // All events for counting/browsing, regardless of year data
     people,
     places: geolocatedPlaces,
     allPlaces,

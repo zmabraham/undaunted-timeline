@@ -142,7 +142,7 @@ function App() {
   }, []);
 
   const timelineData = useMemo(() => {
-    if (!data) return { events: [], people: [], places: [], allPlaces: [], topics: [], teachings: [], institutions: [], communities: [], concepts: [], documents: [], quotes: [], allEntities: [] };
+    if (!data) return { events: [], allEvents: [], people: [], places: [], allPlaces: [], topics: [], teachings: [], institutions: [], communities: [], concepts: [], documents: [], quotes: [], allEntities: [] };
     return processTimelineData(data);
   }, [data]);
 
@@ -335,7 +335,7 @@ function App() {
                 key="home"
                 onNavigate={(v) => setView(v as View)}
                 stats={{
-                  events: timelineData.events.length,
+                  events: timelineData.allEvents.length,
                   people: timelineData.people.length,
                   places: timelineData.allPlaces.length,
                   topics: timelineData.topics.length,
@@ -506,7 +506,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2">
           {/* Entity counts - responsive */}
           <div className="flex items-center justify-center gap-2 sm:gap-4 font-subheading text-[10px] sm:text-xs text-parchment-500 flex-wrap">
-            <span className="flex items-center gap-1" title="Chronicles"><Clock className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.events.length}</span></span>
+            <span className="flex items-center gap-1" title="Chronicles"><Clock className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.allEvents.length}</span></span>
             <span className="text-gold-400/30">✦</span>
             <span className="flex items-center gap-1" title="Souls"><User className="w-3 h-3 text-gold-500" /> <span className="hidden xs:inline">{timelineData.people.length}</span></span>
             <span className="text-gold-400/30">✦</span>

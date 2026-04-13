@@ -107,8 +107,13 @@ export default function EraView({ era, events, onSelectEvent, onSelectPerson }: 
                       {event.year}
                     </div>
                   )}
+                  {event.date && !event.year && (
+                    <div className="inline-block px-3 py-1 rounded-full text-xs font-subheading tracking-wide mb-3 border border-gold-400/30 bg-gold-400/20 text-gold-600">
+                      {event.date}
+                    </div>
+                  )}
                   <h4 className="font-display font-semibold mb-3 line-clamp-2 text-ink-200 leading-snug">
-                    {(event as any).name || event.extracted_data?.event || event.extracted_data?.description || 'Event'}
+                    {(event as any).name || event.extracted_data?.title || event.extracted_data?.event || event.extracted_data?.description || 'Event'}
                   </h4>
                   <p className="font-body text-sm text-ink-100 line-clamp-3 leading-relaxed">
                     {event.passage?.substring(0, 150)}...

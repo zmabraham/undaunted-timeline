@@ -76,7 +76,11 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
   const handleFootnoteEnter = (footnoteText: string, element: HTMLElement) => {
     const rect = element.getBoundingClientRect();
     setActiveFootnote({ number: 0, text: footnoteText });
-    setFootnotePosition({ x: rect.left + rect.width / 2, y: rect.bottom + 8 });
+    // Round to integer to prevent sub-pixel blur
+    setFootnotePosition({
+      x: Math.round(rect.left + rect.width / 2),
+      y: Math.round(rect.bottom + 8)
+    });
   };
 
   const handleFootnoteLeave = () => {
@@ -441,7 +445,7 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
           {activeFootnote && (
             <div
               className="fixed inset-0"
-              style={{ zIndex: 9998 }}
+              style={{ zIndex: 99998 }}
               onClick={() => setActiveFootnote(null)}
             />
           )}
@@ -449,22 +453,26 @@ export default function BookReader({ initialChapter = 1, initialParagraph, highl
           <AnimatePresence>
             {activeFootnote && (
               <motion.div
-                initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
                 className="fixed max-w-sm pointer-events-auto"
                 style={{
-                  left: `${footnotePosition.x}px`,
+                  left: '50%',
                   top: `${footnotePosition.y}px`,
-                  transform: 'translateX(-50%)',
-                  zIndex: 9999
-                }}
+                  marginLeft: '-150px',
+                  zIndex: 99999,
+                  willChange: 'transform, opacity',
+                  backfaceVisibility: 'hidden',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale'
+                } as any}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="bg-gray-900 border-2 border-yellow-600 rounded-lg p-4 shadow-2xl" style={{ backgroundColor: '#1a1a1a', border: '2px solid #d97706' }}>
-                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent" style={{ borderBottomColor: '#1a1a1a' }}></div>
-                  <p className="font-body text-sm leading-relaxed" style={{ color: '#faf7f0' }}>
+                <div style={{ backgroundColor: '#1a1a1a', border: '2px solid #d97706', borderRadius: '8px', padding: '16px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
+                  <div style={{ position: 'absolute', top: '-8px', left: '50%', marginLeft: '-8px', width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderBottom: '8px solid #1a1a1a' }}></div>
+                  <p style={{ fontFamily: 'serif', fontSize: '14px', lineHeight: '1.6', color: '#faf7f0', margin: 0 }}>
                     {activeFootnote.text}
                   </p>
                 </div>
